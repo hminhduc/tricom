@@ -1,0 +1,132 @@
+# Place all the behaviors and hooks related to the matching controller here.
+# All this logic will automatically be available in application.js.
+# You can use CoffeeScript in this file: http://coffeescript.org/
+jQuery ->
+  oJobmasterTable = $('.jobmastertable').DataTable({
+    "dom": 'lBfrtip',
+    "pagingType": "simple_numbers"
+    ,"oLanguage":{
+      "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
+    }
+    ,
+    "columnDefs": [ {
+      "targets"  : 'no-sort',
+      "orderable": false
+    }],
+    "oSearch": {"sSearch": queryParameters().search},
+
+    "buttons": [{
+                "extend":    'copyHtml5',
+                "text":      '<i class="fa fa-files-o"></i>',
+                "titleAttr": 'Copy'
+            },
+            {
+                "extend":    'excelHtml5',
+                "text":      '<i class="fa fa-file-excel-o"></i>',
+                "titleAttr": 'Excel'
+            },
+            {
+                "extend":    'csvHtml5',
+                "text":      '<i class="fa fa-file-text-o"></i>',
+                "titleAttr": 'CSV'
+            },
+            {
+              "extend": 'selectAll',
+              "action": ( e, dt, node, config ) ->
+                oJobmasterTable.$('tr').addClass('selected')
+                oJobmasterTable.$('tr').addClass('success')
+                selects = oJobmasterTable.rows('tr.selected').data()
+                if selects.length == 0
+                  $("#edit_jobmaster").attr("disabled", true);
+                  $("#destroy_jobmaster").attr("disabled", true);
+                else
+                  $("#destroy_jobmaster").attr("disabled", false);
+                  if selects.length == 1
+                    $("#edit_jobmaster").attr("disabled", false);
+                  else
+                    $("#edit_jobmaster").attr("disabled", true);
+                $(".buttons-select-none").removeClass('disabled')
+
+
+
+
+            },
+            {
+              "extend": 'selectNone',
+              "action": ( e, dt, node, config ) ->
+                oJobmasterTable.$('tr').removeClass('selected')
+                oJobmasterTable.$('tr').removeClass('success')
+                selects = oJobmasterTable.rows('tr.selected').data()
+                if selects.length == 0
+                  $("#edit_jobmaster").attr("disabled", true);
+                  $("#destroy_jobmaster").attr("disabled", true);
+                else
+                  $("#destroy_jobmaster").attr("disabled", false);
+                  if selects.length == 1
+                    $("#edit_jobmaster").attr("disabled", false);
+                  else
+                    $("#edit_jobmaster").attr("disabled", true);
+                $(".buttons-select-none").addClass('disabled')
+            }
+
+            ]
+  })
+
+  $("#edit_jobmaster").attr("disabled", true);
+  $("#destroy_jobmaster").attr("disabled", true);
+
+
+  $(document).bind('ajaxError', 'form#new_jobmaster', (event, jqxhr, settings, exception) ->
+    $(event.data).render_form_errors( $.parseJSON(jqxhr.responseText) );
+  )
+
+
+
+  $('.jobmastertable').on( 'click', 'tr',  () ->
+    d = oJobmasterTable.row(this).data()
+    if d != undefined
+      if $(this).hasClass('selected')
+        $(this).removeClass('selected')
+        $(this).removeClass('success')
+        # $("#edit_jobmaster").attr("disabled", true);
+        # $("#destroy_jobmaster").attr("disabled", true);
+      else
+        # oJobmasterTable.$('tr.selected').removeClass('selected')
+        # oJobmasterTable.$('tr.success').removeClass('success')
+        $(this).addClass('selected')
+        $(this).addClass('success')
+        # $("#edit_jobmaster").attr("disabled", false);
+        # $("#destroy_jobmaster").attr("disabled", false);
+    selects = oJobmasterTable.rows('tr.selected').data()
+    if selects.length == 0
+      $("#edit_jobmaster").attr("disabled", true);
+      $("#destroy_jobmaster").attr("disabled", true);
+      $(".buttons-select-none").addClass('disabled')
+    else
+      $("#destroy_jobmaster").attr("disabled", false);
+      $(".buttons-select-none").removeClass('disabled')
+      if selects.length == 1
+        $("#edit_jobmaster").attr("disabled", false);
+      else
+        $("#edit_jobmaster").attr("disabled", true);
+
+  )
+
+
+  $.fn.render_form_errors = (errors) ->
+    $form = this;
+    this.clear_previous_errors();
+    model = this.data('model');
+
+
+    $.each(errors, (field, messages) ->
+      $input = $('input[name="' + model + '[' + field + ']"]');
+      $input.closest('.form-group').addClass('has-error').find('.help-block').html( messages.join(' & ') );
+    );
+
+
+  $.fn.clear_previous_errors = () ->
+    $('.form-group.has-error', this).each( () ->
+      $('.help-block', $(this)).html('');
+      $(this).removeClass('has-error');
+    );
