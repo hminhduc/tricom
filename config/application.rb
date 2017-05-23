@@ -26,7 +26,7 @@ module Jpt
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     # config.time_zone = 'Central Time (US & Canada)'
     # todo change timezone
-    config.time_zone = 'Osaka'
+    config.time_zone = 'Hanoi'
     # config.time_zone = 'Hanoi'
     config.active_record.default_timezone = :local
 
