@@ -1,0 +1,12 @@
+<div class="container">
+    <div class="row">
+        <div class='col-sm-6 col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4'>
+		<%= simple_form_for @kintaiteeburu do |f|%>
+			<%= f.input :勤務タイプ, include_blank: false, collection: [ "001","002","003","004","005","006","007","008","009"],input_html: { style: 'width:30%' } %>		    
+		    <%= f.input :出勤時刻, as: :time,minute_step: 30,:default => Date.new(2000,1,1)%>
+		    <%= f.input :退社時刻, as: :time,minute_step: 30,:default => Date.new(2000,1,1)%>
+		    <%= f.button :submit, class: 'btn btn-primary', id: 'kintaiteeburu'%>
+		<% end %>
+		</div>
+	</div>
+</div>
