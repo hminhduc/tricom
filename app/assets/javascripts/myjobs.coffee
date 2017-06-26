@@ -4,8 +4,10 @@ jQuery ->
   action: (e, dt, node, config) ->
     $('#import-csv-modal').modal('show')
   oTable = $('#myjobmaster').DataTable({
-    "dom": 'lBfrtip',
+    "dom": "<'row'<'col-md-6'l><'col-md-6'f>><'row'<'col-md-7'B><'col-md-5'p>><'row'<'col-md-12'tr>><'row'<'col-md-12'i>>",
     "scrollX": true,
+    "fnDrawCallback": (oSettings) ->
+      $('.new-btn').appendTo($('.dt-buttons'));
 #    'scrollY': "300px",
     "pagingType": "full_numbers",
     "oLanguage": {

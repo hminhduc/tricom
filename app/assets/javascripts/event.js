@@ -627,15 +627,15 @@ $(function () {
 
                 });
 
-                $("#destroy_event").attr("disabled", true);
+                $("#destroy_event").addClass("disabled");
             }, function(dismiss) {
                 if (dismiss === 'cancel') {
 
                     var selects = oEventTable.rows('tr.selected').data();
                     if( selects.length == 0)
-                      $("#destroy_event").attr("disabled", true);
+                      $("#destroy_event").addClass("disabled", true);
                     else
-                      $("#destroy_event").attr("disabled", false);
+                      $("#destroy_event").removeClass("disabled");
                 }
             });
           // var response = confirm($('#message_confirm_delete').text());
@@ -1188,9 +1188,14 @@ $(function(){
     });
     // Event table in shousai modal
     oEventTable = $('#event_table').DataTable({
-        "dom": 'lBfrtip',
         //"scrollX": true,
+        "dom": "<'row'<'col-md-6'l><'col-md-6'f>><'row'<'col-md-7'B><'col-md-5'p>><'row'<'col-md-12'tr>><'row'<'col-md-12'i>>",
         "pagingType": "full_numbers",
+        "fnDrawCallback": function( oSettings ) {
+            $('.new-btn').appendTo($('.dt-buttons'));
+            $('.edit-btn').appendTo($('.dt-buttons'));
+            $('.delete-btn').appendTo($('.dt-buttons'));
+        },
         "oLanguage":{"sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"},
         "aoColumnDefs": [
             // {"aTargets": [1], "mRender": function (data, type, full) {
@@ -1255,9 +1260,9 @@ $(function(){
             oEventTable.$('tr').addClass('success');
             var selects = oEventTable.rows('tr.selected').data();
             if (selects.length == 0){
-                $("#destroy_event").attr("disabled", true);
+                $("#destroy_event").addClass("disabled");
             }else{
-                $("#destroy_event").attr("disabled", false);
+                $("#destroy_event").removeClass("disabled");
             }
 
             $(".buttons-select-none").removeClass('disabled');
@@ -1270,9 +1275,9 @@ $(function(){
             oEventTable.$('tr').removeClass('success');
             var selects = oEventTable.rows('tr.selected').data();
             if( selects.length == 0){
-                $("#destroy_event").attr("disabled", true);
+                $("#destroy_event").addClass("disabled");
             }else{
-                $("#destroy_event").attr("disabled", false);
+                $("#destroy_event").removeClass("disabled");
             }
             $(".buttons-select-none").addClass('disabled');
           }
@@ -1297,10 +1302,10 @@ $(function(){
         }
         var selects = oEventTable.rows('tr.selected').data();
         if( selects.length == 0){
-          $("#destroy_event").attr("disabled", true);
+          $("#destroy_event").addClass("disabled");
           $(".buttons-select-none").addClass('disabled')
         }else{
-          $("#destroy_event").attr("disabled", false);
+          $("#destroy_event").removeClass("disabled");
           $(".buttons-select-none").removeClass('disabled');
         }
     });
@@ -1746,7 +1751,7 @@ $(function(){
     if (s == '10' || s == '11' || s == '12' || s == '13'){
         $('.event_帰社').show();
     }
-    $("#destroy_event").attr("disabled", true);
+    $("#destroy_event").addClass("disabled");
 });
 function showModal(date,hoshukeitai) {
 
