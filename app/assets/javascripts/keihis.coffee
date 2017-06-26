@@ -449,10 +449,13 @@ jQuery ->
   className: 'buttons-import'
   action: (e, dt, node, config) ->
     $('#import-csv-modal').modal('show')
-    
   oKeihiheadTable = $('.keihihead-table').DataTable({
-    "dom": 'lBfrtip',
+    "dom": "<'row'<'col-md-6'l><'col-md-6'f>><'row'<'col-md-7'B><'col-md-5'p>><'row'<'col-md-12'tr>><'row'<'col-md-12'i>>",
     "pagingType": "simple_numbers"
+    "fnDrawCallback": (oSettings) ->
+      $('.new-btn').appendTo($('.dt-buttons'));
+      $('.edit-btn').appendTo($('.dt-buttons'));
+      $('.delete-btn').appendTo($('.dt-buttons'));
     ,"oLanguage":{
       "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
     }

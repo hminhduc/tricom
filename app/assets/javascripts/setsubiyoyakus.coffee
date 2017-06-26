@@ -7,7 +7,7 @@ jQuery ->
   action: (e, dt, node, config) ->
     $('#import-csv-modal').modal('show')
   oTable = $('.setsubiyoyaku-table').DataTable({
-    "dom": 'lBfrtip',
+    "dom": "<'row'<'col-md-6'l><'col-md-6'f>><'row'<'col-md-7'B><'col-md-5'p>><'row'<'col-md-12'tr>><'row'<'col-md-12'i>>",
     "pagingType": "full_numbers",
     "oLanguage":{
       "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
