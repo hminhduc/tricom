@@ -5,7 +5,7 @@ class SettingsController < ApplicationController
   def new
     @shains = Shainmaster.all
     @settings = Setting.new
-    respond_with(@settings)
+    respond_with(@setting, location: settings_url)
   end
 
   def index
@@ -36,22 +36,20 @@ class SettingsController < ApplicationController
   def create
     @setting = Setting.new(setting_params)
     @setting.save
-    respond_with(@setting)
+    respond_with(@setting, location: settings_url)
   end
 
   def update
     case params[:commit]
 
-      when '登録する'
-        notice = t "app.flash.update_success" if @setting.update(setting_params)
+      when (t 'helpers.submit.setting')
+        notice = t 'app.flash.update_success' if @setting.update(setting_params)
         #redirect_to :back, notice: notice
-
         redirect_to(session[:return_to])
-      when '更新する'
-        flash[:notice] = t "app.flash.update_success" if @setting.update(setting_params)
+      when (t 'helpers.submit.update')
+        flash[:notice] = t 'app.flash.update_success' if @setting.update(setting_params)
         respond_with(@setting, location: settings_url)
     end
-
   end
 
   def destroy
@@ -62,10 +60,10 @@ class SettingsController < ApplicationController
 
   def import
     if params[:file].nil?
-      flash[:alert] = t "app.flash.file_nil"
+      flash[:alert] = t 'app.flash.file_nil'
       redirect_to settings_path
-    elsif File.extname(params[:file].original_filename) != ".csv"
-      flash[:danger] = t "app.flash.file_format_invalid"
+    elsif File.extname(params[:file].original_filename) != '.csv'
+      flash[:danger] = t 'app.flash.file_format_invalid'
       redirect_to settings_path
     else
       begin
@@ -87,8 +85,56 @@ class SettingsController < ApplicationController
     @settings = Setting.all
     respond_to do |format|
       format.html
-      format.csv { send_data @settings.to_csv, filename: "Setting.csv" }
+      format.csv { send_data @settings.to_csv, filename: 'Setting.csv' }
     end
+  end
+
+  def ajax
+    case params[:focus_field]
+      when 'setting_削除する'
+        settingIds = params[:settings]
+        settingIds.each{ |settingId|
+          Setting.find_by(社員番号: settingId).destroy
+        }
+        data = {destroy_success: 'success'}
+        respond_to do |format|
+        format.json { render json: data}
+      end
+    end
+    case params[:setting]
+    when 'setting_scrolltime'
+      @setting = Setting.where(社員番号: session[:user]).first
+      @setting.scrolltime = params[:scrolltime]
+      @setting.save()
+      respond_to do |format|
+        format.json {render json: @setting}
+      end
+    when 'setting_local'
+      @setting = Setting.where(社員番号: session[:user]).first
+      @setting.local = params[:local]
+      @setting.save()
+      respond_to do |format|
+        format.json {render json: @setting}
+      end
+    when 'select_holiday_vn'
+      @setting = Setting.where(社員番号: session[:user]).first
+      if params[:select_holiday_vn] == 'true'
+        @setting.select_holiday_vn = '1'
+      else
+        @setting.select_holiday_vn = '0'
+      end
+      @setting.save()
+      respond_to do |format|
+        format.json {render json: @setting}
+      end
+    when 'turning_data'
+      @setting = Setting.where(社員番号: session[:user]).first
+      @setting.turning_data = params[:turning_data]
+      @setting.save()
+      respond_to do |format|
+        format.json {render json: @setting}
+      end
+    end 
   end
 
   private
@@ -97,6 +143,6 @@ class SettingsController < ApplicationController
     end
 
     def setting_params
-      params.require(:setting).permit :社員番号, :scrolltime, :local
+      params.require(:setting).permit :社員番号, :scrolltime, :local, :select_holiday_vn, :turning_data
     end
 end

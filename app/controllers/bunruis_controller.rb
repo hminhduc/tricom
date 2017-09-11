@@ -2,11 +2,10 @@ class BunruisController < ApplicationController
   before_action :require_user!
   before_action :set_bunrui, only: [:show, :edit, :update, :destroy]
 
-  respond_to :html
+  respond_to :html, :js
 
   def index
     @bunruis = Bunrui.all
-    respond_with(@bunruis)
   end
 
   def show
@@ -14,8 +13,7 @@ class BunruisController < ApplicationController
   end
 
   def new
-    @bunrui = Bunrui.new
-    respond_with(@bunrui)
+    @bunrui = Bunrui.new    
   end
 
   def edit
@@ -39,10 +37,10 @@ class BunruisController < ApplicationController
 
   def import
     if params[:file].nil?
-      flash[:alert] = "app.flash.file.nil"
+      flash[:alert] = t 'app.flash.file.nil'
       redirect_to bunruis_path
-    elsif File.extname(params[:file].original_filename) != ".csv"
-      flash[:danger] = t "app.flash.file_format_invalid"
+    elsif File.extname(params[:file].original_filename) != '.csv'
+      flash[:danger] = t 'app.flash.file_format_invalid'
       redirect_to bunruis_path
     else
       begin
@@ -65,7 +63,45 @@ class BunruisController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.csv { send_data @bunruis.to_csv, filename: "分類マスタ.csv" }
+      format.csv { send_data @bunruis.to_csv, filename: '分類マスタ.csv' }
+    end
+  end
+
+  def ajax
+    case params[:focus_field]
+      when 'bunrui_削除する'
+        bunruiIds = params[:bunruis]
+        bunruiIds.each{ |bunruiId|
+          Bunrui.find_by(分類コード: bunruiId).destroy
+        }
+        data = {destroy_success: 'success'}
+        respond_to do |format|
+        format.json { render json: data}
+      end
+    end
+  end
+
+    def create_bunrui
+    @bunrui = Bunrui.new(bunrui_params)
+    respond_to do |format|
+      if  @bunrui.save
+        format.js { render 'create_bunrui'}
+      else
+        format.js { render json: @bunrui.errors, status: :unprocessable_entity}
+      end
+    end
+    end
+
+  def update_bunrui
+    @bunrui = Bunrui.find_by(分類コード: bunrui_params[:分類コード])
+    # @eki.update(eki_params)
+    # redirect_to ekis_path
+    respond_to do |format|
+      if  @bunrui.update(bunrui_params)
+        format.js { render 'update_bunrui'}
+      else
+        format.js { render json: @bunrui.errors, status: :unprocessable_entity}
+      end
     end
   end
 

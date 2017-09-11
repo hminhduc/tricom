@@ -28,7 +28,7 @@
                 <td><%= myjob.job名 %></td>
                 <td><%= myjob.ユーザ名 %></td>
                 <td><%= myjob.bunrui_分類名 %></td>
-                <td><%= myjob.updated_at %></td>
+                <td><%= myjob.updated_at.to_s[0..18] %></td>
               </tr>
           <% end %>
           </tbody>
@@ -40,7 +40,12 @@
         <div class="pull-left">
           <%= link_to 'MYJOBマスタ管理へ', myjobmasters_path %>
         </div>
-        <button type="submit" class="btn btn-primary" id="myjob_destroy">削除する</button>
+        <% msg_select = t 'app.select_confirm' %>
+        <% msg_confirm = t 'app.delete_confirm' %>
+        <span id='message_confirm_select' hidden='true'><%=msg_select%></span>
+        <span id='message_confirm_delete' hidden='true'><%=msg_confirm%></span>
+        <button type="button" class="btn btn-default" id="clear_myjob">選択を解除する</button>
+        <button type="button" style= 'margin-right: 100px' class="btn btn-primary" id="myjob_destroy">削除</button>
         <button type="button" class="btn btn-primary" data-dismiss="modal" id="myjob_sentaku_ok">　ＯＫ　</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
       </div>

@@ -1,16 +1,29 @@
 = simple_form_for(@setsubiyoyaku) do |f|
-  .col-sm-2.col-sm-offset-2
-    = f.input :設備コード, label:'設備コード' do
-      = f.select :設備コード, Setsubi.all.map {|p| [ p.設備名, p.設備コード ] },{}, {include_blank: true, class: 'form-control'}
-    = f.input :予約者, as: :hidden, input_html: {value: session[:user]}
-    = f.input :開始, as: :date_time_picker
-    = f.input :終了, as: :date_time_picker
-    = f.input :用件
-    = f.input :相手先, wrapper: :vertical_input_group do
-      = f.input_field :相手先, class: 'form-control'
-      %span.input-group-addon.refer-kaisha
-        %span.glyphicon.glyphicon-search{'aria-hidden'=>"true"}
+  .col-md-8.col-xs-8.col-sm-6.col-lg-8.col-sm-offset-2
+    = f.input :設備コード, as: :hidden
+    = f.association :setsubi, label_method: :設備名, value_method: :設備コード, label:'設備コード', disabled: true,input_html: {style: "width:200px"}
+    / = f.input :設備コード, label:'設備コード' do
+    /   = f.select :設備コード, Setsubi.all.map {|p| [ p.設備名, p.設備コード ] },{}, {include_blank: true, class: 'form-control',disabled: true}
+    = f.input :予約者, label:'予約者' do
+      = f.select :予約者, Shainmaster.all.map {|p| [ p.氏名, p.社員番号 ] },{}, {include_blank: true, class: 'form-control', style: "width:200px"}
+    .row
+      .col-md-3.col-xs-3.col-sm-3.col-lg-3
+        = f.input :開始, as: :date_time_picker,input_html: {style: "width:200px"}
+      .col-md-8.col-xs-8.col-sm-8.col-lg-8.col-md-offset-1.col-xs-offset-1.col-sm-offset-1.col-lg-offset-1
+        = label_tag (t 'app.label.hinemosu')
+        %br
+        = check_box_tag "select_allday", nil, true
+        %p.help-block=t 'app.label.hinemosu_descr'
+    / = f.input :開始, as: :date_time_picker
+    = f.input :終了, as: :date_time_picker,input_html: {style: "width:200px"}
+    = f.input :用件, input_html:{style: 'width:239px'}
+    .set-width{style: "width: 239px"}
+      = f.input :相手先, wrapper: :vertical_input_group , hint:"#{@setsubiyoyaku.kaishamaster.try :会社名}", hint_html: {class: 'hint-kaisha-refer'} do
+        = f.input_field :相手先, class: 'form-control'
+        %span.input-group-addon.refer-kaisha
+          %span.glyphicon.glyphicon-search{'aria-hidden'=>"true"}
 
     = f.button :submit, class: 'btn btn-primary'
-
+    = link_to '削除', @setsubiyoyaku, :method => :delete, :data => { :confirm => (t 'app.delete_confirm') }, class: 'btn btn-primary' if modal == "edit"
+    %span#time_start{hidden: true}=@setsubiyoyaku.開始
 = render 'share/kaisha_modal'

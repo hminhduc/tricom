@@ -3,6 +3,10 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 @import "font-awesome";
 
+.kintai-table { overflow-x: scroll; display: block;}
+.set-width{
+  width: 100%;
+}
 tr [colspan="6"] {
   text-align: center;
 }
@@ -30,4 +34,39 @@ tr [colspan="6"] {
 .form_in_place {
   width: 1px;
   color: red;
+}
+
+.table-height td {
+  height: 55px;
+
+}
+
+.table-width {
+  width: 100px;
+
+}
+
+.time {
+  //width: 100px;
+}
+
+.timestart {
+  //width: 100px;
+}
+.summary {
+  margin-left: 80px;
+  width: 50%
+}
+
+.custom-background {
+  background-color: rgb(249, 249, 249);
+}
+
+.input-number{
+  width: 50px
+}
+
+.text-gray {
+  color: #c6cdcc;
+
 }

@@ -30,7 +30,7 @@
                 <td><%= mybasho.場所名カナ %></td>
                 <td><%= mybasho.会社コード %></td>
                 <td><%= mybasho.kaisha_name %></td>
-                <td><%= mybasho.updated_at %></td>
+                <td><%= mybasho.updated_at.to_s[0..18] %></td>
 
               </tr>
           <% end %>
@@ -57,8 +57,13 @@
         <div class="pull-left">
           <%= link_to 'MY場所マスタ管理へ', mybashomasters_path %>
         </div>
-        <button type="submit" class="btn btn-primary" id="mybasho_destroy">削除する</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" id="koutei_sentaku_ok">　ＯＫ　</button>
+        <% msg_select = t 'app.select_confirm' %>
+        <% msg_confirm = t 'app.delete_confirm' %>
+        <span id='message_confirm_select' hidden='true'><%=msg_select%></span>
+        <span id='message_confirm_delete' hidden='true'><%=msg_confirm%></span>
+        <button type="button" class="btn btn-default" id="clear_mybasho">選択を解除する</button>
+        <button type="submit" style= 'margin-right: 100px' class="btn btn-primary" id="mybasho_destroy">削除</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="mybasho_sentaku_ok">　ＯＫ　</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
       </div>
     </div>

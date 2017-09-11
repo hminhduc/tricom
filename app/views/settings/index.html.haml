@@ -1,7 +1,7 @@
 = javascript_include_tag 'settings'
 = provide(:title, (t 'title.setting'))
 %ol.breadcrumb
-  %li= link_to 'メニュー', main_path
+  %li= link_to (t 'title.menu'), main_path
   %li.active Setting
 
 %br
@@ -12,25 +12,19 @@
       %th 社員番号
       %th ScrollTime
       %th Local
-      %th
-      %th
+      %th Vietnamese Holidays
+      %th Turning data
+
   %tbody
     - @setting.each do |setting|
       %tr
         %td= setting.社員番号
         %td= setting.scrolltime
         %td= setting.local
-        %td= link_to '編集', edit_setting_path(setting)
-        - msg = t 'app.delete_confirm'
-        %td= link_to '削除', setting, :method => :delete, :data => { :confirm => msg }
+        %td= setting.select_holiday_vn
+        %td= setting.turning_data
 
-= link_to '新規', new_setting_path
 
-%h4 CSVでのデータをインポート!
-= form_tag import_settings_path,class:'form-inline', multipart: true do
-  .form-group
-    = label_tag 'selectcsv', nil, class: 'sr-only'
-    = file_field_tag :file , class: 'btn btn-default'
-  .form-group
-    = label_tag 'importcsv', nil, class: 'sr-only'
-    = submit_tag "Import CSV" , class: 'btn btn-default'
+= render 'share/new_edit_destroy_buttons',object: 'setting',new_path: new_setting_path
+
+=render 'share/import_csv_modal',import_path: import_settings_path

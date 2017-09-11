@@ -6,7 +6,7 @@ $(function(){
         //"scrollX": true,
         //"scrollCollapse": true,
         "oLanguage":{
-            "sUrl": "../../assets/resource/dataTable_ja.txt"
+            "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
         },
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": [ 3,4 ]},
@@ -19,7 +19,7 @@ $(function(){
             "targets"  : 'no-sort',
             "orderable": false
         }]
-
+        ,"oSearch": {"sSearch": queryParameters().search}
     });
 
     //選択された行を判断
@@ -56,44 +56,6 @@ $(function () {
     //    $(location).attr('href','/kouteimasters');
     //});
 });
-
-//defind ref functions
-(function($) {
-
-    $.fn.modal_success = function(){
-        // close modal
-        this.modal('hide');
-
-        // clear form input elements
-        // note: handle textarea, select, etc
-        this.find('form input[type="text"]').val('');
-
-        // clear error state
-        this.clear_previous_errors();
-    };
-
-    $.fn.render_form_errors = function(errors){
-
-        $form = this;
-        this.clear_previous_errors();
-        model = this.data('model');
-
-        // show error messages in input form-group help-block
-        $.each(errors, function(field, messages){
-            $input = $('input[name="' + model + '[' + field + ']"]');
-            $input.closest('.form-group').addClass('has-error').find('.help-block').html( messages.join(' & ') );
-        });
-    };
-
-    $.fn.clear_previous_errors = function(){
-        $('.form-group.has-error', this).each(function(){
-            $('.help-block', $(this)).html('');
-            $(this).removeClass('has-error');
-        });
-    }
-
-}(jQuery));
-
 //button handle
 $(function(){
     $('#shozoku_search').click(function(){

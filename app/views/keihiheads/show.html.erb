@@ -5,31 +5,43 @@
 <ol class="breadcrumb">
   <li><%= link_to 'メニュー', main_path %></li>
   <li><%= link_to 'カレンダー', events_path %></li>
-  <li><%= link_to '経費承認一覧', shonin_search_keihiheads_path %></li>
-  <li class="active">経費・承認要求</li>
+  <% if params[:shonin] %>
+    <li><%= link_to '経費承認一覧', shonin_search_keihiheads_path %></li>
+  <% else  %>
+    <li><%= link_to '経費入力管理', keihiheads_path %></li>
+  <% end %>
+  <li class="active">経費・照会</li>
 </ol>
 
 <%= simple_form_for @keihi, html: {class:'form-inline'} do |f| %>
 
     <!--header-->
-    <div class="form-group">
-      <%= label_tag 'label1','起票者:　' << @keihi.shainmaster_氏名 << '　' %>
-    </div>
+
 
     <div class="form-group">
       <div class="editor-datetime">
         <%= label_tag 'label2','日付:'%>
-        <%= f.text_field :日付, class: 'form-control', size: 10 %>
-        <%= button_tag '>', id: 'search-shinshei', type: 'button', class: 'btn' %>
+        <%= f.text_field :日付, class: 'form-control',disabled: true, size: 10 %>
+
+    <!--     <%= button_tag '>', id: 'search-shinshei', type: 'button', class: 'btn' %> -->
       </div>
     </div>
 
     <div class="form-group">
-      <%= label_tag 'label2','申請No:'%>
+      <%= label_tag 'label2','申請番号:'%>
       <%# f.select :shinsheino,[''], {class: 'form-control'} %>
       <%array_value = [@keihi.id , @keihi.id] %>
-      <%= select(:keihihead, :id, array_value, {}, {class: 'form-control'}) %>
+      <%= select(:keihihead, :id, array_value, {}, {class: 'form-control',disabled: true}) %>
       <%# f.text_field :shinsheino, class: 'form-control' %>
+    </div>
+    <div class="form-group">
+      <%= label_tag 'label2','社員番号:'%>
+      <%= f.text_field :社員番号, class: 'form-control',disabled: true, size: 10 %>
+      <%= label_tag 'label2','氏名:'%>
+      <%= f.text_field :shainmaster_氏名, class: 'form-control',disabled: true, size: 10 %>
+    </div>
+    <div class="form-group pull-right">
+      <button id="pdf_show_keihihead" class="btn btn-primary" type="button"><%=(t 'app.label.export_pdf')%></button>
     </div>
 
     <div class="spacer"></div>
@@ -84,35 +96,104 @@
     <!--footer-->
 
     <div class="spacer"></div>
-    <div class="form-group">
-      <%= f.label '小　計' %>
-      <%= f.text_field :交通費合計, size:2, disabled: true, class: 'form-control' %>
-      <%= f.text_field :日当合計, size:2, disabled: true, class: 'form-control' %>
-      <%= f.text_field :宿泊費合計, size:2, disabled: true, class: 'form-control' %>
-      <%= f.text_field :その他合計, size:2, disabled: true, class: 'form-control' %>
-      <%= f.label :仮払金, class:'akaji' %>
-      <%= f.text_field :仮払金, size:2, disabled: true, class: 'form-control' %>
-    </div><br>
-    <div class="form-group">
-      <%= f.label :旅費交通費合計 %>
-      <%= f.text_field :旅費合計, size:2, disabled: true, class: 'form-control' %>
-      <%= f.label :支給品, class:'akaji' %>
-      <%= f.text_field :支給品, size:2, disabled: true, class: 'form-control' %>
-      <%= f.label :過不足 %>
-      <%= f.text_field :過不足, size:2, disabled: true, class: 'form-control' %>
-    </div><br>
-    <div class="form-group">
-      <%= f.label '経　費　合　計' %>
-      <%= f.text_field :合計, size:2, disabled: true, class: 'form-control' %>
-      <%= f.check_box :承認kubun %>
-      <%= f.label :承認要求 %>
-      <%= f.label :承認 %>
-      <%= f.text_field  :承認者, size:4, disabled: true, class: 'form-control'%>
-      <%= Shainmaster.find_by(id: @keihi.承認者).氏名 %>
-      <div class="editor-datetime">
-        <%= f.label :清算予定日 %>
-        <%= f.text_field :清算予定日, size:10, disabled: true, class: 'form-control' %>
+    <div class="row">
+      <div class=" col-md-12 col-xs-12 col-sm-12 col-lg-12 ">
+        <div class=" col-md-7 col-xs-7 col-sm-7 col-lg-7 ">
+          <div class=" col-md-2 col-xs-2 col-sm-2 col-lg-2 col-md-offset-1 col-xs-offset-1 col-sm-offset-1 col-lg-offset-1">
+            <%= f.input :交通費合計, size:4, disabled: true, class: 'form-control', input_html: { :style=> 'width: 100%;'} %>
+          </div>
+          <div class=" col-md-2 col-xs-2 col-sm-2 col-lg-2">
+            <%= f.input :日当合計, size:2, disabled: true, class: 'form-control', input_html: { :style=> 'width: 100%;'}%>
+          </div>
+          <div class=" col-md-2 col-xs-2 col-sm-2 col-lg-2">
+            <%= f.input :宿泊費合計, size:2, disabled: true, class: 'form-control', input_html: { :style=> 'width: 100%;'}%>
+          </div>
+          <div class=" col-md-4 col-xs-4 col-sm-4 col-lg-3">
+            <%= f.input :旅費合計, size:4, disabled: true, class: 'form-control', input_html: { :style=> 'width: 100%;'}, label: "旅費交通費合計"%>
+          </div>
+          <div class=" col-md-2 col-xs-2 col-sm-2 col-lg-2">
+            <%= f.input :その他合計, size:2, disabled: true, class: 'form-control', input_html: { :style=> 'width: 100%;'} %>
+          </div>
+        </div>
+        <div class=" col-md-4 col-xs-4 col-sm-4 col-lg-4 ">
+          <div class=" col-md-4 col-xs-4 col-sm-4 col-lg-4">
+            <%= f.input :仮払金, disabled: true, class: 'form-control', input_html: { :style=> 'width: 100%;'}, :label_html => {:class => "akaji"} %>
+          </div>
+          <div class=" col-md-4 col-xs-4 col-sm-4 col-lg-4">
+            <%= f.input :過不足, disabled: true, class: 'form-control', input_html: { :style=> 'width: 100%;'} %>
+          </div>
+          <div class=" col-md-4 col-xs-4 col-sm-4 col-lg-4">
+            <%= f.input :支給品, disabled: true, class: 'form-control', input_html: { :style=> 'width: 100%;'}, :label_html => {:class => "akaji"} %>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="row">
+      <div class=" col-md-12 col-xs-12 col-sm-12 col-lg-12 ">
+        <div class=" col-md-7 col-xs-7 col-sm-7 col-lg-7 ">
+          <div class=" col-md-3 col-xs-3 col-sm-3 col-lg-3 col-md-offset-1 col-xs-offset-1 col-sm-offset-1 col-lg-offset-1">
+            <!-- <%= f.input :合計, class: 'form-control', input_html: { :style=> 'width: 100%;'}, disabled: true %> -->
+            <%= f.label '経費合計' %>
+            <%= f.text_field :合計, style: 'width: 100%;', disabled: true, class: 'form-control' %>
+          </div>
+          <div class=" col-md-2 col-xs-2 col-sm-2 col-lg-2 col-md-offset-6 col-xs-offset-6 col-sm-offset-6 col-lg-offset-6">
+            <%= f.label :承認要求 %>
+            <div></div>
+            <%= f.check_box :承認kubun, disabled: true %>
+          </div>
+        </div>
+        <div class=" col-md-4 col-xs-4 col-sm-4 col-lg-4 ">
+          <div class=" col-md-5 col-xs-5 col-sm-5 col-lg-5">
+            <!-- <%= f.input :承認者,:input_html => { :size => 10}, disabled: true %> -->
+            <%= f.label :承認者 %>
+            <%= f.text_field  :承認者 , style: 'width: 100%;', disabled: true, class: 'form-control'%>
+
+          </div>
+          <div class=" col-md-6 col-xs-6 col-sm-6 col-lg-6">
+            <!-- <%= f.input :清算予定日, size: 10, class: 'form-control',:input_html => { :size => 10}%> -->
+            <%= f.label :清算予定日 %>
+            <%= f.text_field :清算予定日, style: 'width: 100%;', disabled: true, class: 'form-control' %>
+          </div>
+        </div>
       </div>
     </div>
 
+ <!--    <div class="form-group">
+      <%= f.label '小　計' %>
+      <%= f.text_field :交通費合計, size:4, disabled: true, class: 'form-control' %>
+      <%= f.text_field :日当合計, size:2, disabled: true, class: 'form-control' %>
+      <%= f.text_field :宿泊費合計, size:2, disabled: true, class: 'form-control' %>
+      <%= f.text_field :その他合計, size:2, disabled: true, class: 'form-control' %>
+      <%= f.label :旅費交通費合計 %>
+      <%= f.text_field :旅費合計, size:4, disabled: true, class: 'form-control' %>
+      <%= f.label :仮払金, class:'akaji' %>
+      <%= f.text_field :仮払金, size:2, disabled: true, class: 'form-control' %>
+      <%= f.label :過不足 %>
+      <%= f.text_field :過不足, size:4, disabled: true, class: 'form-control' %>
+      <%= f.label :支給品, class:'akaji' %>
+      <%= f.text_field :支給品, size:2, disabled: true, class: 'form-control' %>
+    </div><br> -->
+    <!-- <div class="form-group">
+      <%= f.label :旅費交通費合計 %>
+      <%= f.text_field :旅費合計, size:4, disabled: true, class: 'form-control' %>
+      <%= f.label :支給品, class:'akaji' %>
+      <%= f.text_field :支給品, size:2, disabled: true, class: 'form-control' %>
+      <%= f.label :過不足 %>
+      <%= f.text_field :過不足, size:4, disabled: true, class: 'form-control' %>
+    </div><br> -->
+  <!--   <div class="form-group">
+      <%= f.label '経　費　合　計' %>
+      <%= f.text_field :合計, size:4, disabled: true, class: 'form-control' %>
+      <%= f.check_box :承認kubun , disabled: true%>
+      <%= f.label :承認要求 %>
+      <%= f.label :承認 %>
+      <%= f.text_field  :承認者, size:4, disabled: true, class: 'form-control'%>
+      <%= Shainmaster.find_by(id: @keihi.承認者).try(:氏名) %>
+      <%= f.label :清算予定日 %>
+      <%= f.text_field :清算予定日, size:10, disabled: true, class: 'form-control' %>
+
+    </div>
+ -->
 <% end %>

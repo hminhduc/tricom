@@ -1,80 +1,111 @@
-%div#back-to-top-of-guide
-%nav.navbar.navbar-inverse.navbar-fixed-top{role: :navigation}
+%nav.navbar.navbar-inverse.rarius.navbar-fixed-top
   .container-fluid
-    .navbar-header
-      %ul.nav.navbar-nav.navbar-left
-        %li= link_to " 勤務管理システム", root_path, :class => "glyphicon glyphicon-home root"
+    - if current_user
+      .navbar-header
+        / # = link_to raw((t 'title.kinmukanrishisutemu')), root_path, :class => "glyphicon glyphicon-home root navbar-brand"
+        = link_to raw("<span class='navbar-brand root'><i class='glyphicon glyphicon-home' style='margin-right:1em;'></i>"+(t 'title.kinmukanrishisutemu')+"</span>"), root_path
+      %ul.nav.navbar-nav
         %li.dropdown
           %a.dropdown-toggle{'href'=>"#", 'data-toggle'=>"dropdown", 'role'=>"button", 'aria-haspopup'=>"true", 'aria-expanded'=>"false" }
-            %span メニュー
+            %span.glyphicon.glyphicon-menu-hamburger
             %span.caret
           %ul.dropdown-menu
-            %li= link_to ' カレンダー', events_path, :class => "glyphicon glyphicon-calendar icon-left"
-            %li= link_to ' タイムライン', time_line_view_events_path, :class => "glyphicon glyphicon-list-alt icon-left"
+            %li= link_to raw("<i class='glyphicon glyphicon-list-alt' style='margin-right:1em;'></i>"+(t 'title.time_line_view')), time_line_view_events_path
+            %li= link_to raw("<i class='glyphicon glyphicon-calendar' style='margin-right:1em;'></i>"+(t 'title.event')), events_path
             %legend.menu
-            %li= link_to ' 勤務', kintais_url, :class => "glyphicon glyphicon-briefcase icon-left"
-            %li= link_to ' 経費', keihiheads_url, :class => "glyphicon glyphicon-yen icon-left"
-            %li= link_to ' 伝言', dengons_url, :class => "glyphicon glyphicon-envelope icon-left"
-            %li= link_to ' 承認', shonin_search_keihiheads_url, :class => "glyphicon glyphicon-ok icon-left"
-            %li= link_to ' 回覧', kairans_url, :class => "glyphicon glyphicon-comment icon-left"
-            %li= link_to ' 設備予約', setsubiyoyakus_url, :class => "glyphicon glyphicon-list icon-left"
+            %li= link_to raw("<i class='glyphicon glyphicon-briefcase' style='margin-right:1em;'></i>"+(t 'title.kintai')), kintais_url
+            %legend.menu
+            %li= link_to raw("<i class='glyphicon glyphicon-yen' style='margin-right:1em;'></i>"+(t 'title.kanri.keihihead')), keihiheads_url
+            %li= link_to raw("<i class='glyphicon glyphicon-ok' style='margin-right:1em;'></i>"+(t 'title.keihishonin')), shonin_search_keihiheads_url
+            %li= link_to raw("<i class='glyphicon glyphicon-yen' style='margin-right:1em;'></i>"+(t 'title.keihi_shuppi_menu')), show_keihi_shuppi_keihiheads_path
+            %legend.menu
+            %li= link_to raw("<i class='glyphicon glyphicon-envelope' style='margin-right:1em;'></i>"+(t 'title.kairan')), kairans_url
+            %li= link_to raw("<i class='glyphicon glyphicon-comment' style='margin-right:1em;'></i>"+(t 'title.dengon_menu')), dengons_url
+            %legend.menu
+            %li= link_to raw("<i class='glyphicon glyphicon-list' style='margin-right:1em;'></i>"+(t 'title.setsubiyoyaku')), setsubiyoyakus_url
+
+
         %li.dropdown
           %a.dropdown-toggle{'href'=>"#", 'data-toggle'=>"dropdown", 'role'=>"button", 'aria-haspopup'=>"true", 'aria-expanded'=>"false" }
-            %span ヘルプ
+            %span.glyphicon.glyphicon-question-sign
             %span.caret
           %ul.dropdown-menu
-            %li= link_to ' ヘルプ', helps_path, :class => "glyphicon glyphicon-question-sign icon-left"
+            %li= link_to raw("<i class='glyphicon glyphicon-question-sign' style='margin-right:1em;'></i>"+(t 'title.help')), helps_path
+            %li= link_to raw("<i class='glyphicon glyphicon-question-sign' style='margin-right:1em;'></i>"+'ヘルプ編集'), edit_help_path
+        %li.dropdown
+          .loader
 
-    .collapse.navbar-collapse
-      %ul.nav.navbar-nav.navbar-right
+      %ul.nav.navbar-nav.navbar-right.float-right
+        .search-group-select.col-md-1.col-xs-1.col-sm-1.col-lg-1
+          .margin-center.text-gray
+            %span.glyphicon.glyphicon-search#search_select{"aria-hidden" => "true"}
+        .search-group-nav.col-md-4.col-xs-8.col-sm-6.col-lg-4{hidden: :true}
+          .input-group.search-field
+            %span.input-group-addon.search-icon#search_icon
+              %span.glyphicon.glyphicon-search{"aria-hidden" => "true"}
+            %input{type: "text", class: "form-control search-input",id: :search_field, name: :search_field}
+
         - if current_user
           %li.dropdown
+            %a.dropdown-toggle{'href'=>"#", 'data-toggle'=>"dropdown", 'role'=>"button", 'aria-haspopup'=>"true", 'aria-expanded'=>"false"}
+              %span.glyphicon.glyphicon-asterisk
+              %span.caret
+            %ul.dropdown-menu
+              %li= link_to raw("<i class='glyphicon glyphicon-plus' style='margin-right:1em;'></i>"+(t 'title.newevent')), new_event_path
+              %li= link_to raw("<i class='glyphicon glyphicon-list-alt' style='margin-right:1em;'></i>"+(t 'title.task')), tasks_path
+              - if current_user.admin? || current_user.supervisor?
+                %li= link_to raw("<i class='glyphicon glyphicon-export' style='margin-right:1em;'></i>"+(t 'title.export_csv')+"!"), export_csv_index_path
+              - if current_user.shainmaster.shozokumaster.所属コード == "3"
+                %li= link_to raw("<i class='glyphicon glyphicon-list-alt' style='margin-right:1em;'></i>"+(t 'title.kanrig')), kanris_root_path
+              %li= link_to raw("<i class='glyphicon glyphicon-asterisk' style='margin-right:1em;'></i>"+(t 'title.setting')), setting_settings_path
+          %li.dropdown
             %a.dropdown-toggle{'href'=>"#", 'data-toggle'=>"dropdown", 'role'=>"button", 'aria-haspopup'=>"true", 'aria-expanded'=>"false" }
-              - if current_user.avatar.exists?
-                - image_path_origin = current_user.avatar.url
-                %span= image_tag image_path_origin, size: "30x30"
-              - else
-                %span= image_tag "/assets/thumb/missing.png", size: "30x30"
-
-              / - if avatar_image.present?avatar_image.url(:thumb).present?
-              /   %span= image_tag image_path_origin, size: "30x30"
-              / - else
-
-              / %span Main
-              / %span.caret
+              %span= image_tag current_user.avatar, size: "30x30"                           
             %ul.dropdown-menu.center
-              / - if image_path_origin.present?
-              /   %li= image_tag image_path_origin, size: "30x30"
-              - if current_user.avatar.exists?
-                - image_path_origin = current_user.avatar.url
-                %li= image_tag image_path_origin, size: "30x30"
-              - else
-                %li= image_tag "/assets/thumb/missing.png", size: "30x30"
+              %li= image_tag current_user.avatar, size: "30x30"                            
               %li= link_to current_user.try(:担当者名称).to_s, edit_user_path(current_user)
               %li.text-gray パスワード更新日：#{current_user.updated_at.to_date}
               %legend.menu
               %li= link_to ' プロファイル変更', edit_user_path(current_user), :class => "glyphicon glyphicon-edit icon-left"
               %li= link_to " ログアウト", logout_path, method: "delete", :class => "glyphicon glyphicon-log-out icon-left"
 
-          / %li.navbar-text パスワード更新日：#{current_user.updated_at.to_date}
-          / - image_path_origin = current_user.avatar.url(:thumb)
-          / - if image_path_origin.present?
-          /   - image_path_length = image_path_origin.length
-          /   - image_path = image_path_origin[1,image_path_length-1]
-          /   %li= image_tag image_path
-          / -#%li= image_tag user.avatar.url(:thumb)
-          / %li= link_to current_user.try(:担当者名称).to_s, edit_user_path(current_user)
-          %li.dropdown
-            %a.dropdown-toggle{'href'=>"#", 'data-toggle'=>"dropdown", 'role'=>"button", 'aria-haspopup'=>"true", 'aria-expanded'=>"false"}
-              %span.glyphicon.glyphicon-asterisk
-              %span.caret
-            %ul.dropdown-menu
+          - kairans = Kairanshosai.where(対象者: session[:user], 状態: 0)
+          - dengons = Dengon.where(社員番号: session[:user], 確認: false)
+          - messages = Message.all.where(conversation_id: (Conversation.involving(current_user).map(&:id)),read_at: nil).joins(:user).where("担当者マスタ.担当者コード!= ?",current_user.id).order(created_at: :desc)
+          - count_total = kairans.count + dengons.count + messages.count
+          - if count_total > 0
+            %li.dropdown
+              %a.dropdown-toggle{'href'=>"#", 'data-toggle'=>"dropdown", 'role'=>"button", 'aria-haspopup'=>"true", 'aria-expanded'=>"false" }
+                %i{class: 'glyphicon glyphicon-bell text-red'}
+                %span{class: 'message-count text-red'} #{count_total}
+              %ul.dropdown-menu.message-item
+                - if messages.count > 0
+                  - messages.each do |message|
+                    - naiyou = message.body.length > 12 ? "#{message.body[0...12]}..." : message.body
+                    %li= link_to raw('&nbsp;&nbsp;&nbsp;')+ message.user.name+': '+naiyou, "#", class: "fa fa-wechat icon-left start-conversation","data-sid" => message.conversation.sender_id, "data-rip" => message.conversation.recipient_id
+                - if kairans.count > 0
+                  - if messages.count > 0
+                    %legend.menu
+                  - kairans.each do |kairan|
+                    - naiyou = kairan.内容.length > 12 ? "#{kairan.内容[0...12]}..." : kairan.内容
+                    %li= link_to ' '+ naiyou, "/kairans?locale=ja&search="+kairan.内容, :class => "glyphicon glyphicon-envelope icon-left"
+                - if dengons.count > 0
+                  - if kairans.count > 0 || messages.count > 0
+                    %legend.menu
+                  - dengons.each do |dengon|
+                    - naiyou = dengon.伝言内容.length > 12 ? "#{dengon.伝言内容[0...12]}..." : dengon.伝言内容
+                    %li= link_to ' '+ naiyou, "/dengons?locale=ja&search="+dengon.伝言内容, :class => "glyphicon glyphicon-comment icon-left"
+          - else
+            %li.dropdown
+              %a.dropdown-toggle{'href'=>"#", 'data-toggle'=>"dropdown", 'role'=>"button", 'aria-haspopup'=>"true", 'aria-expanded'=>"false" }
+                %i{class: 'glyphicon glyphicon-bell'}
+                %span{class: 'message-count'}
+              %ul.dropdown-menu.message-item{style: "display: none"}
 
-              - if current_user.admin? || current_user.supervisor?
-                %li= link_to ' データをエクスポート!', export_csv_index_path, :class => "glyphicon glyphicon-export icon-left"
-              - if current_user.shainmaster.shozokumaster.所属コード == "3"
-                %li= link_to ' 管理G', kanris_root_path, :class => "glyphicon glyphicon-list-alt icon-left"
-              %li= link_to ' 設定', setting_settings_path, :class => "glyphicon glyphicon-asterisk"
+
+
         - else
-          %li= link_to 'ログイン', login_path
-
+          %li= link_to (t 'title.login'), login_path
+    - else
+      / = link_to raw(t 'title.kinmukanrishisutemu'), root_path, :class => "glyphicon glyphicon-home root navbar-brand"
+      = link_to raw("<span class='navbar-brand root'><i class='glyphicon glyphicon-home' style='margin-right:1em;'></i>"+(t 'title.kinmukanrishisutemu')+"</span>"), root_path

@@ -1,0 +1,11 @@
+$('#kaisha-edit-modal').modal('hide');
+
+oKaisha_modal.rows('tr.selected').remove().draw();
+
+var table = $('#kaisha-table-modal').DataTable();
+
+var row = table.row.add( ["<%=@kaishamaster.会社コード%>","<%=@kaishamaster.会社名%>","<%=@kaishamaster.備考%>"] ).draw( false ).nodes().to$();
+row.addClass('selected');
+row.addClass('success');
+$("#edit_kaishamaster").attr("disabled", false);
+$("#destroy_kaishamaster").attr("disabled", false);

@@ -3,21 +3,29 @@
     %thead
     %tr
       %th{rowspan:"2"} 日付
-      %th{rowspan:"2"} 相手先名
-
+      %th{rowspan:"2"} 相手先/JOB番号 <br><br> ※イベント参照
       %th{colspan:"4"}　旅　費　交　通　費　
-
       %th{rowspan:"2"} その他
-      %th{rowspan:"2"} JobNo</th>
-      %th{rowspan:"2"} 備考</th>
-      %th{rowspan:"2"} 領収書</th>
-      %th{rowspan:"2"} </th>
+      %th{rowspan:"2"} 備考
+      %th{rowspan:"2"} 領収書
+      %th{rowspan:"2"}
     %tr
-      %th 機関名
-      %th 発/着
-      %th 交通費
-      %th 日当/宿泊
+      / %th{style: "background-color: rgb(249, 249, 249)"} ※イベント参照
+      %th{style: "background-color: rgb(249, 249, 249)"} 機関名
+      %th{style: "background-color: rgb(249, 249, 249)"} 発/着
+      %th{style: "background-color: rgb(249, 249, 249)"} 交通費
+      %th{style: "background-color: rgb(249, 249, 249)"} 日当/宿泊
     %tbody
       = f.simple_fields_for :keihibodies do |body|
         = render 'keihibody_row', f: body
 = link_to_add_row "行追加", f, :keihibodies
+
+= f.button :button, ' 前行複写 ', class: 'copy-all', type: 'button', id: 'copy-all'
+.delete-all
+  = f.button :button, ' 全行削除 ', class: 'delete-all', type: 'button', id: 'delete-all'
+.spacer
+  .row
+.col-md-9.col-xs-9.col-sm-9.col-lg-9.col-md-offset-3.col-xs-offset-3.col-sm-offset-3.col-lg-offset-3
+  = f.button :button, ' 集 計 す る ', class: 'summary', type: 'button'
+.spacer
+  .row

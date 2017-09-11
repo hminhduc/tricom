@@ -7,7 +7,27 @@ $(function(){
     //var firstHour = new Date().getUTCHours();
     var scroll = -1,
         viewNames = ['agendaWeek', 'agendaDay', 'timelineDay'];
+
     $.getJSON('/events', function(data) {
+        var myEventSourses = '';
+        if(data.setting.select_holiday_vn == "1")
+            myEventSourses = [
+                    {
+                        googleCalendarId: 'en.japanese#holiday@group.v.calendar.google.com',
+                        color: 'green'
+                    }
+                    ,{
+                        googleCalendarId: 'en.vietnamese#holiday@group.v.calendar.google.com',
+                        color: 'blue'
+                    }
+                ];
+        else
+            myEventSourses = [
+                    {
+                        googleCalendarId: 'en.japanese#holiday@group.v.calendar.google.com',
+                        color: 'green'
+                    }
+                ];
         var calendar = $('#calendar-month-view').fullCalendar(
             {
                 schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
@@ -22,7 +42,7 @@ $(function(){
                 //    // days of week. an array of zero-based day of week integers (0=Sunday)
                 //    // (Monday-Freeday in this example)
                 //},
-                //firstDay: 1,
+                firstDay: 1,
                 //editable: true,
                 //aspectRatio: 1.5,/
                 //resourceAreaWidth: '30%',
@@ -32,17 +52,9 @@ $(function(){
                 //minTime: '00:00:00',
                 //maxTime: '24:00:00',
                 //eventOverlap: false,
+                nowIndicator: true,
                 googleCalendarApiKey: 'AIzaSyDOeA5aJ29drd5dSAqv1TW8Dvy2zkYdsdk',
-                eventSources: [
-                    {
-                        googleCalendarId: 'en.japanese#holiday@group.v.calendar.google.com',
-                        color: 'green'
-                    }
-                    ,{
-                        googleCalendarId: 'en.vietnamese#holiday@group.v.calendar.google.com',
-                        color: 'blue'
-                    }
-                ],
+                eventSources: myEventSourses,
                 schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                 //defaultView: 'timelineDay',
                 events: data.my_events,
@@ -52,12 +64,14 @@ $(function(){
                     center: 'month,agendaWeek,agendaDay prevYear,nextYear',
                     right:  'today prev,next'
                 },
+                dragOpacity: "0.5",
+                editable: true,
                 dayClick: function(date, jsEvent, view) {
                    //window.open('http://misuzu.herokuapp.com/events/new?start_at='+date.format());
                    var calendar = document.getElementById('calendar-month-view');
 
                     calendar.ondblclick = function() {
-                       window.open('/events/new?start_at='+date.format());
+                       location.href='/events/new?start_at='+date.format();
 
                     }
                     //alert(data.sUrl);
@@ -73,10 +87,11 @@ $(function(){
                         // contentType: 'application/json',
 
                         success: function(data) {
+                            var color = element.css("background-color");
                             element.append("<button id='bt-hoshu-1"+date.format()+"' onclick='showModal(\""+date.format()+"\",\"0\"); return false;' "+
                                     "value=1 class='btn btn-hoshu' type='button'>携帯</button>"+
                                     "<button id='bt-hoshu-0"+date.format()+"' onclick='showModal(\""+date.format()+"\",\"1\"); return false;' "+
-                                    "value=0 class='btn btn-primary btn-text' type='button'>携帯</button>");
+                                    "value=0 class='btn btn-text' style='background-color:"+color+"' type='button'>携帯</button>");
                             if(data.kintai_hoshukeitai == 1){
                                 $('#bt-hoshu-1'+date.format()).show();
                                 $('#bt-hoshu-0'+date.format()).hide();
@@ -114,6 +129,39 @@ $(function(){
                             .replaceWith('<div>'+event.job+'</div>'+'<div>'+event.comment+'</div>');
                         }
                     }
+                },
+                eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc) {
+                   // alert(event.title + " was dropped on " + event.start.format());
+                    updateEvent(event);
+                },
+
+
+                eventResize: function(event, dayDelta, minuteDelta, revertFunc) {
+                    updateEvent(event);
+                }
+                ,eventMouseover: function(event, jsEvent, view) {
+                    var tooltip = '<div class="tooltipevent hover-end">' +'<div>'+ event.start.format("YYYY/MM/DD HH:mm") +'</div>' +'<div>'+ event.end.format("YYYY/MM/DD HH:mm")+'</div>' +'<div>'+ event.title +'</div>' ;
+                    if(event.job != undefined){
+                        tooltip = tooltip + '<div>'+event.job+'</div>'
+                    }
+                    if(event.comment != undefined){
+                        tooltip = tooltip + '<div>'+event.comment+'</div>'
+                    }
+                    tooltip = tooltip +'</div>'
+                    $("body").append(tooltip);
+                    $(this).mouseover(function(e) {
+                        $(this).css('z-index', 10000);
+                        $('.tooltipevent').fadeIn('500');
+                        $('.tooltipevent').fadeTo('10', 1.9);
+                    }).mousemove(function(e) {
+                        $('.tooltipevent').css('top', e.pageY + 10);
+                        $('.tooltipevent').css('left', e.pageX + 20);
+                    });
+                },
+
+                eventMouseout: function(event, jsEvent, view) {
+                    $(this).css('z-index', 8);
+                    $('.tooltipevent').remove();
                 }
             }
         );
@@ -252,35 +300,88 @@ $(document).ready(function(){
     //     $('#after_div').show();
     // });
     // $('#after_div').modal('hide');
+    $(document).bind('ajaxError', 'form#new_mybashomaster', function(event, jqxhr, settings, exception){
+
+        // note: jqxhr.responseJSON undefined, parsing responseText instead
+        $(event.data).render_form_errors( $.parseJSON(jqxhr.responseText) );
+
+    });
+
+    $(document).bind('ajaxError', 'form#new_kaishamaster', function(event, jqxhr, settings, exception){
+
+        // note: jqxhr.responseJSON undefined, parsing responseText instead
+        $(event.data).render_form_errors( $.parseJSON(jqxhr.responseText) );
+
+    });
+
 
 });
+
+(function($) {
+
+  $.fn.render_form_errors = function(errors){
+
+    $form = this;
+    this.clear_previous_errors();
+    model = this.data('model');
+
+    // show error messages in input form-group help-block
+    $.each(errors, function(field, messages){
+      $input = $('input[name="' + model + '[' + field + ']"]');
+      $input.closest('.form-group').addClass('has-error').find('.help-block').html( messages.join(' & ') );
+    });
+
+  };
+
+  $.fn.clear_previous_errors = function(){
+    $('.form-group.has-error', this).each(function(){
+      $('.help-block', $(this)).html('');
+      $(this).removeClass('has-error');
+    });
+  }
+
+}(jQuery));
+
 // readjust sizing after font load
 $(window).on('load', function() {
     $('#calendar-timeline').fullCalendar('render');
     $('#goto-date-input').val(moment().format('YYYY/MM/DD'));
+    var strtime = new Date($("#event_開始").val());
 
-    if ($('#event_状態コード').val() == "30"){
+    var joutai = $('#event_状態コード').val()
+    var joutai_kubun = ''
+    oJoutaiTable.rows().every( function( rowIdx, tableLoop, rowLoop ){
+        var data = this.data();
+        if( data[0] == joutai){
+            joutai_kubun = data[3]
+        }
+    });
+    if (joutai_kubun == '1' || joutai_kubun == '5') {
+        $('#event_場所コード').prop( "disabled", false );
+        $('#event_JOB').prop( "disabled", false );
+        $('#event_工程コード').prop( "disabled", false );
+        $('#basho_search').prop( "disabled", false );
+        $('#koutei_search').prop( "disabled", false )
+    }else {
         $('#event_場所コード').prop( "disabled", true );
         $('#event_JOB').prop( "disabled", true );
         $('#event_工程コード').prop( "disabled", true );
         $('#basho_search').prop( "disabled", true );
         $('#koutei_search').prop( "disabled", true );
-
-    }else{
-        $('#event_場所コード').prop( "disabled", false );
-        $('#event_JOB').prop( "disabled", false );
-        $('#event_工程コード').prop( "disabled", false );
-        $('#basho_search').prop( "disabled", false );
-        $('#koutei_search').prop( "disabled", false );
-
     }
 
 });
 
 //toggle_calendar
 $(function () {
-    $('#toggle-calendar-goto').click(function () {
-        $('#goto-date-input').data("DateTimePicker").toggle();
+    $('#goto-date-input').click(function () {
+        $('.datetime_search').data("DateTimePicker").toggle();
+    });
+    $('#event_開始').click(function () {
+        $('.event_開始 .datetime').data("DateTimePicker").toggle();
+    });
+    $('#event_終了').click(function () {
+        $('.event_終了 .datetime').data("DateTimePicker").toggle();
     });
     $('#save').click(function () {
         var hoshukeitai = $("#kintai_保守携帯回数").val();
@@ -322,117 +423,515 @@ $(function () {
     $('#mybasho_destroy').click(function (){
         var mybasho_id = oMybashoTable.row('tr.selected').data();
         var shain = $('#event_社員番号').val();
-        $.ajax({
-            url: '/events/ajax',
-            data: {id: 'mybasho_削除する',mybasho_id: mybasho_id[1],shain: shain},
-            type: "POST",
+        if( mybasho_id == undefined)
+            swal($('#message_confirm_select').text())
+        else{
+            swal({
+                title: $('#message_confirm_delete').text(),
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "OK",
+                cancelButtonText: "キャンセル",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }).then(function() {
+                $.ajax({
+                    url: '/events/ajax',
+                    data: {id: 'mybasho_削除する',mybasho_id: mybasho_id[1],shain: shain},
+                    type: "POST",
 
-            success: function(data) {
-               if(data.destroy_success != null){
-                    console.log("getAjax destroy_success:"+ data.destroy_success);
-                    // $('#mybasho_table').find('tr.selected').remove();
-                    // $("#mybasho_table").dataTable().fnDraw();
-                    $("#mybasho_table").dataTable().fnDeleteRow($('#mybasho_table').find('tr.selected').remove());
-                    $("#mybasho_table").dataTable().fnDraw();
+                    success: function(data) {
+                       if(data.destroy_success != null){
+                            console.log("getAjax destroy_success:"+ data.destroy_success);
+                            oMybashoTable.rows('tr.selected').remove().draw();
+                        }
+                        else{
+                            console.log("getAjax destroy_success:"+ data.destroy_success);
+                        }
+                    },
+                    failure: function() {
+                        console.log("mybasho_削除する keydown Unsuccessful");
+                    }
+                });
+                $("#mybasho_destroy").addClass("disabled");
+            }, function(dismiss) {
+                if (dismiss === 'cancel') {
+                    $("#myjob_destroy").removeClass("disabled");
                 }
-                else{
+            });
+        }
 
-                    console.log("getAjax destroy_success:"+ data.destroy_success);
-                }
-            },
-            failure: function() {
-                console.log("mybasho_削除する keydown Unsuccessful");
-            }
-        });
-        $('#event_場所コード').val('');
-        //$('#basho_name').text(d[1]);
-        $('.hint-basho-refer').text('');
-
-        // $('#mybasho_search_modal').modal('hide');
-        // $('#mybasho_search_modal').modal('show');
     });
 
     $('#myjob_destroy').click(function (){
         var myjob_id = oMyjobTable.row('tr.selected').data();
         var shain = $('#event_社員番号').val();
-        $.ajax({
-            url: '/events/ajax',
-            data: {id: 'myjob_削除する',myjob_id: myjob_id[1],shain: shain},
-            type: "POST",
 
-            success: function(data) {
-               if(data.destroy_success != null){
-                    console.log("getAjax destroy_success:"+ data.destroy_success);
-                    // $('#mybasho_table').find('tr.selected').remove();
-                    // $("#mybasho_table").dataTable().fnDraw();
-                    $("#myjob_table").dataTable().fnDeleteRow($('#myjob_table').find('tr.selected').remove());
-                    $("#myjob_table").dataTable().fnDraw();
+        if( myjob_id == undefined)
+            swal($('#message_confirm_select').text())
+        else{
+            swal({
+                title: $('#message_confirm_delete').text(),
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "OK",
+                cancelButtonText: "キャンセル",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }).then(function() {
+                $.ajax({
+                    url: '/events/ajax',
+                    data: {id: 'myjob_削除する',myjob_id: myjob_id[1],shain: shain},
+                    type: "POST",
+
+                    success: function(data) {
+                       if(data.destroy_success != null){
+                            console.log("getAjax destroy_success:"+ data.destroy_success);
+                            oMyjobTable.rows('tr.selected').remove().draw();
+                        }
+                        else{
+
+                            console.log("getAjax destroy_success:"+ data.destroy_success);
+                        }
+                    },
+                    failure: function() {
+                        console.log("myjob_削除する keydown Unsuccessful");
+                    }
+                });
+                $("#myjob_destroy").addClass("disabled");
+
+            }, function(dismiss) {
+                if (dismiss === 'cancel') {
+                    $("#myjob_destroy").removeClass("disabled");
                 }
-                else{
-
-                    console.log("getAjax destroy_success:"+ data.destroy_success);
-                }
-            },
-            failure: function() {
-                console.log("myjob_削除する keydown Unsuccessful");
-            }
-        });
-        $('#event_JOB').val('');
-        //$('#basho_name').text(d[1]);
-        $('.hint-job-refer').text('');
-
-        // $('#mybasho_search_modal').modal('hide');
-        // $('#mybasho_search_modal').modal('show');
+            });
+        }
     });
 
-    $('#koutei_sentaku_ok_mybasho').click(function(){
-        var mybasho_id = oBashoTable.row('tr.selected').data();
-        var shain = $('#event_社員番号').val();
-        $.ajax({
-            url: '/events/ajax',
-            data: {id: 'basho_selected',mybasho_id: mybasho_id[0],shain: shain},
-            type: "POST",
 
-            success: function(data) {
-               if(data.mybasho_id != null){
-                    console.log("getAjax mybasho_id:"+ data.mybasho_id);
-
-                }
-                else{
-
-                    console.log("getAjax mybasho_id:"+ data.mybasho_id);
-                }
-            },
-            failure: function() {
-                console.log("basho_selected keydown Unsuccessful");
-            }
-        });
+    $('#mybasho_sentaku_ok').click(function(){
+        var d = oMybashoTable.row('tr.selected').data();
+        if(d!= undefined){
+            $('#event_場所コード').val(d[1]);
+            $('.hint-basho-refer').text(d[2]);
+            $('#event_場所コード').closest('.form-group').find('span.help-block').remove();
+            $('#event_場所コード').closest('.form-group').removeClass('has-error');
+        }
     });
 
-    $('#job_sentaku_ok').click(function(){
-
-        var myjob_id = oJobTable.row('tr.selected').data();
-        var shain = $('#event_社員番号').val();
-        $.ajax({
-            url: '/events/ajax',
-            data: {id: 'job_selected',myjob_id: myjob_id[0],shain: shain},
-            type: "POST",
-
-            success: function(data) {
-               if(data.myjob_id != null){
-                    console.log("getAjax myjob_id:"+ data.myjob_id);
-
-                }
-                else{
-
-                    console.log("getAjax myjob_id:"+ data.myjob_id);
-                }
-            },
-            failure: function() {
-                console.log("job_selected keydown Unsuccessful");
-            }
-        });
+    $('#mybasho_table tbody').on( 'dblclick', 'tr', function () {
+        $(this).addClass('selected');
+        $(this).addClass('success');
+        var d = oMybashoTable.row('tr.selected').data();
+        if(d!= undefined){
+            $('#event_場所コード').val(d[1]);
+            $('.hint-basho-refer').text(d[2]);
+            $('#event_場所コード').closest('.form-group').find('span.help-block').remove();
+            $('#event_場所コード').closest('.form-group').removeClass('has-error');
+        }
+        $('#mybasho_search_modal').modal('hide')
     });
+
+    $('#myjob_sentaku_ok').click(function(){
+        var d = oMyjobTable.row('tr.selected').data();
+        if(d!= undefined){
+            $('#event_JOB').val(d[1]);
+            $('.hint-job-refer').text(d[2]);
+            $('#event_JOB').closest('.form-group').find('span.help-block').remove();
+            $('#event_JOB').closest('.form-group').removeClass('has-error');
+        }
+    });
+
+    $('#myjob_table tbody').on( 'dblclick', 'tr', function () {
+        $(this).addClass('selected');
+        $(this).addClass('success');
+        var d = oMyjobTable.row('tr.selected').data();
+        if(d!= undefined){
+            $('#event_JOB').val(d[1]);
+            $('.hint-job-refer').text(d[2]);
+            $('#event_JOB').closest('.form-group').find('span.help-block').remove();
+            $('#event_JOB').closest('.form-group').removeClass('has-error');
+        }
+        $('#myjob_search_modal').modal('hide')
+    });
+
+    $('#clear_mybasho').click(function () {
+
+        oMybashoTable.$('tr.selected').removeClass('selected');
+        oMybashoTable.$('tr.success').removeClass('success');
+        $("#mybasho_destroy").addClass("disabled");
+
+    } );
+
+
+
+    $('#clear_myjob').click(function () {
+
+        oMyjobTable.$('tr.selected').removeClass('selected');
+        oMyjobTable.$('tr.success').removeClass('success');
+        $("#myjob_destroy").addClass("disabled");
+    } );
+
+    $('#destroy_event').click(function(){
+        var events = oEventTable.rows('tr.selected').data();
+        var eventIds = new Array();
+        if( events.length == 0)
+          swal($('#message_confirm_select').text());
+        else{
+            swal({
+                title: $('#message_confirm_delete').text(),
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "OK",
+                cancelButtonText: "キャンセル",
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }).then(function() {
+                var len = events.length;
+
+                var i=0;
+                for(i=0;i<len;i++)
+                  eventIds[i] = events[i][0];
+
+                $.ajax({
+                  url: '/events/ajax',
+                  data:{
+                    id: 'event_destroy',
+                    events: eventIds
+                  },
+
+                  type: "POST",
+
+                  success: function(data){
+                    swal("削除されました!", "", "success");
+                    if (data.destroy_success != null){
+                        console.log("getAjax destroy_success:"+ data.destroy_success);
+                        oEventTable.rows('tr.selected').remove().draw();
+                        // $("#event_table").dataTable().fnDeleteRow($('#event_table').find('tr.selected').remove());
+                        // $("#event_table").dataTable().fnDraw();
+                        for(i=0;i<len;i++)
+                            $('#calendar-month-view').fullCalendar('removeEvents',eventIds[i]);
+
+                    }else
+                        console.log("getAjax destroy_success:"+ data.destroy_success);
+                    },
+                  failure: function(){
+                    console.log("event_destroy keydown Unsuccessful");
+                  }
+
+                });
+
+                $("#destroy_event").addClass("disabled");
+            }, function(dismiss) {
+                if (dismiss === 'cancel') {
+
+                    var selects = oEventTable.rows('tr.selected').data();
+                    if( selects.length == 0)
+                      $("#destroy_event").addClass("disabled", true);
+                    else
+                      $("#destroy_event").removeClass("disabled");
+                }
+            });
+          // var response = confirm($('#message_confirm_delete').text());
+          // if(response){
+          //   var len = events.length;
+
+          //   var i=0;
+          //   for(i=0;i<len;i++)
+          //     eventIds[i] = events[i][0];
+
+          //   $.ajax({
+          //     url: '/events/ajax',
+          //     data:{
+          //       id: 'event_destroy',
+          //       events: eventIds
+          //     },
+
+          //     type: "POST",
+
+          //     success: function(data){
+          //       if (data.destroy_success != null){
+          //           console.log("getAjax destroy_success:"+ data.destroy_success);
+          //           $("#event_table").dataTable().fnDeleteRow($('#event_table').find('tr.selected').remove());
+          //           $("#event_table").dataTable().fnDraw();
+          //           for(i=0;i<len;i++)
+          //               $('#calendar-month-view').fullCalendar('removeEvents',eventIds[i]);
+
+          //       }else
+          //           console.log("getAjax destroy_success:"+ data.destroy_success);
+          //       },
+          //     failure: function(){
+          //       console.log("event_destroy keydown Unsuccessful");
+          //     }
+
+          //   });
+
+          //   $("#destroy_event").addClass("disabled");
+          // }else{
+          //   var selects = oEventTable.rows('tr.selected').data();
+          //   if( selects.length == 0)
+          //     $("#destroy_event").addClass("disabled");
+          //   else
+          //     $("#destroy_event").removeClass("disabled");
+          // }
+        }
+    });
+
+    // $('#destroy_event_footer').click(function(){
+    //     var events = oEventTable_Footer.rows('tr.selected').data();
+    //     var eventIds = new Array();
+    //     if( events.length == 0)
+    //       swal($('#message_confirm_select').text());
+    //     else{
+    //         swal({
+    //             title: $('#message_confirm_delete').text(),
+    //             text: "",
+    //             type: "warning",
+    //             showCancelButton: true,
+    //             confirmButtonColor: "#DD6B55",
+    //             confirmButtonText: "OK",
+    //             cancelButtonText: "キャンセル",
+    //             closeOnConfirm: false,
+    //             closeOnCancel: false
+    //         }).then(function() {
+    //             var len = events.length;
+
+    //             var i=0;
+    //             for(i=0;i<len;i++)
+    //               eventIds[i] = events[i][0];
+
+    //             $.ajax({
+    //               url: '/events/ajax',
+    //               data:{
+    //                 id: 'event_destroy',
+    //                 events: eventIds
+    //               },
+
+    //               type: "POST",
+
+    //               success: function(data){
+    //                 swal("削除されました!", "", "success");
+    //                 if (data.destroy_success != null){
+    //                     console.log("getAjax destroy_success:"+ data.destroy_success);
+    //                     oEventTable_Footer.rows('tr.selected').remove().draw();
+    //                     // $("#event_table").dataTable().fnDeleteRow($('#event_table').find('tr.selected').remove());
+    //                     // $("#event_table").dataTable().fnDraw();
+    //                     for(i=0;i<len;i++)
+    //                         $('#calendar-month-view').fullCalendar('removeEvents',eventIds[i]);
+
+    //                 }else
+    //                     console.log("getAjax destroy_success:"+ data.destroy_success);
+    //                 },
+    //               failure: function(){
+    //                 console.log("event_destroy keydown Unsuccessful");
+    //               }
+
+    //             });
+
+    //             $("#destroy_event_footer").addClass("disabled");
+    //         }, function(dismiss) {
+    //             if (dismiss === 'cancel') {
+
+    //                 var selects = oEventTable_Footer.rows('tr.selected').data();
+    //                 if( selects.length == 0)
+    //                   $("#destroy_event_footer").addClass("disabled");
+    //                 else
+    //                   $("#destroy_event_footer").removeClass("disabled");
+    //             }
+    //         });
+    //     }
+    // });
+
+     $('#export_event').click(function(){
+        location.href='/events/export_csv.csv?locale=ja';
+     });
+
+    $('#print_event').click(function(){
+        if( $("#selectDay").css('display') == 'none'){
+            $("#selectDay").css('display', '');
+            $("#print_event_job").addClass("disabled");
+            $("#print_event_koutei").addClass("disabled");
+            $("#print_pdf_event").css('display', '');
+            $("#print_pdf_job").css('display', 'none');
+            $("#print_pdf_koutei").css('display', 'none');
+            var currentDate = new Date();
+            var startOfWeek = moment().startOf('isoweek').format('YYYY/MM/DD');
+            var endOfWeek   = moment().endOf('isoweek').format('YYYY/MM/DD');
+            $("#date_start_input").val(startOfWeek);
+            $("#date_end_input").val(endOfWeek);
+
+            // //set minDate and maxDate for datetimepicker
+            // var dateCurrent = $('#calendar-month-view').fullCalendar('getDate');
+            // var minDate = dateCurrent.startOf("month").format("DD-MM-YYYY");
+            // var maxDate = dateCurrent.endOf("month").format("DD-MM-YYYY");
+            // $('.date_start_select').data("DateTimePicker").minDate(minDate);
+            // $('.date_start_select').data("DateTimePicker").maxDate(maxDate);
+            // $('.date_end_select').data("DateTimePicker").minDate(minDate);
+            // $('.date_end_select').data("DateTimePicker").maxDate(maxDate);
+
+
+        }
+        else{
+            $("#selectDay").css('display', 'none');
+            $("#print_event_job").removeClass("disabled");
+            $("#print_event_koutei").removeClass("disabled");
+        }
+    });
+    $('#print_event_job').click(function(){
+        if( $("#selectDay").css('display') == 'none'){
+            $("#selectDay").css('display', '');
+            $("#print_event").addClass("disabled");
+            $("#print_event_koutei").addClass("disabled");
+            $("#print_pdf_event").css('display', 'none');
+            $("#print_pdf_job").css('display', '');
+            $("#print_pdf_koutei").css('display', 'none');
+            var currentDate = new Date();
+            var startOfWeek = moment().startOf('isoweek').format('YYYY/MM/DD');
+            var endOfWeek   = moment().endOf('isoweek').format('YYYY/MM/DD');
+            $("#date_start_input").val(startOfWeek);
+            $("#date_end_input").val(endOfWeek);
+        }
+        else{
+            $("#selectDay").css('display', 'none');
+            $("#print_event").removeClass("disabled");
+            $("#print_event_koutei").removeClass("disabled");
+        }
+    });
+    $('#print_event_koutei').click(function(){
+        if( $("#selectDay").css('display') == 'none'){
+            $("#selectDay").css('display', '');
+            $("#print_event").addClass("disabled");
+            $("#print_event_job").addClass("disabled");
+            $("#print_pdf_event").css('display', 'none');
+            $("#print_pdf_job").css('display', 'none');
+            $("#print_pdf_koutei").css('display', '');
+            var currentDate = new Date();
+            var startOfWeek = moment().startOf('isoweek').format('YYYY/MM/DD');
+            var endOfWeek   = moment().endOf('isoweek').format('YYYY/MM/DD');
+            $("#date_start_input").val(startOfWeek);
+            $("#date_end_input").val(endOfWeek);
+        }
+        else{
+            $("#selectDay").css('display', 'none');
+            $("#print_event").removeClass("disabled");
+            $("#print_event_job").removeClass("disabled");
+        }
+    });
+    $('#print_pdf_event').click(function(){
+        window.open('/events/pdf_event_show.pdf?locale=ja&date_start='+$("#date_start_input").val()+'&date_end='+$("#date_end_input").val());
+    });
+    $('#print_pdf_job').click(function(){
+        window.open('/events/pdf_job_show.pdf?locale=ja&date_start='+$("#date_start_input").val()+'&date_end='+$("#date_end_input").val());
+    });
+    $('#print_pdf_koutei').click(function(){
+        window.open('/events/pdf_koutei_show.pdf?locale=ja&date_start='+$("#date_start_input").val()+'&date_end='+$("#date_end_input").val());
+    });
+    $('#date_start_input').click(function(){
+        $('.date_start_select').data("DateTimePicker").toggle();
+    });
+    $('#date_end_input').click(function(){
+        $('.date_end_select').data("DateTimePicker").toggle();
+    });
+
+
+
+    //Footer
+    // $('#export_event_footer').click(function(){
+    //     location.href='/events/export_csv.csv?locale=ja';
+    //  });
+
+    // $('#print_event_footer').click(function(){
+    //     if( $("#selectDay_footer").css('display') == 'none'){
+    //         $("#selectDay_footer").css('display', '');
+    //         $("#print_event_job_footer").addClass("disabled");
+    //         $("#print_event_koutei_footer").addClass("disabled");
+    //         $("#print_pdf_event_footer").css('display', '');
+    //         $("#print_pdf_job_footer").css('display', 'none');
+    //         $("#print_pdf_koutei_footer").css('display', 'none');
+    //         var currentDate = new Date();
+    //         var startOfWeek = moment().startOf('isoweek').format('YYYY/MM/DD');
+    //         var endOfWeek   = moment().endOf('isoweek').format('YYYY/MM/DD');
+    //         $("#date_start_input_footer").val(startOfWeek);
+    //         $("#date_end_input_footer").val(endOfWeek);
+
+    //         // //set minDate and maxDate for datetimepicker
+    //         // var dateCurrent = $('#calendar-month-view').fullCalendar('getDate');
+    //         // var minDate = dateCurrent.startOf("month").format("DD-MM-YYYY");
+    //         // var maxDate = dateCurrent.endOf("month").format("DD-MM-YYYY");
+    //         // $('.date_start_select').data("DateTimePicker").minDate(minDate);
+    //         // $('.date_start_select').data("DateTimePicker").maxDate(maxDate);
+    //         // $('.date_end_select').data("DateTimePicker").minDate(minDate);
+    //         // $('.date_end_select').data("DateTimePicker").maxDate(maxDate);
+
+
+    //     }
+    //     else{
+    //         $("#selectDay_footer").css('display', 'none');
+    //         $("#print_event_job_footer").removeClass("disabled");
+    //         $("#print_event_koutei_footer").removeClass("disabled");
+    //     }
+    // });
+    // $('#print_event_job_footer').click(function(){
+    //     if( $("#selectDay_footer").css('display') == 'none'){
+    //         $("#selectDay_footer").css('display', '');
+    //         $("#print_event_footer").addClass("disabled");
+    //         $("#print_event_koutei_footer").addClass("disabled");
+    //         $("#print_pdf_event_footer").css('display', 'none');
+    //         $("#print_pdf_job_footer").css('display', '');
+    //         $("#print_pdf_koutei_footer").css('display', 'none');
+    //         var currentDate = new Date();
+    //         var startOfWeek = moment().startOf('isoweek').format('YYYY/MM/DD');
+    //         var endOfWeek   = moment().endOf('isoweek').format('YYYY/MM/DD');
+    //         $("#date_start_input_footer").val(startOfWeek);
+    //         $("#date_end_input_footer").val(endOfWeek);
+    //     }
+    //     else{
+    //         $("#selectDay_footer").css('display', 'none');
+    //         $("#print_event_footer").removeClass("disabled");
+    //         $("#print_event_koutei_footer").removeClass("disabled");
+    //     }
+    // });
+    // $('#print_event_koutei_footer').click(function(){
+    //     if( $("#selectDay_footer").css('display') == 'none'){
+    //         $("#selectDay_footer").css('display', '');
+    //         $("#print_event_footer").addClass("disabled");
+    //         $("#print_event_job_footer").addClass("disabled");
+    //         $("#print_pdf_event_footer").css('display', 'none');
+    //         $("#print_pdf_job_footer").css('display', 'none');
+    //         $("#print_pdf_koutei_footer").css('display', '');
+    //         var currentDate = new Date();
+    //         var startOfWeek = moment().startOf('isoweek').format('YYYY/MM/DD');
+    //         var endOfWeek   = moment().endOf('isoweek').format('YYYY/MM/DD');
+    //         $("#date_start_input_footer").val(startOfWeek);
+    //         $("#date_end_input_footer").val(endOfWeek);
+    //     }
+    //     else{
+    //         $("#selectDay_footer").css('display', 'none');
+    //         $("#print_event_footer").removeClass("disabled");
+    //         $("#print_event_job_footer").removeClass("disabled");
+    //     }
+    // });
+    // $('#print_pdf_event_footer').click(function(){
+    //     window.open('/events/pdf_event_show.pdf?locale=ja&date_start='+$("#date_start_input_footer").val()+'&date_end='+$("#date_end_input_footer").val());
+    // });
+    // $('#print_pdf_job_footer').click(function(){
+    //     window.open('/events/pdf_job_show.pdf?locale=ja&date_start='+$("#date_start_input_footer").val()+'&date_end='+$("#date_end_input_footer").val());
+    // });
+    // $('#print_pdf_koutei_footer').click(function(){
+    //     window.open('/events/pdf_koutei_show.pdf?locale=ja&date_start='+$("#date_start_input_footer").val()+'&date_end='+$("#date_end_input_footer").val());
+    // });
+    // $('#date_start_input_footer').click(function(){
+    //     $('.date_start_select_footer').data("DateTimePicker").toggle();
+    // });
+    // $('#date_end_input_footer').click(function(){
+    //     $('.date_end_select_footer').data("DateTimePicker").toggle();
+    // });
     //$('#開始').click(function () {
     //    $('#event_開始').data("DateTimePicker").toggle();
     //});
@@ -458,8 +957,37 @@ $(function () {
         focusOnShow: false
 
     });
+    $('.datetime_search').datetimepicker({
+        format: 'YYYY/MM/DD',
+        widgetPositioning: {
+                horizontal: 'left'
+            },
+        showTodayButton: true,
+        showClear: true,
+        sideBySide: true,
+        //toolbarPlacement: 'top',
+        keyBinds: false,
+        focusOnShow: false
+    });
 
-    //$('#event_開始').datetimepicker({
+    $('.date_start_select').datetimepicker({
+        // minDate: "2017/02/01",
+        // maxDate: "2017/02/28",
+        format: 'YYYY/MM/DD'
+    });
+    $('.date_end_select').datetimepicker({
+        format: 'YYYY/MM/DD'
+    });
+
+    $('.date_start_select_footer').datetimepicker({
+        // minDate: "2017/02/01",
+        // maxDate: "2017/02/28",
+        format: 'YYYY/MM/DD'
+    });
+    $('.date_end_select_footer').datetimepicker({
+        format: 'YYYY/MM/DD'
+    });
+    // $('#event_開始').datetimepicker({
     //    format: 'YYYY/MM/DD HH:mm',
     //    showClear: true,
     //    showTodayButton: true,
@@ -470,9 +998,9 @@ $(function () {
     //    toolbarPlacement: 'top',
     //    keyBinds: false,
     //    focusOnShow: false
-    //});
-    //
-    //$('#event_終了').datetimepicker({
+    // });
+
+    // $('#event_終了').datetimepicker({
     //    format: 'YYYY/MM/DD HH:mm',
     //    showTodayButton: true,
     //    showClear: true,
@@ -483,12 +1011,32 @@ $(function () {
     //    toolbarPlacement: 'top',
     //    keyBinds: false,
     //    focusOnShow: false
-    //});
+    // });
 
-    //$("#event_開始").on("dp.change", function (e) {
-    //    $('#event_終了').data("DateTimePicker").minDate(e.date);
-    //});
-    //
+    $(".event_開始 .datetime").on("dp.change", function (e) {
+
+        var q = new Date();
+        var m = q.getMonth();
+        var d = q.getDate();
+        var y = q.getFullYear();
+
+        var date = new Date(y,m,d);
+
+        var mydate = new Date($("#event_開始").val().substring(0,10));
+        var strtime = new Date($("#event_開始").val());
+
+        date =date.toString()
+        mydate = mydate.toString()
+        if(date == mydate)
+        {
+            $("#selectShozai").css('display', '');
+        }
+        else
+        {
+            $("#selectShozai").css('display', 'none');
+        }
+    });
+
     //$("#event_終了").on("dp.change", function (e) {
     //    $('#event_開始').data("DateTimePicker").maxDate(e.date);
     //});
@@ -584,11 +1132,17 @@ $(function(){
 });
 
 // init search table
+$.fn.dataTable.ext.buttons.import = {
+    className: 'buttons-import',
+    action: function ( e, dt, node, config ) {
+        $('#import-csv-modal').modal('show');
+    }
+};
 $(function(){
     oTable = $('#user_table').DataTable({
         "pagingType": "simple_numbers"
         ,"oLanguage":{
-            "sUrl": "../../assets/resource/dataTable_ja.txt"
+            "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
         },
         columnDefs: [{
                 targets: [0],
@@ -602,62 +1156,52 @@ $(function(){
         ]
     });
 
-    oBashoTable = $('#basho_table').DataTable({
-        "pagingType": "simple_numbers"
-        ,"oLanguage":{
-            "sUrl": "../../assets/resource/dataTable_ja.txt"
-        }
-    });
 
     oMybashoTable = $('#mybasho_table').DataTable({
         "pagingType": "simple_numbers"
         ,"oLanguage":{
-            "sUrl": "../../assets/resource/dataTable_ja.txt"
+            "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
         }
     });
 
-    oJoutaiTable = $('#joutai_table').DataTable({
-        "pagingType": "simple_numbers"
-        ,"oLanguage":{
-            "sUrl": "../../assets/resource/dataTable_ja.txt"
-        }
-    });
 
     oKouteiTable = $('#koutei_table').DataTable({
         "pagingType": "simple_numbers"
         ,"oLanguage":{
-            "sUrl": "../../assets/resource/dataTable_ja.txt"
+            "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
         }
     });
 
     oShozaiTable = $('#shozai_table').DataTable({
         "pagingType": "simple_numbers"
         ,"oLanguage":{
-            "sUrl": "../../assets/resource/dataTable_ja.txt"
+            "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
         }
     });
 
-    oJobTable = $('#job_table').DataTable({
-        "pagingType": "simple_numbers"
-        ,"oLanguage":{
-            "sUrl": "../../assets/resource/dataTable_ja.txt"
-        }
-    });
+
     oMyjobTable = $('#myjob_table').DataTable({
         "pagingType": "simple_numbers"
         ,"oLanguage":{
-            "sUrl": "../../assets/resource/dataTable_ja.txt"
+            "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
         }
     });
-
+    // Event table in shousai modal
     oEventTable = $('#event_table').DataTable({
+        //"scrollX": true,
+        "dom": "<'row'<'col-md-6'l><'col-md-6'f>><'row'<'col-md-7'B><'col-md-5'p>><'row'<'col-md-12'tr>><'row'<'col-md-12'i>>",
         "pagingType": "full_numbers",
-        "oLanguage":{"sUrl": "../../assets/resource/dataTable_ja.txt"},
+        "fnDrawCallback": function( oSettings ) {
+            $('.new-btn').appendTo($('.dt-buttons'));
+            $('.edit-btn').appendTo($('.dt-buttons'));
+            $('.delete-btn').appendTo($('.dt-buttons'));
+        },
+        "oLanguage":{"sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"},
         "aoColumnDefs": [
-            {"aTargets": [0], "mRender": function (data, type, full) {
-                return '<a href="/events/' + data + '/edit">詳細</a>';
-                }
-            },
+            // {"aTargets": [1], "mRender": function (data, type, full) {
+            //     return '<a href="/events/' + data + '/edit">詳細</a>';
+            //     }
+            // },
             {"aTargets": [1,2], "mRender": function (data, type, full) {
                 var time_format = moment(data, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm');
                 if (time_format !== 'Invalid date'){
@@ -665,26 +1209,223 @@ $(function(){
                     }else return '';
                 }
             },
-            { "bSortable": false, "aTargets": [ 0 ]},
-            {"targets": [ 0 ],"searchable": false}
+            { "bSortable": false, "aTargets": [ 0,9 ]},
+            {"targets": [ 0,9 ],"searchable": false},
+            {"targets": [ 0 ],"visible": false }
             //{"targets": [1,2], "width": '11%'},
             //{"targets": [0], "width": '3%'},
             //{"targets": [7,8], "width": '6%'},
             //{"targets": [5], "width": '8%'}
         ],
-        "order": [],
+
+        // "order": [],
         "columnDefs": [
             {"targets" : 'no-sort', "orderable": false}
         ],
-        "autoWidth": true
+        "oSearch": {"sSearch": queryParameters().search},
+        "autoWidth": false,
+        "buttons": [{
+            "extend":    'copyHtml5',
+            "text":      '<i class="fa fa-files-o"></i>',
+            "titleAttr": 'Copy',
+            "exportOptions": {
+                "columns": [1,2,3,4,5,6,7,8]
+            }
+        },
+        {
+            "extend":    'excelHtml5',
+            "text":      '<i class="fa fa-file-excel-o"></i>',
+            "titleAttr": 'Excel',
+            "exportOptions": {
+                "columns": [1,2,3,4,5,6,7,8]
+            }
+        },
+        {
+            "extend":    'csvHtml5',
+            "text":      '<i class="fa fa-file-text-o"></i>',
+            "titleAttr": 'CSV',
+            "exportOptions": {
+                "columns": [1,2,3,4,5,6,7,8]
+            }
+        },
+        {
+                "extend":    'import',
+                "text":      '<i class="glyphicon glyphicon-import"></i>',
+                "titleAttr": 'Import'
+        },
+        {
+          "extend": 'selectAll',
+          "action": function( e, dt, node, config ){
+            oEventTable.$('tr').addClass('selected');
+            oEventTable.$('tr').addClass('success');
+            var selects = oEventTable.rows('tr.selected').data();
+            if (selects.length == 0){
+                $("#destroy_event").addClass("disabled");
+            }else{
+                $("#destroy_event").removeClass("disabled");
+            }
+
+            $(".buttons-select-none").removeClass('disabled');
+          }
+        },
+        {
+          "extend": 'selectNone',
+          "action": function( e, dt, node, config ){
+            oEventTable.$('tr').removeClass('selected');
+            oEventTable.$('tr').removeClass('success');
+            var selects = oEventTable.rows('tr.selected').data();
+            if( selects.length == 0){
+                $("#destroy_event").addClass("disabled");
+            }else{
+                $("#destroy_event").removeClass("disabled");
+            }
+            $(".buttons-select-none").addClass('disabled');
+          }
+
+        }
+
+        ]
     });
+
+    $('#event_table').on( 'click', 'tr', function () {
+
+        var d = oEventTable.row(this).data();
+        if(d != undefined){
+            if($(this).hasClass('selected')){
+                $(this).removeClass('selected');
+                $(this).removeClass('success');
+
+            }else{
+                $(this).addClass('selected');
+                $(this).addClass('success');
+            }
+        }
+        var selects = oEventTable.rows('tr.selected').data();
+        if( selects.length == 0){
+          $("#destroy_event").addClass("disabled");
+          $(".buttons-select-none").addClass('disabled')
+        }else{
+          $("#destroy_event").removeClass("disabled");
+          $(".buttons-select-none").removeClass('disabled');
+        }
+    });
+
+
+    //Event table in end page
+//     oEventTable_Footer = $('#event_table_footer').DataTable({
+//         "dom": 'lBfrtip',
+//         "pagingType": "full_numbers",
+//         "oLanguage":{"sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"},
+//         "aoColumnDefs": [
+//             {"aTargets": [1], "mRender": function (data, type, full) {
+//                 return '<a href="/events/' + data + '/edit">詳細</a>';
+//                 }
+//             },
+//             {"aTargets": [2,3], "mRender": function (data, type, full) {
+//                 var time_format = moment(data, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD HH:mm');
+//                 if (time_format !== 'Invalid date'){
+//                     return time_format;
+//                     }else return '';
+//                 }
+//             },
+//             { "bSortable": false, "aTargets": [ 0,1 ]},
+//             {"targets": [ 0,1 ],"searchable": false},
+//             {"targets": [ 0 ],"visible": false }
+//             //{"targets": [1,2], "width": '11%'},
+//             //{"targets": [0], "width": '3%'},
+//             //{"targets": [7,8], "width": '6%'},
+//             //{"targets": [5], "width": '8%'}
+//         ],
+
+//         "order": [],
+//         "columnDefs": [
+//             {"targets" : 'no-sort', "orderable": false}
+//         ],
+//         "oSearch": {"sSearch": queryParameters().search},
+//         "autoWidth": true,
+//         "buttons": [{
+//             "extend":    'copyHtml5',
+//             "text":      '<i class="fa fa-files-o"></i>',
+//             "titleAttr": 'Copy',
+//             "exportOptions": {
+//                 "columns": [2,3,4,5,6,7,8,9]
+//             }
+//         },
+//         {
+//             "extend":    'excelHtml5',
+//             "text":      '<i class="fa fa-file-excel-o"></i>',
+//             "titleAttr": 'Excel',
+//             "exportOptions": {
+//                 "columns": [2,3,4,5,6,7,8,9]
+//             }
+//         },
+//         {
+//             "extend":    'csvHtml5',
+//             "text":      '<i class="fa fa-file-text-o"></i>',
+//             "titleAttr": 'CSV',
+//             "exportOptions": {
+//                 "columns": [2,3,4,5,6,7,8,9]
+//             }
+//         },
+//         {
+//           "extend": 'selectAll',
+//           "action": function( e, dt, node, config ){
+//             oEventTable_Footer.$('tr').addClass('selected');
+//             oEventTable_Footer.$('tr').addClass('success');
+//             var selects = oEventTable_Footer.rows('tr.selected').data();
+//             if (selects.length == 0){
+//                 $("#destroy_event_footer").addClass("disabled");
+//             }else{
+//                 $("#destroy_event_footer").removeClass("disabled");
+//             }
+
+//             $(".buttons-select-none").removeClass('disabled');
+//           }
+//         },
+//         {
+//           "extend": 'selectNone',
+//           "action": function( e, dt, node, config ){
+//             oEventTable_Footer.$('tr').removeClass('selected');
+//             oEventTable_Footer.$('tr').removeClass('success');
+//             var selects = oEventTable_Footer.rows('tr.selected').data();
+//             if( selects.length == 0){
+//                 $("#destroy_event_footer").addClass("disabled");
+//             }else{
+//                 $("#destroy_event_footer").removeClass("disabled");
+//             }
+//             $(".buttons-select-none").addClass('disabled');
+//           }
+
+//         }
+
+//         ]
+//     });
+
+//     $('#event_table_footer').on( 'click', 'tr', function () {
+
+//         var d = oEventTable_Footer.row(this).data();
+//         if(d != undefined){
+//             if($(this).hasClass('selected')){
+//                 $(this).removeClass('selected');
+//                 $(this).removeClass('success');
+
+//             }else{
+//                 $(this).addClass('selected');
+//                 $(this).addClass('success');
+//             }
+//         }
+//         var selects = oEventTable_Footer.rows('tr.selected').data();
+//         if( selects.length == 0){
+//           $("#destroy_event_footer").addClass("disabled");
+//           $(".buttons-select-none").addClass('disabled')
+//         }else{
+//           $("#destroy_event_footer").removeClass("disabled");
+//           $(".buttons-select-none").removeClass('disabled');
+//         }
+// });
 
     //選択された行を判断
     $('#user_table tbody').on( 'click', 'tr', function () {
-
-        var d = oTable.row(this).data();
-        $('#selected_user').val(d[0]);
-        $('#selected_user_name').val(d[1]);
 
         if ( $(this).hasClass('selected') ) {
             $(this).removeClass('selected');
@@ -699,44 +1440,21 @@ $(function(){
 
     } );
 
-    //場所選択された行を判断
-    $('#basho_table tbody').on( 'click', 'tr', function () {
 
-        var d = oBashoTable.row(this).data();
-        $('#event_場所コード').val(d[0]);
-        //$('#basho_name').text(d[1]);
-        $('.hint-basho-refer').text(d[1]);
-        $('#event_場所コード').closest('.form-group').find('span.help-block').remove()
-        $('#event_場所コード').closest('.form-group').removeClass('has-error')
-        if ( $(this).hasClass('selected') ) {
-            $(this).removeClass('selected');
-            $(this).removeClass('success');
-        }
-        else {
-            oBashoTable.$('tr.selected').removeClass('selected');
-            oBashoTable.$('tr.success').removeClass('success');
-            $(this).addClass('selected');
-            $(this).addClass('success');
-        }
-    } );
 
     $('#mybasho_table tbody').on( 'click', 'tr', function () {
 
-        var d = oMybashoTable.row(this).data();
-        $('#event_場所コード').val(d[1]);
-        //$('#basho_name').text(d[1]);
-        $('.hint-basho-refer').text(d[2]);
-        $('#event_場所コード').closest('.form-group').find('span.help-block').remove()
-        $('#event_場所コード').closest('.form-group').removeClass('has-error')
         if ( $(this).hasClass('selected') ) {
             $(this).removeClass('selected');
             $(this).removeClass('success');
+            $("#mybasho_destroy").addClass("disabled");
         }
         else {
             oMybashoTable.$('tr.selected').removeClass('selected');
             oMybashoTable.$('tr.success').removeClass('success');
             $(this).addClass('selected');
             $(this).addClass('success');
+            $("#mybasho_destroy").removeClass("disabled");
         }
     } );
 
@@ -744,57 +1462,7 @@ $(function(){
     // if (s != '11'){
     //     $('.event_有無').hide();
     // }
-    //状態選択された行を判断
-    $('#joutai_table tbody').on( 'click', 'tr', function () {
 
-        var d = oJoutaiTable.row(this).data();
-        $('#event_状態コード').val(d[0]);
-        //$('#joutai_name').text(d[1]);
-        $('.hint-joutai-refer').text(d[1]);
-        if( d[1] == '外出' || d[1] == '直行' || d[1] == '出張' || d[1] == '出張移動')
-            $('.event_有無').show();
-        else
-            $('.event_有無').hide();
-        //#    remove error if has
-        $('#event_状態コード').closest('.form-group').find('span.help-block').remove()
-        $('#event_状態コード').closest('.form-group').removeClass('has-error')
-
-        if ( $(this).hasClass('selected') ) {
-            $(this).removeClass('selected');
-            $(this).removeClass('success');
-        }
-        else {
-            oJoutaiTable.$('tr.selected').removeClass('selected');
-            oJoutaiTable.$('tr.success').removeClass('success');
-            $(this).addClass('selected');
-            $(this).addClass('success');
-        }
-
-        //check if that day missing
-        if (d[0] == "30"){
-            //$('#event_開始').val(moment());
-            //$('#event_終了').val(moment());
-
-            $('#event_場所コード').prop( "disabled", true );
-            $('#event_JOB').prop( "disabled", true );
-            $('#event_工程コード').prop( "disabled", true );
-            $('#basho_search').prop( "disabled", true );
-            $('#koutei_search').prop( "disabled", true );
-
-        }else{
-            //$('#event_開始').val('');
-            //$('#event_終了').val('');
-
-            $('#event_場所コード').prop( "disabled", false );
-            $('#event_JOB').prop( "disabled", false );
-            $('#event_工程コード').prop( "disabled", false );
-            $('#basho_search').prop( "disabled", false );
-            $('#koutei_search').prop( "disabled", false );
-
-        }
-
-
-    } );
 
     //工程選択された行を判断
     $('#koutei_table tbody').on( 'click', 'tr', function () {
@@ -838,46 +1506,63 @@ $(function(){
 
     } );
 
-    //工程選択された行を判断
-    $('#job_table tbody').on( 'click', 'tr', function () {
-
-        var d = oJobTable.row(this).data();
-        $('#event_JOB').val(d[0]);
-        //$('#job_name').text(d[1]);
-        $('.hint-job-refer').text(d[1])
-
-        if ( $(this).hasClass('selected') ) {
-            $(this).removeClass('selected');
-            $(this).removeClass('success');
-        }
-        else {
-            oJobTable.$('tr.selected').removeClass('selected');
-            oJobTable.$('tr.success').removeClass('success');
-            $(this).addClass('selected');
-            $(this).addClass('success');
-        }
-
-    } );
 
     $('#myjob_table tbody').on( 'click', 'tr', function () {
 
-        var d = oMyjobTable.row(this).data();
-        $('#event_JOB').val(d[1]);
-        //$('#job_name').text(d[1]);
-        $('.hint-job-refer').text(d[2])
-
         if ( $(this).hasClass('selected') ) {
             $(this).removeClass('selected');
             $(this).removeClass('success');
+            $("#myjob_destroy").addClass("disabled");
         }
         else {
             oMyjobTable.$('tr.selected').removeClass('selected');
             oMyjobTable.$('tr.success').removeClass('success');
             $(this).addClass('selected');
             $(this).addClass('success');
+            $("#myjob_destroy").removeClass("disabled");
         }
 
     } );
+
+    $('#user_refer_sentaku_ok').click(function(){
+        var d = oTable.row('tr.selected').data();
+        if(d!=undefined){
+            $('#jobmaster_入力社員番号').val(d[0])
+            $('.hint-shain-refer').text(d[1])
+        }
+    })
+
+    $('#select_user_modal_refer,#user_table tbody').on( 'dblclick', 'tr', function () {
+        $(this).addClass('selected');
+        $(this).addClass('success');
+        var d = oTable.row('tr.selected').data();
+        if(d!=undefined){
+            $('#jobmaster_入力社員番号').val(d[0])
+            $('.hint-shain-refer').text(d[1])
+        }
+        $('#select_user_modal_refer').modal('hide');
+    });
+
+
+
+    $('#user_sentaku_ok').click(function(){
+        var d = oTable.row('tr.selected').data();
+        if(d!=undefined){
+            $('#selected_user').val(d[0]);
+            $('#selected_user_name').val(d[1]);
+        }
+    })
+
+    $('#select_user_modal,#user_table tbody').on( 'dblclick', 'tr', function () {
+        $(this).addClass('selected');
+        $(this).addClass('success');
+        var d = oTable.row('tr.selected').data();
+        if(d!=undefined){
+            $('#selected_user').val(d[0]);
+            $('#selected_user_name').val(d[1]);
+        }
+        $("#user_sentaku_ok").trigger('click');
+    });
 
 });
 
@@ -1062,10 +1747,11 @@ $(function(){
 
 $(function(){
     var s = $("#event_状態コード").val();
-    $('.event_有無').hide();
+    $('.event_帰社').hide();
     if (s == '10' || s == '11' || s == '12' || s == '13'){
-        $('.event_有無').show();
+        $('.event_帰社').show();
     }
+    $("#destroy_event").addClass("disabled");
 });
 function showModal(date,hoshukeitai) {
 
@@ -1103,3 +1789,51 @@ function showModal(date,hoshukeitai) {
     $('#bt-hoshu-1').show();
     $('#bt-hoshu-0').hide();
 }
+
+
+function updateEvent(the_event){
+    jQuery.ajax({
+        url: '/events/ajax',
+        data: {id: 'event_drag_update',shainId: the_event.resourceId, eventId: the_event.id, event_start: the_event.start.format('YYYY/MM/DD HH:mm'), event_end: the_event.end.format('YYYY/MM/DD HH:mm') },
+        type: "POST",
+
+        success: function(data) {
+                console.log("Update success");
+        },
+        failure: function() {
+            console.log("Update unsuccessful");
+        }
+    })
+    $('#calendar-month-view').fullCalendar('updateEvent', the_event);
+    return;
+
+
+}
+$(function(){
+    $('#current_user_button').show();
+    //when click create
+    $('.submit-button').click(function(e){
+        var joutai = $('#event_状態コード').val();
+        if( joutai == '105' || joutai == '109' || joutai == '113'){
+            $('.form-group.has-error').each(function(){
+              $('.help-block', $(this)).html('');
+              $(this).removeClass('has-error');
+            });
+            var kintai_daikyu = $('#kintai_daikyu').val();
+            var old_joutai = $('#old_joutai').val();
+            if ((old_joutai == '')||((old_joutai != '')&&(old_joutai != joutai))) {
+                if(kintai_daikyu == ''){
+                    $('#event_状態コード').val("");
+                    swal("振休の状態で代休相手日付を選択しなければなりません。")
+                    $input = $('#event_状態コード');
+                    $input.closest('.form-group').addClass('has-error').find('.help-block').text("を入力してください。");
+
+                    e.preventDefault();
+                }
+            }
+        }
+
+
+    })
+
+});

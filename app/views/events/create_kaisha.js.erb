@@ -1,2 +1,12 @@
 $('#kaisha-new-modal').modal('hide')
-$('#mybashomaster_会社コード').val('<%= @kaisha.会社コード %>')
+
+oKaisha_modal.$('tr.selected').removeClass('selected');
+oKaisha_modal.$('tr.success').removeClass('success');
+var table = $('#kaisha-table-modal').DataTable();
+
+var row = table.row.add( ["<%=@kaisha.会社コード%>","<%=@kaisha.会社名%>","<%=@kaisha.備考%>"] ).draw( false ).nodes().to$();
+row.addClass('selected');
+row.addClass('success');
+$("#edit_kaishamaster").attr("disabled", false);
+$("#destroy_kaishamaster").attr("disabled", false);
+

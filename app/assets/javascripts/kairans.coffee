@@ -5,9 +5,12 @@
 jQuery ->
   shokairan_table = $('.shokairan-table').DataTable({
     "pagingType": "simple_numbers"
+    "fnDrawCallback": (oSettings) ->
+      $('.new-btn').appendTo($('.dt-buttons'));
     ,"oLanguage":{
-      "sUrl": "../../assets/resource/dataTable_ja.txt"
+      "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
     },
+    "dom": "<'row'<'col-md-6'l><'col-md-6'f>><'row'<'col-md-7'B><'col-md-5'p>><'row'<'col-md-12'tr>><'row'<'col-md-12'i>>",
     columnDefs: [
       { "width": "15%", "targets": 0 },
       { "width": "10%", "targets": 1 },
@@ -15,30 +18,25 @@ jQuery ->
       { "width": "50%", "targets": 3 }
       { "width": "5%", "targets": 4 }
     ],
+    buttons: [
+      'selectAll',
+      'selectNone'
+    ],
     order: [[ 0, 'des' ]]
   })
 
   kairan_table = $('.kairan-table').DataTable({
     "pagingType": "simple_numbers"
+    "fnDrawCallback": (oSettings) ->
+      $('.new-btn').appendTo($('.dt-buttons'));
+      $('.edit-btn').appendTo($('.dt-buttons'));
+      $('.delete-btn').appendTo($('.dt-buttons'));
     ,"oLanguage":{
-      "sUrl": "../../assets/resource/dataTable_ja.txt"
+      "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
     },
-#    "aoColumnDefs": [
-#      { "bSortable": false, "aTargets": [5 ]},
-#      {"targets": [3],"width": '30%'},
-#      {"targets": [5], "width": '5%'}
-#    ],
-#    "columnDefs": [
-#      {"targets"  : 'no-sort',"orderable": false}
-#    ]
 
-#    "columnDefs": [
-#      { "width": "30%", "targets": 3 },
-#      { "width": "5%", "targets": 4 },
-#      {"targets"  : 'no-sort', "orderable": false }
-#    ]
-
-    columnDefs: [ {orderable: false, className: 'select-checkbox',targets: 7},
+    columnDefs: [
+      { orderable: false,className: 'select-checkbox',targets: 7},
       { "width": "12%", "targets": 0 },
       { "width": "12%", "targets": 1 },
       { "width": "13%", "targets": 2 },
@@ -49,62 +47,61 @@ jQuery ->
       { "width": "5%", "targets": 7 },
       { "targets": [ 8 ], "visible": false, "searchable": false },
       { "targets": [ 9 ], "visible": false, "searchable": false },
+      { "targets": [ 10 ], "visible": false, "searchable": false },
     ],
     select: {
-#      style:    'os',
       style:    'multi',
       selector: 'td:last-child'
     },
     order: [[ 0, 'des' ]],
-    dom: 'Bfrtip',
+    "dom": "<'row'<'col-md-6'l><'col-md-6'f>><'row'<'col-md-7'B><'col-md-5'p>><'row'<'col-md-12'tr>><'row'<'col-md-12'i>>",
     buttons: [
-#      'selected',
-#      'selectedSingle',
       'selectAll',
       'selectNone'
-#      'selectRows',
-#      'selectColumns',
-#      'selectCells'
     ],
+    "oSearch": {"sSearch": queryParameters().search}
   })
 
   shain_table = $('.shain-table').DataTable({
     "pagingType": "simple_numbers",
     "oLanguage":{
-      "sUrl": "../../assets/resource/dataTable_ja.txt"
+      "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
     },
-#    "aoColumnDefs": [
-#      { "bSortable": false, "aTargets": [0]},
-#      {
-#        "targets": [0],
-#        "width": '20%'
-#      }
-#    ],
-#    "columnDefs": [{
-#      "targets"  : 'no-sort',
-#      "orderable": false
-#    }],
     columnDefs: [ {
       orderable: false,
       className: 'select-checkbox',
       targets:   0
     } ],
     select: {
-#      style:    'os',
       style:    'multi',
-#      selector: 'td:first-child'
+
     },
     dom: 'Bfrtip',
     buttons: [
-#      'selected',
-#      'selectedSingle',
       'selectAll',
       'selectNone'
-#      'selectRows',
-#      'selectColumns',
-#      'selectCells'
     ]
   })
+
+  $('#kakunin').addClass('disabled')
+  kairan_table.on( 'select', ( e, dt, type, indexes )->
+    row = kairan_table[ type ]( indexes ).nodes().to$()
+    data = kairan_table.row( indexes ).data()
+    if data[10] != $('#session_user').val()
+      kairan_table.row( indexes ).nodes().to$().removeClass( 'selected' );
+      swal("あなたはアクセス権限ではありません！")
+    else if data[5] == '確認済'
+      kairan_table.row( indexes ).nodes().to$().removeClass( 'selected' );
+      swal("確認済!")
+
+  );
+  $('.kairan-table tbody').on( 'click', 'tr', () ->
+    d = kairan_table.row('tr.selected').data()
+    if d!= undefined
+      $('#kakunin').removeClass('disabled')
+    else
+      $('#kakunin').addClass('disabled')
+  )
 
   $('.datetime').datetimepicker({
     format: 'YYYY/MM/DD HH:mm',
@@ -118,12 +115,40 @@ jQuery ->
 #    defaultDate: '2016/03/14 09:00'
   })
 
-  $('#kairan').click () ->
+  $('#kairan_開始').click () ->
+    $('.kairan_開始 .datetime').data("DateTimePicker").toggle();
+  $('#kairan_終了').click () ->
+    $('.kairan_終了 .datetime').data("DateTimePicker").toggle();
+
+  $('#kairan').click (e) ->
     selected_rows = shain_table.rows( { selected: true } ).data()
     shainNo = []
     for row in selected_rows
       shainNo.push(row[1])
     $('#shain').val(shainNo.toString())
+    if $('#kairan_開始').val() == ''
+      today = new Date
+      DD = today.getDate()
+      MM = today.getMonth() + 1
+      YYYY = today.getFullYear()
+      HH = today.getHours()
+      mm = today.getMinutes()
+      if DD < 10
+        DD = '0' + DD
+      if MM < 10
+        MM = '0' + MM
+      if HH< 10
+        HH = '0' + HH
+      if mm < 10
+        mm = '0' + mm
+      today = YYYY + '/' + MM + '/' + DD + ' '+HH+':'+mm
+      $("#kairan_開始").val(today)
+    if $('#kairan_件名').val() == ''
+      e.preventDefault()
+      swal("件名を入力してください。")
+    if $('#shain').val() == ''
+      e.preventDefault()
+      swal("社員を選択してください。")
 
   $('#kakunin').click () ->
     selected_rows = kairan_table.rows( { selected: true } ).data()
@@ -145,7 +170,7 @@ jQuery ->
     shain_table_mark = $('.shain-table-mark').DataTable({
       "pagingType": "simple_numbers",
       "oLanguage":{
-        "sUrl": "../../assets/resource/dataTable_ja.txt"
+        "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
       },
       "select": {
         "style": 'multi'
@@ -160,12 +185,3 @@ jQuery ->
         api.rows(getTaishoList(data.taishosha)).select()
     })
   )
-
-#  shain_table_mark.rows(["[id='10002']", "[id='81000']"]).select()
-
-#  shain_table_mark.rows().every( () ->
-#    data = this.data()
-#    if data[0] == '10002'
-#      $(this).addClass('duc')
-##      shain_table.row(this).select()
-#  )

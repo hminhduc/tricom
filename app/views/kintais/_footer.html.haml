@@ -1,37 +1,48 @@
 .row
   .col-sm-2
-    = render 'kinmu_refer'
-  .col-sm-6.col-sm-offset-1
-    %table#kintai-table.table.table-striped.table-bordered.table-hover.table-condensed{cellspacing: "0"}
-      %thead
-        %tr
-          %th 合計時間
-          %th 実労働
-          %th 遅刻早退
-          %th 普通残業
-          %th 深夜残業
-          %th 普通保守
-          %th 深夜保守
-          %th 保守携帯
-      %tbody
-        %tr
-          %td
-          %td.sum1
-          %td.sum2
-          %td.sum3
-          %td.sum4
-          %td.sum5
-          %td.sum6
-          %td.sum7
-  .col-sm-3
+    %button.btn.btn-default.kinmu-show
+      %span.glyphicon.glyphicon-list-alt
+    %button.btn.btn-default.kinmu-hide
+      %span.glyphicon.glyphicon-list-alt
+    = render 'kinmu_refer_tab_help'
+  .col-md-6.col-xs-6.col-sm-6.col-lg-6.col-md-offset-1.col-xs-offset-1.col-sm-offset-1.col-lg-offset-1
+    = f.button ' 集 計 す る ', class: 'summary', type: 'button'
+    .row
+      .spacer
+      %table#kintai-table.table.table-striped.table-bordered.table-hover.table-condensed{cellspacing: "0"}
+        %thead
+          %tr
+            %th 合計時間
+            %th 実労働
+            %th 遅刻早退
+            %th 普通残業
+            %th 深夜残業
+            %th 普通保守
+            %th 深夜保守
+            %th 保守携帯
+            %th 有休日数
+        %tbody
+          %tr
+            %td
+            %td.sum1
+            %td.sum2
+            %td.sum3
+            %td.sum4
+            %td.sum5
+            %td.sum6
+            %td.sum7
+            %td.sum8
+
+      %p.finish-message
+  .col-md-3.col-xs-3.col-sm-3.col-lg-3
     .pull-right
       -#= check_box_tag 'finish-input'
       -#= label_tag '承認要求'
       -#= button_tag '入力済', name: 'commit', value:'入力済', class: 'btn btn-default'
-      - if @kintai.入力済 == '0' || @kintai.入力済.nil?
-        = f.submit :入力済, class: 'btn btn-default'
-      - else
-        = f.submit :入力する, class: 'btn btn-default'
-
-
-    %p.finish-message
+      / - if @kintai.try(:入力済) == '0' || @kintai.try(:入力済).nil?
+      /   %button#export_pdf.btn.btn-primary{:disabled => "true", :type => "button"}= (t 'app.label.export_pdf')
+      /   = f.submit (t 'helpers.submit.entered'), class: 'btn btn-primary'
+      / - else
+      /   %button#export_pdf.btn.btn-primary{:type => "button"}= (t 'app.label.export_pdf')
+      /   = f.submit (t 'helpers.submit.input'), class: 'btn btn-primary'
+      / = f.submit (t 'helpers.submit.destroy'), class: 'btn btn-primary', :data => { :confirm => (t 'app.delete_data_in_month_confirm') }

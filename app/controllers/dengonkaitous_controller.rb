@@ -2,7 +2,7 @@ class DengonkaitousController < ApplicationController
   before_action :require_user!
   before_action :set_dengonkaitou, only: [:show, :edit, :update, :destroy]
 
-  respond_to :html
+  respond_to :html, :js
 
   def index
     @dengonkaitous = Dengonkaitou.all
@@ -10,7 +10,6 @@ class DengonkaitousController < ApplicationController
   end
 
   def show
-    respond_with(@dengonkaitou)
   end
 
   def new
@@ -39,10 +38,10 @@ class DengonkaitousController < ApplicationController
 
   def import
     if params[:file].nil?
-      flash[:alert] = t "app.flash.file_nil"
+      flash[:alert] = t 'app.flash.file_nil'
       redirect_to dengonkaitous_path
-    elsif File.extname(params[:file].original_filename) != ".csv"
-      flash[:danger] = t "app.flash.file_format_invalid"
+    elsif File.extname(params[:file].original_filename) != '.csv'
+      flash[:danger] = t 'app.flash.file_format_invalid'
       redirect_to dengonkaitous_path
     else
       begin
@@ -65,7 +64,45 @@ class DengonkaitousController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.csv { send_data @dengonkaitous.to_csv, filename: "伝言回答マスタ.csv" }
+      format.csv { send_data @dengonkaitous.to_csv, filename: '伝言回答マスタ.csv' }
+    end
+  end
+
+  def ajax
+    case params[:focus_field]
+      when 'dengonkaitou_削除する'
+        dengonkaitouIds = params[:dengonkaitous]
+        dengonkaitouIds.each{ |dengonkaitouId|
+          Dengonkaitou.find_by(id: dengonkaitouId).destroy
+        }
+        data = {destroy_success: 'success'}
+        respond_to do |format|
+        format.json { render json: data}
+      end
+    end
+  end
+
+    def create_dengonkaitou
+    @dengonkaitou = Dengonkaitou.new(dengonkaitou_params)
+    respond_to do |format|
+      if  @dengonkaitou.save
+        format.js { render 'create_dengonkaitou'}
+      else
+        format.js { render json: @dengonkaitou.errors, status: :unprocessable_entity}
+      end
+    end
+    end
+
+  def update_dengonkaitou
+    @dengonkaitou = Dengonkaitou.find_by(id: dengonkaitou_params[:id])
+    # @eki.update(eki_params)
+    # redirect_to ekis_path
+    respond_to do |format|
+      if  @dengonkaitou.update(dengonkaitou_params)
+        format.js { render 'update_dengonkaitou'}
+      else
+        format.js { render json: @dengonkaitou.errors, status: :unprocessable_entity}
+      end
     end
   end
 
@@ -75,6 +112,6 @@ class DengonkaitousController < ApplicationController
     end
 
     def dengonkaitou_params
-      params.require(:dengonkaitou).permit(:種類名, :備考)
+      params.require(:dengonkaitou).permit(:種類名, :備考, :id)
     end
 end

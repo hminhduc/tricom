@@ -36,4 +36,23 @@ $(document).on('ready', function() {
     // $(.gui)
     // $(".guide-title").css("height",$(".guide-title").closest(".guide-contenti").height-76+"px")
     // $(".guide-item").css("height","24px")
+
+    $('.show_pdf_help').click(function(){
+      $('#view_pdf').attr('data','"../../assets/images/Tricom.pdf'+$(this).attr('data'));
+      // $('object').contents().find('mainContainer').css("overflow","hidden");
+      // var o = $('object');
+      // var s = $('html', o[0].contentDocument).animate({scrollTop:1100},500);
+
+
+      // alert(s.find('body,#outerContainer,#mainContainer,#viewerContainer').height());
+      // $('#view_pdf')[0].animate({scrollTop:1100},500);
+      // $('#view_pdf').find_element_by_name('mainContainer').animate({scrollTop:1100},500);
+      // $('#view_pdf').animate({scrollTop:1100},500);
+      // $('#iframemc').contents().find('body').animate({scrollTop:1100},500);
+      // $("#iframemc").contents().children().animate({ scrollTop: 1100 }, 500);
+
+    })
+    $('#view_pdf').css("height", $(document).height()+'px');
 });
+
+

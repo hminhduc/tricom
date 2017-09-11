@@ -3,7 +3,7 @@ class ShoninshamstsController < ApplicationController
   before_action :set_shoninshamst, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource except: :export_csv
 
-  respond_to :html
+  respond_to :html, :js
 
   def index
     @shoninshamsts = Shoninshamst.all
@@ -15,7 +15,7 @@ class ShoninshamstsController < ApplicationController
   end
 
   def new
-    # @shoninshamst = Shoninshamst.new
+    @shoninshamst = Shoninshamst.new
     respond_with(@shoninshamst)
   end
 
@@ -26,7 +26,7 @@ class ShoninshamstsController < ApplicationController
     @shoninshamst = Shoninshamst.new(shoninshamst_params)
     if @shoninshamst.save
       flash[:notice] = t 'app.flash.update_success'
-      respond_with(@shoninshamst)
+    respond_with(@shoninshamst, location: shoninshamsts_url)
     else
       render :new
     end
@@ -34,7 +34,7 @@ class ShoninshamstsController < ApplicationController
 
   def update
     @shoninshamst.update(shoninshamst_params)
-    respond_with(@shoninshamst)
+    respond_with(@shoninshamst, location: shoninshamsts_url)
   end
 
   def destroy
@@ -44,10 +44,10 @@ class ShoninshamstsController < ApplicationController
 
   def import
     if params[:file].nil?
-      flash[:alert] = t "app.flash.file_nil"
+      flash[:alert] = t 'app.flash.file_nil'
       redirect_to shoninshamsts_path
-    elsif File.extname(params[:file].original_filename) != ".csv"
-      flash[:danger] = t "app.flash.file_format_invalid"
+    elsif File.extname(params[:file].original_filename) != '.csv'
+      flash[:danger] = t 'app.flash.file_format_invalid'
       redirect_to shoninshamsts_path
     else
       begin
@@ -70,16 +70,42 @@ class ShoninshamstsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.csv { send_data @shoninshamsts.to_csv, filename: "承認者マスタ.csv" }
+      format.csv { send_data @shoninshamsts.to_csv, filename: '承認者マスタ.csv' }
     end
   end
 
+  def ajax
+    case params[:focus_field]
+      when 'shonin_削除する'
+        shoninIds = params[:shonins]
+        shoninIds.each{ |shoninId|
+          Shoninshamst.find_by(id: shoninId).destroy
+        }
+        data = {destroy_success: 'success'}
+        respond_to do |format|
+        format.json { render json: data}
+      end
+    end
+  end
+
+  def create_shonin
+    @shoninshamst = Shoninshamst.new(shoninshamst_params)
+    respond_to do |format|
+      if  @shoninshamst.save
+        format.js { render 'create_shoninsha'}
+      else
+        format.js { render json: @shoninshamst.errors, status: :unprocessable_entity}
+      end
+    end
+    end
+
+  
   private
     def set_shoninshamst
       @shoninshamst = Shoninshamst.find(params[:id])
     end
 
     def shoninshamst_params
-      params.require(:shoninshamst).permit(:申請者, :承認者, :順番)
+      params.require(:shoninshamst).permit(:id, :申請者, :承認者, :順番)
     end
 end

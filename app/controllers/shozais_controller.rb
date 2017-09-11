@@ -38,13 +38,26 @@ class ShozaisController < ApplicationController
     @shozai.destroy
     respond_with @shozai, location: shozais_url
   end
-
+  def ajax
+    case params[:focus_field]      
+      when 'shozai_削除する'
+        params[:shozais].each {|shozai_code|
+          shozai=Shozai.find(shozai_code)
+          shozai.destroy if shozai
+        }
+        data = {destroy_success: 'success'}
+        respond_to do |format|
+          format.json { render json: data}
+        end
+      else
+    end
+  end
   def import
     if params[:file].nil?
-      flash[:alert] = t "app.flash.file_nil"
+      flash[:alert] = t 'app.flash.file_nil'
       redirect_to shozais_path
-    elsif File.extname(params[:file].original_filename) != ".csv"
-      flash[:danger] = t "app.flash.file_format_invalid"
+    elsif File.extname(params[:file].original_filename) != '.csv'
+      flash[:danger] = t 'app.flash.file_format_invalid'
       redirect_to shozais_path
     else
       begin
@@ -67,7 +80,7 @@ class ShozaisController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.csv { send_data @shozais.to_csv, filename: "所在マスタ.csv" }
+      format.csv { send_data @shozais.to_csv, filename: '所在マスタ.csv' }
     end
   end
 

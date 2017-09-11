@@ -1,6 +1,10 @@
 class Kintai < ActiveRecord::Base
   # scope :current_month, ->(member) { where( 社員番号: member, 日付: Date.today.beginning_of_month..Date.today.end_of_month )}
+  include PgSearch
+  multisearchable :against => %w{日付 曜日 勤務タイプ joutai_状態名 備考 社員番号}
+
   scope :selected_month, ->(member,month) { where( 社員番号:  member, 日付: month.beginning_of_month..month.end_of_month ) }
+  scope :selected_tocurrent, ->(member,month) { where( 社員番号:  member, 日付: Date.today.beginning_of_year..month.prev_month.end_of_month ) }
   scope :current_user, ->(member) { where( 社員番号: member)}
   scope :get_by_mounth, ->(date) { where(日付: date.beginning_of_month..date.end_of_month)}
   scope :get_by_mounth_hoshukeitai, ->(date) { where(日付: date.beginning_of_month..date.end_of_month, 曜日: "2")}
@@ -27,9 +31,28 @@ class Kintai < ActiveRecord::Base
   validates :深夜残業時間, numericality: { greater_than_or_equal_to: 0}, allow_nil: true
   validates :普通保守時間, numericality: { greater_than_or_equal_to: 0}, allow_nil: true
   validates :深夜保守時間, numericality: { greater_than_or_equal_to: 0}, allow_nil: true
+  delegate :状態名, to: :joutaimaster, prefix: :joutai, allow_nil: true
 
+  before_update :check_joutai_to_update_kinmutype
+
+  def check_joutai_to_update_kinmutype
+    if 状態1.present?
+      joutaikubun = Joutaimaster.find_by(状態コード: 状態1).try(:状態区分)
+      if joutaikubun == '2' || joutaikubun == '6'
+        self.勤務タイプ = ''
+      end
+    end
+
+  end
+  def self.import(file)
+    # a block that runs through a loop in our CSV data
+    CSV.foreach(file.path, headers: true) do |row|
+      # creates a user for each row in the CSV file
+      Kintai.create! row.to_hash
+    end
+  end
   def self.to_csv
-    attributes = %w{id 日付 曜日 曜日 勤務タイプ 実労働時間 普通残業時間 深夜残業時間 普通保守時間
+    attributes = %w{日付 曜日 勤務タイプ 実労働時間 普通残業時間 深夜残業時間 普通保守時間
       深夜保守時間 保守携帯回数 状態1 状態2 状態3 備考 社員番号 入力済 holiday 代休相手日付 代休取得区分
       出勤時刻 退社時刻 遅刻時間 早退時間}
 
@@ -41,15 +64,22 @@ class Kintai < ActiveRecord::Base
       end
     end
   end
+  # Naive approach
+  def self.rebuild_pg_search_documents
+    find_each { |record| record.update_pg_search_document }
+  end
 
+  # def shain_logined?
+  #   社員番号 == Thread.current[:session][:user] if !Thread.current[:session].nil?
+  # end
   private
   def check_date_input
     if 出勤時刻.present? && 退社時刻.present?
       if 出勤時刻 > 退社時刻
-        errors.add(:退社時刻, "は出勤時刻以上の値にしてください。")
+        errors.add(:退社時刻, (I18n.t 'app.model.check_time_attendance'))
       end
       if ((退社時刻 - 出勤時刻)/1.hour).to_i > 22
-        errors.add(:退社時刻, "は22時間より小さい値にしてください。")
+        errors.add(:退社時刻, (I18n.t 'app.model.check_time'))
       end
     end
   end
@@ -58,7 +88,7 @@ class Kintai < ActiveRecord::Base
     if 状態1.present?
       @joutaimaster = Joutaimaster.find_by 状態コード: 状態1
       if @joutaimaster.nil?
-        errors.add(:状態1, "状態が存在していない")
+        errors.add(:状態1,  (I18n.t 'app.model.check_joutai1'))
       end
     end
   end

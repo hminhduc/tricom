@@ -23,9 +23,13 @@ json.events @all_events do |event|
       umu_flag = ' <span style="font-size: 15px;" class="glyphicon glyphicon-triangle-top"></span>'
   end
   comment = ''
-  comment = event.try(:comment)
+  comment = event.try(:comment) if event.try(:comment)
+  if comment == ''
+    comment = Jobmaster.find_by(job番号: event.try(:JOB)).job名 if Jobmaster.find_by(job番号: event.try(:JOB))
+  end
   title =''
   title = event.joutaimaster.try(:name) if event.joutaimaster
+  json.joutai title
   # title = event.joutaimaster.try(:name) << kisha_flag if event.joutaimaster
   # title = event.jobmaster.try(:job_name) << kisha_flag if event.joutaimaster
   if title == '外出' || title == '直行' || title == '出張' || title == '出張移動'
@@ -65,7 +69,7 @@ json.shains @shains do |shain|
   json.yakushoku shain.yakushokumaster.try(:役職名) if shain.yakushokumaster
   dengon = shain.try(:伝言件数) == '0' ? '' : shain.try(:伝言件数)
   json.dengon dengon
-  kairan = shain.try(:回覧件数) == '0' ? '' : shain.try(:回覧件数)
+  kairan = (shain.try(:回覧件数) == '0' || shain.id != session[:user])? '' : shain.try(:回覧件数)
   json.kairan kairan
   background_color = ''
   background_color = shain.shozai.try :background_color if shain.shozai
@@ -86,4 +90,10 @@ json.setting do
   json.scrolltime @setting.try(:scrolltime) if @setting
   json.scrolltime '06:00' if !@setting
 
+end
+
+json.default do
+  json.joutai @joutaiDefault.try(:name) if @joutaiDefault
+  json.color @joutaiDefault.try(:色) if @joutaiDefault
+  json.textColor @joutaiDefault.try(:text_color)  if @joutaiDefault
 end

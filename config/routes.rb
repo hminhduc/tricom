@@ -1,25 +1,41 @@
 Jpt::Application.routes.draw do
+  Rails.application.routes.draw do
+
+  resources :tasks do
+    put :sort, on: :collection
+    collection {post :change_status, :ajax}
+  end
+end
   get 'rorumenbas/new'
 
   get 'rorumasters/new'
 
+  resources :conversations do
+    collection {post :update_message}
+    resources :messages
+  end
   resources :yuusens do
+    collection {get :export_csv}
+    collection {post :import, :ajax}
+  end
+  resources :paths do
     collection {get :export_csv}
     collection {post :import}
   end
   resources :setsubis do
-    collection {post :import}
+    collection {post :import, :ajax, :create_setsubi, :update_setsubi}
     collection {get :export_csv}
   end
   resources :settings do
-    collection {post :import}
+    collection {post :import, :ajax}
     collection {get :export_csv, :setting}
   end
   get 'kanris/index'
 
   get 'kanri/index'
-
+  get 'main/search'
   get 'helps' => 'helps#index'
+  get 'edit_help' => 'helps#edit_help'
 
   resources :kairans do
     collection {post :confirm, :kaitou_create}
@@ -30,7 +46,7 @@ Jpt::Application.routes.draw do
 
   resources :kairanyokenmsts do
     collection {get :export_csv}
-    collection {post :import}
+    collection {post :import, :ajax, :create_kairanyoken, :update_kairanyoken}
   end
 
   resources :kairanshosais do
@@ -40,62 +56,69 @@ Jpt::Application.routes.draw do
 
   resources :tsushinseigyous do
     collection {get :export_csv}
-    collection {post :import}
+    collection {post :import, :ajax, :create_tsushinseigyou, :update_tsushinseigyou}
   end
 
   resources :dengonyoukens do
     collection {get :export_csv}
-    collection {post :import}
+    collection {post :import, :ajax, :create_dengonyouken, :update_dengonyouken}
   end
 
   resources :dengonkaitous do
     collection {get :export_csv}
-    collection {post :import}
+    collection {post :import, :ajax, :create_dengonkaitou, :update_dengonkaitou}
   end
 
   resources :dengons do
     collection {get :export_csv}
   end
 
+  resources :main, only: [:index] do
+    collection {get :search}
+    collection {post :ajax}
+  end
 
-  root to: 'main#index'
   get "login" => "sessions#new"
   post "login" => "sessions#create"
   delete "logout" => "sessions#destroy"
-
+  get "confirm" => "sessions#send_mail"
+  post "confirm" => "sessions#confirm_mail"
+  get "login_code" => "sessions#login_code"
+  post "login_code" => "sessions#login_code_confirm"
   resources :bashokubunmsts  do
-    collection {post :import}
+    collection {post :import, :ajax, :create_bashokubunmst, :update_bashokubunmst}
     collection {get :export_csv}
   end
 
   resources :bunruis do
-    collection {post :import}
+    collection {post :import, :ajax, :create_bunrui, :update_bunrui}
     collection {get :export_csv}
   end
 
   resources :shoninshamsts  do
-    collection {post :import}
+    collection {post :import, :ajax, :create_shonin}
     collection {get :export_csv}
   end
 
   resources :ekis do
-    collection {post :import}
+    collection {post :ajax, :import, :create_eki, :update_eki}
     collection {get :export_csv}
   end
 
   resources :kikanmsts do
-    collection {post :import}
+    collection {post :import, :ajax, :create_modal, :update_modal}
     collection {get :export_csv}
   end
 
   resources :kintais do
-    collection {get :search}
+    collection {get :search,:pdf_show,:sumikakunin}
+    collection {post :import, :ajax}
     collection {get :export_csv}
   end
 
   resources :events, only: [:index, :new, :create, :edit, :update] do
-		collection {post :ajax, :custom, :create_basho, :create_kaisha, :time_line_view}
-    collection {get :time_line_view}
+		collection {post :ajax, :custom, :create_mybasho,:create_basho,:update_basho, :create_kaisha,:update_kaisha, :create_job, :update_job, :time_line_view, :import, :shutchou_create}
+    collection {get :time_line_view, :pdf_event_show, :pdf_job_show, :pdf_koutei_show, :shutchou_ikkatsu_new}
     collection {get :export_csv}
 	end
 
@@ -109,13 +132,13 @@ Jpt::Application.routes.draw do
   end
 
   resources :shainmasters do
-    collection {post :ajax, :import}
+    collection {post :ajax, :import, :multi_delete}
     collection {get :export_csv}
   end
 
 
   resources :jpt_holiday_msts do
-    collection {post :ajax, :import}
+    collection {post :ajax, :import, :create_holiday, :update_holiday}
     collection{get :export_csv}
   end
 
@@ -134,17 +157,17 @@ Jpt::Application.routes.draw do
     collection {get :change_pass}
     collection {post :change_pass}
     collection {get :export_csv}
-    collection {post :import}
+    collection {post :ajax, :import}
   end
 
   resources :yakushokumasters, param: :id do
-    collection {post :ajax, :import}
+    collection {post :ajax, :import, :create_yakushoku, :update_yakushoku}
     collection {get :export_csv}
   end
 
   resources :keihiheads do
-    collection {post :ajax, :shonin_search}
-    collection {get :shonin_search}
+    collection {post :ajax, :shonin_search, :import}
+    collection {get :shonin_search, :pdf_show, :show_keihi_shuppi,:pdf_show_keihi_shuppi, :pdf_show_index}
     collection {get :export_csv}
   end
 
@@ -153,30 +176,37 @@ Jpt::Application.routes.draw do
   end
 
   resources :shozokumasters do
-    collection {post :import}
+    collection {post :import, :ajax, :create_shozoku, :update_shozoku}
     collection {get :export_csv}
   end
 
   resources :joutaimasters do
-    collection {post :import}
+    collection {post :import, :multi_delete, :ajax, :create_joutai, :update_joutai}
     collection {get :export_csv}
   end
 
   resources :kaishamasters, param: :id do
-    collection { post :import}
+    collection { post :import, :ajax, :create_kaisha, :update_kaisha}
     collection {get :export_csv}
   end
 
   resources :shozais do
-    collection { post :import}
+    collection { post :import, :ajax}
     collection {get :export_csv}
   end
 
   resources :setsubiyoyakus do
+    collection {post :import,:ajax}
+    collection {get :export_csv}
   end
 
   resources :rorumasters do
-    collection { post :import}
+    collection { post :import, :ajax, :multi_delete, :create_roru, :update_roru}
+    collection {get :export_csv}
+  end
+
+  resources :yuukyuu_kyuuka_rirekis do
+    collection { post :import, :ajax}
     collection {get :export_csv}
   end
 
@@ -187,7 +217,7 @@ Jpt::Application.routes.draw do
 
   constraints(:id => /\w+(,\w+)*/) do
     resources :kouteimasters do
-      collection {post :ajax}
+      collection {post :ajax,:multi_delete, :create_koutei, :update_koutei}
       collection{post :import}
       collection {get :export_csv}
     end
@@ -202,4 +232,8 @@ Jpt::Application.routes.draw do
     end
     resources :keihiheads, only: :index
   end
+  resources :kintaiteeburus do
+    collection {post :import,:ajax}
+  end
+  root to: 'main#index'
 end

@@ -1,19 +1,44 @@
 <%= javascript_include_tag 'event' %>
 <%= javascript_include_tag 'events' %>
-
+<%= javascript_include_tag 'job_modal' %>
+<%= javascript_include_tag 'kaisha_modal' %>
+<%= javascript_include_tag 'basho_modal' %>
+<%= javascript_include_tag 'joutai_modal' %>
 <ol class="breadcrumb">
-  <li><%= link_to 'メニュー', main_path %></li>
-  <%if request["param"] == "timeline"%>
-    <li><%= link_to 'タイムライン', time_line_view_events_path %></li>
+  <li><%= link_to (t 'title.menu'), main_path %></li>
+  <%if request["param"] == "timeline"|| local_assigns[:param] == 'timeline'%>
+    <li><%= link_to (t 'title.time_line_view'), time_line_view_events_path %></li>
     <%provide(:title, (t 'title.time_line_view'))%>
   <%else %>
-    <li><%= link_to 'カレンダー', events_path %></li>
+    <li><%= link_to (t 'title.event'), events_path %></li>
     <%provide(:title, (t 'title.event'))%>
   <%end%>
   <!-- <li><%= link_to 'カレンダー', events_path %></li> -->
   <!-- <li><a href="#">基準情報</a></li> -->
   <!-- <li><a href="#">セキュリティ管理</a></li> -->
-  <li class="active">イベント</li>
+  <li class="active"><%=(t 'title.ibento')%></li>
+  <div class= 'pull-right'>
+    <div class="navbar-right" style="margin-right: 5px">
+      <li class="dropdown">
+        <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+          <span><i class="glyphicon glyphicon-question-sign fa-1x" style="color: rgb(76, 76, 76); font-size: 20px"></i></span>
+        </a>
+        <ul class="dropdown-menu help-question" style="width: 600px">
+              <li style="text-align: center; font-size: 20px"><b>エベント</b></li>
+              <li>新規追加の時、すでに、画面のようにレコードが、存在する場合、追加の開始時間を12：00に設定される。</li>
+              <li>イベントの画面を準備するまえに、レコードの存在確認が必要になります。</li>
+              <li>存在レコードが無い場合は、現在と同様に9：00と18：00をセットする。</li>
+              <li>画面のようにレコードが、存在する場合は、12：00と18：00とセットになります。</li>
+              <br>
+              <li>イベントの入力画面で、状態コード（30）「全日休」を選択した時、場所、JOB、工程欄がグレーアウトし、入力ができません。</li>
+              <li>同じ状態コード（31）午前半休、（32）午後半休、（33）特別休暇なども、グレーアウトします。</li>
+              <li>状態区分="2"で判断しているようになります。</li>
+              <li>状態コード＝"1" or "5" or 状態コード = 60 && 開始時間 < 9) の時は、場所、JOB、工程の入力が可能します。</li>
+              <li>それ以外は、不可にしました。　別に状態コード以外の制御でもかまいません。</li>
+            </ul>
+      </li>
+    </div>
+  </div>
 </ol>
 
-<%= render 'form_event', mode: 'new' %>
+<%= render 'form_event', mode: 'new', param: local_assigns[:param] %>

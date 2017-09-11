@@ -3,7 +3,7 @@ $(function() {
     oTable = $('#bashomaster').DataTable({
         "pagingType": "full_numbers"
         , "oLanguage": {
-            "sUrl": "../../assets/resource/dataTable_ja.txt"
+            "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
         },
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": [ 6,7 ]},
@@ -16,13 +16,14 @@ $(function() {
             "targets"  : 'no-sort',
             "orderable": false
         }]
+        ,"oSearch": {"sSearch": queryParameters().search}
     });
 
     //init shozoku modal table
     oKaishaTable = $('#kaisha-table-modal').DataTable({
         "pagingType": "full_numbers"
         ,"oLanguage":{
-            "sUrl": "../../assets/resource/dataTable_ja.txt"
+            "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
         }
     });
 
@@ -30,31 +31,74 @@ $(function() {
     $('#kaisha-table-modal tbody').on( 'click', 'tr', function () {
 
         var d = oKaishaTable.row(this).data();
-        $('#bashomaster_会社コード').val(d[0]);
-        $('#kaisha-name').text(d[1]);
+        //$('#bashomaster_会社コード').val(d[0]);
+        //$('#kaisha-name').text(d[1]);
 
         if ( $(this).hasClass('selected') ) {
             $(this).removeClass('selected');
             $(this).removeClass('success');
-
+            $('#kaisha_sentaku_ok').attr('disabled',true);
+            $('#clear_kaisha').attr('disabled',true);
+            // $('#bashomaster_会社コード').val('');
+            // $('#kaisha-name').text('');
         }
         else {
             oKaishaTable.$('tr.selected').removeClass('selected');
             oKaishaTable.$('tr.success').removeClass('success');
             $(this).addClass('selected');
             $(this).addClass('success');
+            $('#kaisha_sentaku_ok').attr('disabled',false);
+            $('#clear_kaisha').attr('disabled',false);
         }
 
     } );
+    $('#clear_kaisha').on( 'click', function () {
+        oKaishaTable.$('tr.selected').removeClass('selected');
+        oKaishaTable.$('tr.success').removeClass('success');
+        $('#kaisha_sentaku_ok').attr('disabled',true);
+        $('#clear_kaisha').attr('disabled',true);
+        // $('#bashomaster_会社コード').val('');
+        // $('#kaisha-name').text('');
+    });
+    $('#kaisha_sentaku_ok').on( 'click', function () {
+        var d = oKaishaTable.row('tr.selected').data();
+        $('#bashomaster_会社コード').val(d[0]);
+        $('#kaisha-name').text(d[1]);
+    });
+    $('#kaisha-table-modal').on( 'dblclick', 'tr', function () {
+        $(this).addClass('selected');
+        $(this).addClass('success');
+        var d = oKaishaTable.row('tr.selected').data();
+        $('#bashomaster_会社コード').val(d[0]);
+        $('#kaisha-name').text(d[1]);
+        $('#kaisha-search-modal').modal('hide');
+      });
+    $('.refer-kaisha').click(function(){
+        $('#kaisha-search-modal').modal('show');
+        if ($('#bashomaster_会社コード').val() != ''){
+            oKaishaTable.rows().every( function( rowIdx, tableLoop, rowLoop ) {
+              data = this.data();
+              if (data[0] == $('#bashomaster_会社コード').val()) {
+                oKaishaTable.$('tr.selected').removeClass('selected');
+                oKaishaTable.$('tr.success').removeClass('success');
+                this.nodes().to$().addClass('selected');
+                this.nodes().to$().addClass('success');
+                }
+            });
+            oKaishaTable.page.jumpToData($('#bashomaster_会社コード').val(), 0);
+            $('#kaisha_sentaku_ok').attr('disabled',false);
+            $('#clear_kaisha').attr('disabled',false);
+        }
+    });
 });
 
 //button handle
-$(function(){
-    $('.refer-kaisha').click(function(){
-        $('#kaisha-search-modal').modal('show');
-    });
+// $(function(){
+//     $('.refer-kaisha').click(function(){
+//         $('#kaisha-search-modal').modal('show');
+//     });
 
-});
+// });
 
 //keydown trigger
 $(function(){
@@ -83,5 +127,4 @@ $(function(){
 //Add maxlength display
 $(function(){
     $('input[maxlength]').maxlength();
-
 });

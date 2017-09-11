@@ -1,5 +1,5 @@
 <div class="modal" id="kaisha-search-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg" >
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -27,9 +27,17 @@
           <% end %>
           </tbody>
         </table>
+        <% if !(defined?(add_CUD)).nil? %>
+          <br>
+          <%=render "share/new_edit_destroy_buttons", object: "kaishamaster"%>
+        <% end %>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" id="koutei_sentaku_ok">　ＯＫ　</button>
+        <div class="pull-left">
+          <%= link_to '会社マスタ管理へ', kaishamasters_path %>
+        </div>
+        <button type="button" class="btn btn-default" id="clear_kaisha">選択を解除する</button>
+        <button type="button" class="btn btn-primary" id="kaisha_sentaku_ok" data-dismiss="modal">　ＯＫ　</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
       </div>
     </div>

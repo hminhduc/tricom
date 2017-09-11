@@ -1,7 +1,8 @@
 class Shainmaster < ActiveRecord::Base
   self.table_name = :社員マスタ
   self.primary_key = :社員番号
-
+  include PgSearch
+  multisearchable :against => %w{序列 社員番号 連携用社員番号 氏名 shozoku_name roru_ロール名 yakushoku_役職名 内線電話番号 有給残数 }
   # default_scope { where("社員番号 is not '#{ENV['admin_user']}'")}
   default_scope { order(序列: :ASC) }
   validates :社員番号,:氏名, :連携用社員番号, presence: true
@@ -16,6 +17,8 @@ class Shainmaster < ActiveRecord::Base
   has_many :setsubiyoyaku, dependent: :destroy, foreign_key: :予約者
   has_many :mybashomaster, dependent: :destroy, foreign_key: :社員番号
   has_many :myjobmaster, dependent: :destroy, foreign_key: :社員番号
+  has_many :mykaishamaster, dependent: :destroy, foreign_key: :社員番号
+  has_many :jobmaster, dependent: :nullify, foreign_key: :入力社員番号
   has_many :shouninsha, class_name: Shoninshamst.name,
     foreign_key: :承認者, dependent: :destroy
   has_many :shinseisha, class_name: Shoninshamst.name,
@@ -28,6 +31,7 @@ class Shainmaster < ActiveRecord::Base
   has_many :send_dengons, through: :send_dengon, source: :input_user
   has_many :receive_dengons, through: :receive_dengon, source: :to_user
   has_many :rorumenbas, dependent: :destroy, foreign_key: :社員番号
+  has_many :yuukyuu_kyuuka_rireki, dependent: :destroy, foreign_key: :社員番号
   has_one :setting, dependent: :destroy, foreign_key: :社員番号
   belongs_to :shozai, foreign_key: :所在コード
   belongs_to :shozokumaster, foreign_key: :所属コード
@@ -40,7 +44,9 @@ class Shainmaster < ActiveRecord::Base
     from 担当者マスタ)"}
   scope :get_kubun, ->{where(区分: false)}
   delegate :所在名, to: :shozai, prefix: :shozai, allow_nil: true
-
+  delegate :name, to: :shozokumaster, prefix: :shozoku, allow_nil: true
+  delegate :ロール名, to: :rorumaster, prefix: :roru, allow_nil: true
+  delegate :役職名, to: :yakushokumaster, prefix: :yakushoku, allow_nil: true
   def self.import(file)
     # a block that runs through a loop in our CSV data
     CSV.foreach(file.path, headers: true) do |row|
@@ -67,5 +73,9 @@ class Shainmaster < ActiveRecord::Base
         csv << attributes.map{ |attr| shainmaster.send(attr) }
       end
     end
+  end
+  # Naive approach
+  def self.rebuild_pg_search_documents
+    find_each { |record| record.update_pg_search_document }
   end
 end

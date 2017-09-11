@@ -13,12 +13,18 @@ jQuery ->
     focusOnShow: false
   })
 
+  $('#dengon_日付').click () ->
+    $('.datetime').data("DateTimePicker").toggle();
+
   oDengon = $('.dengon').DataTable({
-    "pagingType": "full_numbers"
-    , "oLanguage": {
-      "sUrl": "../../assets/resource/dataTable_ja.txt"
-    }
-    ,"aoColumnDefs": [
+    "pagingType": "simple_numbers"
+    "fnDrawCallback": (oSettings) ->
+      $('.new-btn').appendTo($('.dt-buttons'));
+    ,"oLanguage":{
+      "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
+    },
+    "dom": "<'row'<'col-md-6'l><'col-md-6'f>><'row'<'col-md-7'B><'col-md-5'p>><'row'<'col-md-12'tr>><'row'<'col-md-12'i>>",
+    "aoColumnDefs": [
       { "bSortable": false, "aTargets": [ 10,11]},
       {
         "targets": [10,11],
@@ -26,9 +32,19 @@ jQuery ->
         "targets": [7],
         "width": '20%'
       }
-    ],
-    "columnDefs": [{
+      ],
+    columnDefs: [
       "targets": 'no-sort',
       "orderable": false
-    }]
+    ],
+    buttons: [
+      'selectAll',
+      'selectNone'
+    ],
+    "oSearch": {"sSearch": queryParameters().search}
   })
+
+  $('#dengon_touroku').click (e) ->
+    if $('#dengon_from1').val() == '' && $('#dengon_from2').val() == '' && $('#dengon_日付').val() == ''&& $('#dengon_社員番号').val() == ''&& $('#dengon_用件').val() == '' && $('#dengon_回答').val() == ''&& $('#dengon_伝言内容').val() == ''
+      e.preventDefault()
+      swal("入力してください。")

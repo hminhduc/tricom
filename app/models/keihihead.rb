@@ -1,6 +1,8 @@
 class Keihihead < ActiveRecord::Base
   self.table_name = :keihi_heads
   self.primary_key = :申請番号
+  include PgSearch
+  multisearchable :against => %w{申請番号 shain_name 承認済区分 keihibody_shain_code}
   has_many :keihibodies, foreign_key: :申請番号, dependent: :destroy
   belongs_to :shainmaster, foreign_key: :社員番号
 
@@ -21,6 +23,14 @@ class Keihihead < ActiveRecord::Base
   # validates :承認者, presence: true, length: {minimum: 1}
   validate :check_kubun
 
+  def self.import(file)
+    # a block that runs through a loop in our CSV data
+    CSV.foreach(file.path, headers: true) do |row|
+      # creates a user for each row in the CSV file
+      Keihihead.create! row.to_hash
+    end
+  end
+
   def self.to_csv
     attributes = %w{申請番号 日付 社員番号 申請者 交通費合計 日当合計 宿泊費合計
       その他合計 旅費合計 仮払金 合計 支給品 過不足 承認kubun 承認者 清算予定日 清算日 承認済区分}
@@ -33,18 +43,31 @@ class Keihihead < ActiveRecord::Base
       end
     end
   end
+  # Naive approach
+  def self.rebuild_pg_search_documents
+    find_each { |record| record.update_pg_search_document }
+  end
 
   private
   def check_kubun
     if 承認kubun != "0"
       if self.承認者.empty? && self.清算予定日.nil?
-        errors.add(:承認者, "承認者を入力してください")
-        errors.add(:清算予定日, "清算予定日を入力してください")
+        errors.add(:承認者, (I18n.t 'app.model.check_kubun.shoninsha'))
+        errors.add(:清算予定日, (I18n.t 'app.model.check_kubun.seisanyoteibi'))
       elsif self.承認者.empty?
-         errors.add(:承認者, "承認者を入力してください")
+         errors.add(:承認者, (I18n.t 'app.model.check_kubun.shoninsha'))
       elsif self.清算予定日.nil?
-        errors.add(:清算予定日, "清算予定日を入力してください")
+        errors.add(:清算予定日, (I18n.t 'app.model.check_kubun.seisanyoteibi'))
       end
     end
+  end
+  def shain_name
+    if !self.承認者.empty?
+      Shainmaster.find(self.承認者).try(:氏名)
+    end
+  end
+
+  def keihibody_shain_code
+    Keihibody.find_by(申請番号: self.申請番号).try(:社員番号)
   end
 end

@@ -1,0 +1,31 @@
+= javascript_include_tag 'yuukyuu_kyuukas'
+= provide(:title, (t 'title.yuukyuu_kyuuka'))
+%ol.breadcrumb
+  %li= link_to (t 'title.menu'), main_path
+  %li.active 有給休暇履歴
+
+%br
+
+%table.ykkkretable.table.table-striped.table-bordered.table-hover{cellspacing: '0', width: '100%'}
+  %thead
+    %tr
+      %th
+      %th 社員番号
+      %th 年月
+      %th 月初有給残
+      %th 月末有給残
+      %th
+      %th
+  %tbody
+    - @yuukyuu_kyuuka_rireki.each do |yuukyuu_kyuuka_rireki|
+      %tr
+        %td= yuukyuu_kyuuka_rireki.id
+        %td= yuukyuu_kyuuka_rireki.社員番号
+        %td= yuukyuu_kyuuka_rireki.年月
+        %td= yuukyuu_kyuuka_rireki.月初有給残
+        %td= yuukyuu_kyuuka_rireki.月末有給残
+        %td= link_to '編集', edit_yuukyuu_kyuuka_rireki_path(yuukyuu_kyuuka_rireki)
+        - msg = t 'app.delete_confirm'
+        %td= link_to '削除', yuukyuu_kyuuka_rireki, :method => :delete, :data => { :confirm => msg }
+=render 'share/new_edit_destroy_buttons', object: "ykkkre",new_path: new_yuukyuu_kyuuka_rireki_path
+=render 'share/import_csv_modal',import_path: import_yuukyuu_kyuuka_rirekis_path

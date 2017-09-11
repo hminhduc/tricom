@@ -9,6 +9,11 @@ class Kanris::KintaisController < ApplicationController
       @date = Date.today.to_date
     end
     @kintais = Kintai.get_by_mounth(@date).where.not(社員番号: (Shainmaster.all.where(区分: true).map(&:社員番号)))
+    if params[:user_name].nil?
+      @user_name = current_user.担当者コード
+      @shainmasters = Shainmaster.all.where(社員番号: @user_name)
+      @kintais = Kintai.selected_month(@user_name, @date)
+    end
     if params[:user_name].present?
       @user_name = params[:user_name]
       @shainmasters = Shainmaster.all.where(社員番号: @user_name)
@@ -41,7 +46,7 @@ class Kanris::KintaisController < ApplicationController
     end
     respond_to do |format|
       format.html
-      format.xlsx {render xlsx: 'export_excel', filename: "管理G_勤怠_#{@date}.xlsx"}
+      format.xlsx {render xlsx: 'export_excel', filename: '管理G_勤怠_#{@date}.xlsx'}
     end
   end
 end

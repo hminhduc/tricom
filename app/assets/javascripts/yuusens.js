@@ -3,7 +3,7 @@ $(function() {
     $('.yuusen-table').DataTable({
         "pagingType": "simple_numbers"
         ,"oLanguage":{
-            "sUrl": "../../assets/resource/dataTable_ja.txt"
+            "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
         }
         ,"aoColumnDefs": [
             { "bSortable": false, "aTargets": [ 3,4 ]},
@@ -16,6 +16,7 @@ $(function() {
             "targets"  : 'no-sort',
             "orderable": false
         }]
+        ,"oSearch": {"sSearch": queryParameters().search}
     })
 
 });

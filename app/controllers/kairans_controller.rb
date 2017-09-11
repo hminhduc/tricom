@@ -1,6 +1,6 @@
 class KairansController < ApplicationController
   before_action :require_user!
-  before_action :set_kairan, only: [:update, :destroy]
+  before_action :set_kairan, only: [:update, :destroy,:show]
 
   respond_to :json
 
@@ -19,8 +19,8 @@ class KairansController < ApplicationController
 
   def kaitou_create
     taiShoSha = params[:kaitoto]
-    kairan_params[:発行者] = session[:user]
     kairan = Kairan.create(kairan_params)
+    kairan.update(発行者: session[:user])
     Kairanshosai.create!(回覧コード:kairan.id, 対象者: taiShoSha, 状態: 0)
     kairanShoshai = Kairanshosai.where(回覧コード: params[:kaitoid], 対象者: session[:user]).first!
     kairanShoshai.update(状態: 2)
@@ -36,7 +36,7 @@ class KairansController < ApplicationController
     arrSelected.each do |kairanShoshaiId|
       Kairanshosai.find(kairanShoshaiId).update(状態: 1)
     end
-    flash[:notice] = t "app.flash.kairan_confirm"
+    flash[:notice] = t 'app.flash.kairan_confirm'
     redirect_to kairans_url
   end
 
@@ -46,8 +46,8 @@ class KairansController < ApplicationController
 
   def index
     case params[:button]
-      when '検索'
-      when '確認'
+      when (t 'helpers.button.search')
+      when (t 'helpers.button.confirm')
         strSelecteds = params[:checked]
         arrSelecteds = strSelecteds.split(',') if strSelecteds
         arrSelecteds.each do |kairanShoshaiId|
@@ -63,21 +63,25 @@ class KairansController < ApplicationController
         end
         shain = Shainmaster.find session[:user]
         update_kairanshosai_counter shain
-        flash[:notice] = t "app.flash.kairan_confirm"
+        flash[:notice] = t 'app.flash.kairan_confirm'
       # redirect_to kairans_url
 
     end
 
     @kairanShoshais = Kairanshosai.all
-    if params[:head].present?
-      @shain_param = params[:head][:shainbango]
-    else
-      @shain_param = session[:user]
-    end
+    # if params[:head].present?
+    #   @shain_param = params[:head][:shainbango]
+    # else
+    #   @shain_param = session[:user]
+    # end
+    @shain_param = session[:user]
     @yoken = params[:head][:youken] if params[:head].present?
     arrKairanId = Kairan.where(要件: @yoken).ids if @yoken.present?
-
+    vars = request.query_parameters
     @kairanShoshais = @kairanShoshais.where(対象者: @shain_param) if @shain_param.present?
+    # if !vars['search'].nil?
+    #   @shain_param = ''
+    # end
     @kairanShoshais = @kairanShoshais.where(回覧コード: arrKairanId) if @yoken.present?
 
     old_kairan_process()
@@ -109,20 +113,19 @@ class KairansController < ApplicationController
     # kairan_params[:発行者] = session[:user]
     kairan_params[:状態] = 0
     @kairan = Kairan.new(kairan_params)
-
-    flash[:notice] = t "app.flash.new_success" if @kairan.save
+    flash[:notice] = t 'app.flash.new_success' if @kairan.save
     updateKairanDetail(@kairan.id, params[:shain])
     respond_with(@kairan, location: kairans_url)
   end
 
   def update
     updateKairanDetail(@kairan.id, params[:shain])
-    flash[:notice] = t "app.flash.update_success" if @kairan.update(kairan_params)
+    flash[:notice] = t 'app.flash.update_success' if @kairan.update(kairan_params)
     respond_with(@kairan, location: kairans_url)
   end
 
   def destroy
-    @kairanShoshai.destroy
+    @kairanShoshai.destroy if @kairanShosai
     respond_with(@kairanShoshai, location: kairans_url)
   end
 
@@ -131,14 +134,14 @@ class KairansController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.csv { send_data @kairans.to_csv, filename: "回覧.csv" }
+      format.csv { send_data @kairans.to_csv, filename: '回覧.csv' }
     end
   end
 
   private
   def set_kairan
-    @kairan = Kairan.find(params[:id])
-    @kairanShoshai = Kairanshosai.find(params[:id])
+    @kairan = Kairan.find_by(id: params[:id])
+    @kairanShoshai = Kairanshosai.find_by(id: params[:id])
   end
 
   def kairan_params

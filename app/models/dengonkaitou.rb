@@ -1,8 +1,9 @@
 class Dengonkaitou < ActiveRecord::Base
   self.table_name = :伝言回答マスタ
-
+  include PgSearch
+  multisearchable :against => %w{種類名 備考}
   validates :種類名, presence: true
-  
+  validates :種類名, uniqueness: true
   # a class method import, with file passed through as an argument
 
   def self.import(file)
@@ -24,5 +25,9 @@ class Dengonkaitou < ActiveRecord::Base
         csv << attributes.map{ |attr| dengonkaitou.send(attr) }
       end
     end
+  end
+  # Naive approach
+  def self.rebuild_pg_search_documents
+    find_each { |record| record.update_pg_search_document }
   end
 end

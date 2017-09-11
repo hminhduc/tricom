@@ -12,9 +12,72 @@ module SessionsHelper
     # 現在保留
     # check_shozai()
     check_kintai_at_day_by_user(user.id, Date.today)
+    # reset_data_search
     respond_with user, location: time_line_view_events_url
   end
+  def set_data_search
+    if logged_in?
+      Bashokubunmst.rebuild_pg_search_documents
+      Bashomaster.rebuild_pg_search_documents
+      Bunrui.rebuild_pg_search_documents
+      Dengon.rebuild_pg_search_documents
+      Dengonkaitou.rebuild_pg_search_documents
+      Dengonyouken.rebuild_pg_search_documents
+      Eki.rebuild_pg_search_documents
+      Event.rebuild_pg_search_documents
+      Jobmaster.rebuild_pg_search_documents
+      Joutaimaster.rebuild_pg_search_documents
+      JptHolidayMst.rebuild_pg_search_documents
+      Kairan.rebuild_pg_search_documents
+      Kairanyokenmst.rebuild_pg_search_documents
+      Kaishamaster.rebuild_pg_search_documents
+      Keihihead.rebuild_pg_search_documents
+      Kikanmst.rebuild_pg_search_documents
+      Kintai.rebuild_pg_search_documents
+      Kouteimaster.rebuild_pg_search_documents
+      Rorumaster.rebuild_pg_search_documents
+      Rorumenba.rebuild_pg_search_documents
+      Setsubi.rebuild_pg_search_documents
+      Setsubiyoyaku.rebuild_pg_search_documents
+      Shainmaster.rebuild_pg_search_documents
+      Shoninshamst.rebuild_pg_search_documents
+      Shozai.rebuild_pg_search_documents
+      Shozokumaster.rebuild_pg_search_documents
+      Tsushinseigyou.rebuild_pg_search_documents
+      User.rebuild_pg_search_documents
+      Yakushokumaster.rebuild_pg_search_documents
+      YuukyuuKyuukaRireki.rebuild_pg_search_documents
+      Yuusen.rebuild_pg_search_documents
+    end
+  end
+  def reset_data_search
+    if logged_in?
 
+      # Bashomaster.rebuild_pg_search_documents
+      # Dengon.rebuild_pg_search_documents
+      # Dengonkaitou.rebuild_pg_search_documents
+      # Dengonyouken.rebuild_pg_search_documents
+      # Eki.rebuild_pg_search_documents
+      # Jobmaster.rebuild_pg_search_documents
+      # JptHolidayMst.rebuild_pg_search_documents
+      # Kairan.rebuild_pg_search_documents
+      # PgSearch::Document.delete_all(searchable_type: "Kairanshosai")
+      # Kairanyokenmst.rebuild_pg_search_documents
+      # Keihihead.rebuild_pg_search_documents
+      # PgSearch::Document.delete_all(searchable_type: "Keihibody")
+      # Kintai.rebuild_pg_search_documents
+      # Kouteimaster.rebuild_pg_search_documents
+      # Rorumenba.rebuild_pg_search_documents
+      # Setsubiyoyaku.rebuild_pg_search_documents
+      # PgSearch::Document.delete_all(searchable_type: "Setting")
+      # Shainmaster.rebuild_pg_search_documents
+      # Shoninshamst.rebuild_pg_search_documents
+      # Tsushinseigyou.rebuild_pg_search_documents
+      # User.rebuild_pg_search_documents
+      # YuukyuuKyuukaRireki.rebuild_pg_search_documents
+      Event.rebuild_pg_search_documents
+    end
+  end
   def current_user
     if session[:current_user_id]
       @current_user ||= User.find_by id: session[:current_user_id]
@@ -27,6 +90,7 @@ module SessionsHelper
 
   def log_out
     session.delete :current_user_id
+    session.delete :code
     @current_user = nil
   end
 
@@ -95,6 +159,41 @@ module SessionsHelper
       holiday = '1'
       note = day.holidays(:jp)[0][:name]
     end
+
+    # kinmu_type = Shainmaster.find(session[:user]).勤務タイプ
+
+    # date = day.to_s
+    # case kinmu_type
+    #   when '001'
+    #     start =  date + ' 07:00:00'
+
+    #   when '002'
+    #     start = date + ' 07:30:00'
+
+    #   when '003'
+    #     start = date + ' 08:00:00'
+
+    #   when '004'
+    #     start = date + ' 08:30:00'
+
+    #   when '005'
+    #     start = date + ' 09:00:00'
+
+    #   when '006'
+    #     start = date + ' 09:30:00'
+
+    #   when '007'
+    #     start = date + ' 10:00:00'
+
+    #   when '008'
+    #     start = date + ' 10:30:00'
+
+    #   when '009'
+    #     start = date + ' 11:00:00'
+
+    # end
+
+    # Kintai.create!(日付: day, 曜日: day.wday.to_s, 勤務タイプ: kinmu_type, 出勤時刻: start, 社員番号: user_id, holiday: holiday, 備考: note)
     Kintai.create!(日付: day, 曜日: day.wday.to_s, 社員番号: user_id, holiday: holiday, 備考: note)
   end
 end

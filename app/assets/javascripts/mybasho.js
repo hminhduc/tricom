@@ -3,7 +3,7 @@ $(function() {
     oTable = $('#mybashomaster').DataTable({
         "pagingType": "full_numbers"
         , "oLanguage": {
-            "sUrl": "../../assets/resource/dataTable_ja.txt"
+            "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
         },
         "aoColumnDefs": [
             { "bSortable": false, "aTargets": [ 8,9 ]},
@@ -22,7 +22,7 @@ $(function() {
     oKaishaTable = $('#kaisha-table-modal').DataTable({
         "pagingType": "full_numbers"
         ,"oLanguage":{
-            "sUrl": "../../assets/resource/dataTable_ja.txt"
+            "sUrl": "../../assets/resource/dataTable_"+$('#language').text()+".txt"
         }
     });
 
@@ -30,32 +30,62 @@ $(function() {
     $('#kaisha-table-modal tbody').on( 'click', 'tr', function () {
 
         var d = oKaishaTable.row(this).data();
-        $('#mybashomaster_会社コード').val(d[0]);
-        $('#kaisha-name').text(d[1]);
-
         if ( $(this).hasClass('selected') ) {
             $(this).removeClass('selected');
             $(this).removeClass('success');
-
+            $('#kaisha_sentaku_ok').addClass("disabled");
+            $('#clear_kaisha').addClass("disabled");
+            // $('#mybashomaster_会社コード').val('');
+            // $('#kaisha-name').text('');           
         }
         else {
             oKaishaTable.$('tr.selected').removeClass('selected');
             oKaishaTable.$('tr.success').removeClass('success');
             $(this).addClass('selected');
             $(this).addClass('success');
+            $('#kaisha_sentaku_ok').removeClass("disabled");
+            $('#clear_kaisha').removeClass("disabled");
         }
 
     } );
-});
-
-//button handle
-$(function(){
+    $('#clear_kaisha').on( 'click', function () {        
+        oKaishaTable.$('tr.selected').removeClass('selected');
+        oKaishaTable.$('tr.success').removeClass('success');
+        $('#kaisha_sentaku_ok').addClass("disabled");
+        $('#clear_kaisha').addClass("disabled");        
+    });
+    $('#kaisha_sentaku_ok').on( 'click', function () {        
+        var d = oKaishaTable.row('tr.selected').data();
+        $('#mybashomaster_会社コード').val(d[0]);
+        $('#kaisha-name').text(d[1]);
+    });
+    $('#kaisha-table-modal').on( 'dblclick', 'tr', function () {
+        $(this).addClass('selected');
+        $(this).addClass('success');
+        var d = oKaishaTable.row('tr.selected').data();
+        $('#mybashomaster_会社コード').val(d[0]);
+        $('#kaisha-name').text(d[1]);
+        $('#kaisha-search-modal').modal('hide');
+      });
     $('.refer-kaisha').click(function(){
         $('#kaisha-search-modal').modal('show');
+        if ($('#mybashomaster_会社コード').val() != ''){
+            oKaishaTable.rows().every( function( rowIdx, tableLoop, rowLoop ) {
+              data = this.data();
+              if (data[0] == $('#mybashomaster_会社コード').val()) {
+                oKaishaTable.$('tr.selected').removeClass('selected');
+                oKaishaTable.$('tr.success').removeClass('success');
+                this.nodes().to$().addClass('selected');
+                this.nodes().to$().addClass('success');
+                }
+            });
+            oKaishaTable.page.jumpToData($('#mybashomaster_会社コード').val(), 0);
+            $('#kaisha_sentaku_ok').removeClass("disabled");
+            $('#clear_kaisha').removeClass("disabled");
+        }                   
     });
-
+    
 });
-
 //keydown trigger
 $(function(){
     //var url_path = $(location).attr('pathname');

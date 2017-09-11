@@ -1,0 +1,36 @@
+.row-fruid
+  - msg_select = t 'app.select_confirm'
+  - msg_confirm = t 'app.delete_confirm'
+  - delete_text = t 'title.delete'
+  .span#message_confirm_select{hidden: :true} #{msg_select}
+  .span#message_confirm_delete{hidden: :true} #{msg_confirm}
+  - if request['shain'].nil?
+    = link_to (t 'title.new'), new_keihihead_path(shain: session[:user]), class: 'new-btn dt-button'
+  - else
+    = link_to (t 'title.new'), new_keihihead_path(shain: request['shain']), class: 'new-btn dt-button'
+  %a.edit-btn.dt-button#destroy_keihihead{type: :button} #{delete_text}
+  %a.delete-btn.dt-button#print_index{type: :button} #{(t 'app.label.export_pdf')}
+.row-fruid
+  .form-inline
+    .form-group
+      / .col-md-12.col-xs-12.col-sm-12.col-lg-12
+      = f.label :清算予定日
+      .input-group
+        - if !request["search"].nil?
+          = f.text_field :清算予定日_search, class: 'form-control datepicker_search', value: ''
+        - elsif request["date"].nil?
+          = f.text_field :清算予定日_search, class: 'form-control datepicker_search', value: Date.today
+        - else
+          = f.text_field :清算予定日_search, class: 'form-control datepicker_search', value: request['date']
+        %span.input-group-addon#search_date_icon_group
+          %span.glyphicon.glyphicon-calendar#search_date_icon{"aria-hidden" => "true"}
+      = f.label :対象者
+      - if !request["search"].nil?
+        = f.select(:対象者, Shainmaster.all.order(:社員番号).collect {|p| [ p.氏名, p.社員番号 ] } , {selected: '', include_blank: '全員' }, class: 'form-control')
+      - elsif request['shain'].nil?
+        = f.select(:対象者, Shainmaster.all.order(:社員番号).collect {|p| [ p.氏名, p.社員番号 ] } , {selected: session[:user], include_blank: '全員' }, class: 'form-control')
+      - else
+        = f.select(:対象者, Shainmaster.all.order(:社員番号).collect {|p| [ p.氏名, p.社員番号 ] } , {selected: request['shain'], include_blank: "全員" }, class: 'form-control')
+      = f.label :承認済区分
+      = f.select( :承認済区分, options_for_select(["未承認","承認済"], selected: request['shonin']),{include_blank: "全て" }, class: 'form-control')
+      .span#shain_login{hidden: :true} #{session[:user]}

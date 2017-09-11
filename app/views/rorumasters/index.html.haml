@@ -1,7 +1,7 @@
 = javascript_include_tag 'rorumasters'
 = provide(:title, (t 'title.rorumaster'))
 %ol.breadcrumb
-  %li= link_to 'メニュー', main_path
+  %li= link_to (t 'title.menu'), main_path
   %li.active ロールマスタ
 
 
@@ -11,8 +11,7 @@
       %th ロールコード
       %th ロール名
       %th 序列
-      %th
-      %th
+     
 
   %tbody
     - @rorumaster.each do |rorumaster|
@@ -20,17 +19,8 @@
         %td= rorumaster.ロールコード
         %td= rorumaster.ロール名
         %td= rorumaster.序列
-        %td= link_to '編集', edit_rorumaster_path(rorumaster)
-        - msg = t 'app.delete_confirm'
-        %td= link_to '削除', rorumaster, :method => :delete, :data => { :confirm => msg }
-
-= link_to '新規', new_rorumaster_path
-
-%h4 CSVでのデータをインポート!
-= form_tag import_rorumasters_path,class:'form-inline', multipart: true do
-  .form-group
-    = label_tag 'selectcsv', nil, class: 'sr-only'
-    = file_field_tag :file , class: 'btn btn-default'
-  .form-group
-    = label_tag 'importcsv', nil, class: 'sr-only'
-    = submit_tag "Import CSV" , class: 'btn btn-default'
+        
+= render 'share/new_edit_destroy_buttons',object: "rorumaster"
+= render 'share/import_csv_modal',import_path: import_rorumasters_path
+= render 'roru_new_modal'
+= render 'roru_edit_modal'

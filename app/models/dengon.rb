@@ -1,5 +1,8 @@
 class Dengon < ActiveRecord::Base
   self.table_name = :伝言
+  include PgSearch
+  multisearchable :against => %w{from1 from2 input_user_氏名 to_user_氏名 youken_種類名 kaitou_種類名 伝言内容}
+
 
   belongs_to :input_user, foreign_key: :入力者, class_name: 'Shainmaster'
   belongs_to :to_user, foreign_key: :社員番号, class_name: 'Shainmaster'
@@ -22,4 +25,10 @@ class Dengon < ActiveRecord::Base
       end
     end
   end
+
+  # Naive approach
+  def self.rebuild_pg_search_documents
+    find_each { |record| record.update_pg_search_document }
+  end
+
 end

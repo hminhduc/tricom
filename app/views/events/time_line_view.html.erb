@@ -4,30 +4,102 @@
 <%= stylesheet_link_tag 'events' %>
 <%provide(:title, (t 'title.time_line_view'))%>
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 col-xs-12 col-sm-12 col-lg-12">
     <ol class="breadcrumb">
-      <li><%= link_to 'メニュー', main_path %></li>
-      <li><%= link_to 'カレンダー', events_path %></li>
-      <li class="active">タイムライン</li>
+      <li><%= link_to (t 'title.menu'), main_path %></li>
+      <li><%= link_to (t 'title.event'), events_path %></li>
+      <li class="active"><%=(t 'title.time_line_view')%></li>
+      <div class= 'pull-right'>
+        <div class="navbar-nav navbar-right">
+            <li class="dropdown" style="margin-right: 20px">
+              <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <span><i class="glyphicon glyphicon-option-horizontal fa-1x" style="color: rgb(76, 76, 76); font-size: 20px"></i></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><%= link_to raw("<i class='glyphicon glyphicon-new-window' style='margin-right:1em;'></i>"+(t 'title.shutchou_ikkatsu')), "/events/shutchou_ikkatsu_new?param=timeline&shain_id="+session[:user] %></li>
+                <li id="modal_print_event"><%= link_to raw("<i class='fa fa-print' style='margin-right:1em;'></i>"+(t 'app.label.export_pdf')), "#" %></li>
+                <li id="modal_shousai_event"><%= link_to raw("<i class='glyphicon glyphicon-book' style='margin-right:1em;'></i>"+(t 'app.label.shousai_event')), "#" %></li>
+              </ul>
+            </li>
+            <li class="dropdown" style="margin-right: 20px">
+            <a class="dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              <span><i class="glyphicon glyphicon-question-sign fa-1x" style="color: rgb(76, 76, 76); font-size: 20px"></i></span>
+            </a>
+            <ul class="dropdown-menu help-question" style="width: 500px">
+              <li style="text-align: center; font-size: 20px"><b>タイムライン</b></li>
+              <li>マウスでイベントをドラックすることは、可能ですが、竹中のイベントをドラックして藤井の所へ移動できるのをふせぐことになります。</li>
+              <li>竹中のイベントは、竹中のエリアだけ、移動できる。または、変更することができるようにする。</li>
+
+              <li>①画面の上に現在の時刻を表示する。そして、画面の「リフレシュ」用のボタンをせってする。</li>
+
+              <li>②そしてその時刻で、イベントを精査して、画面のイベントを読み取り、状態を更新します。対象のイベントが、無い場合、「不在」になります。</li>
+            </ul>
+          </li>
+        </div>
+      </div>
     </ol>
   </div>
 </div>
-
+<%= render 'print_modal' %>
+<%= render 'shousai_modal' %>
 <%= simple_form_for :timeline, url: time_line_view_events_path, method: :post do |f| %>
-
+<!--  Show time on top -->
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-2 col-xs-6 col-sm-3 col-lg-2">
+    <table class="pull-left">
+    <% if @kitaku_event.count > 0 %>
+            <td>
+              <button class="btn btn-primary" id="create_kitaku_button" type="button" style="margin-bottom: 0px;margin-right:15px" disabled="true"><%=(t 'app.label.create_kitaku')%></button>
+            </td>
+          <%else%>
+            <td>
+              <button class="btn btn-primary" id="create_kitaku_button" type="button" style="margin-bottom: 0px;margin-right:15px"><%=(t 'app.label.create_kitaku')%></button>
+            </td>
+          <%end
+          %>
+
+          <td>
+            <button class="btn btn-primary" id="reload_button" type="button" style="margin-bottom: 0px;margin-right:15px" ><%=(t 'app.label.reload')%></button>
+          </td>
+    </table>
+  </div>
+  <div class="col-md-6 col-xs-8 col-sm-8 col-lg-4 col-md-offset-3 col-xs-offset-0 col-sm-offset-0 col-lg-offset-3">
+    <%
+        weekday = Array.new
+        weekday[0] =  "日"
+        weekday[1] = "月"
+        weekday[2] = "火"
+        weekday[3] = "水"
+        weekday[4] = "木"
+        weekday[5] = "金"
+        weekday[6] = "土"
+        time = Time.new
+        timeText = "#{time.year}年#{time.month}月#{time.day}日(#{weekday[time.wday]}) #{time.strftime("%H:%M")}"
+     %>
+    <span style="font-size: 30px" id="timeline_time"><%=timeText%></span>
+    <input type="hidden" id="user_login" value=<%= session[:user] %> />
+
+  </div>
+</div>
+<!-- end -->
+<div class="row">
+  <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 col-xs-12 col-sm-12 col-lg-12">
     <div class="timeline-view">
       <div style="height:55px;">
-        <div class="pull-left">
-          <%= f.submit '勤務', class: 'btn btn-default', id:'kintai'%>
-          <%= f.submit '経費', class: 'btn btn-default', id:'keihi'%>
-          <%= f.submit '承認', class: 'btn btn-default', id:'shonin'%>
-          <%= f.submit '伝言', class: 'btn btn-default', id:'dengon'%>
-          <%= f.submit '回覧', class: 'btn btn-default', id:'kairan'%>
-          <%= f.submit '設備予約', class: 'btn btn-default', id:'setsubiyoyaku'%>
-        </div>
-        <table class="pull-right">
+        <!-- <div class="pull-left">
+          <%= f.submit (t 'helpers.submit.redirect_to_kintai'), class: 'btn btn-default', id:'kintai'%>
+          <%= f.submit (t 'helpers.submit.redirect_to_keihihead'), class: 'btn btn-default', id:'keihi'%>
+          <%= f.submit (t 'helpers.submit.redirect_to_shonin'), class: 'btn btn-default', id:'shonin'%>
+          <%= f.submit (t 'helpers.submit.redirect_to_dengon'), class: 'btn btn-default', id:'dengon'%>
+          <%= f.submit (t 'helpers.submit.redirect_to_kairan'), class: 'btn btn-default', id:'kairan'%>
+          <%= f.submit (t 'helpers.submit.redirect_to_setsubiyoyaku'), class: 'btn btn-default', id:'setsubiyoyaku'%>
+        </div> -->
+        <!-- <div class="form-inline pull-left">
+          <%= f.input (t 'app.label.calendar_genzai') do %>
+              <%= f.select :所在コード, Shozai.all.order(所在コード: :asc).map { |s| [s.name, s.id, { class: '' }] }, {:selected => Shainmaster.find(session[:user]).try(:所在コード),include_blank: true},{ class: 'form-control'} %>
+          <% end %>
+        </div> -->
+        <table class="pull-left">
          <!--  <td>
             <%= f.input :ロールコード, label:'部署' do %>
               <%= f.select :ロールコード, @role.map { |k| [k.ロール名, k.ロールコード]}, {:selected => @roru.try(:ロールコード), include_blank: true},{class: 'form-control'}%>
@@ -41,19 +113,19 @@
           <td><button class="btn btn-primary" id="kensaku" type="button" style="margin-bottom: 15px;margin-left:15px">検索</button></td>
  -->
           <td>
-            <bold style="line-height:40px;margin-right:15px;font-weight:bold;">部署</bold>
+            <bold style="line-height:40px;margin-right:15px;font-weight:bold;"><%=(t 'title.busho')%></bold>
           </td>
           <td>
             <%= f.select :ロールコード, @role.map { |k| [k.ロール名, k.ロールコード]}, {:selected => @roru.try(:ロールコード), include_blank: true},{class: 'form-control'}%>
           </td>
 
           <td>
-            <bold style="line-height:40px;margin-right:15px;margin-left:15px;font-weight:bold;">状態</bold>
+            <bold style="line-height:40px;margin-right:15px;margin-left:15px;font-weight:bold;"><%=(t 'title.joutai')%></bold>
           </td>
           <td>
             <%= f.select :状態コード, @joutai.map { |k| [k.状態名, k.状態コード]}, {:prompt => "全て"}, {class: 'form-control'}%>
           </td>
-          <td><button class="btn btn-primary" id="kensaku" type="button" style="margin-bottom: 0px;margin-left:15px">検索</button></td>
+          <td><button class="btn btn-primary" id="kensaku" type="button" style="margin-bottom: 0px;margin-left:15px"><%=(t 'helpers.button.search')%></button></td>
 
         </table>
       </div>

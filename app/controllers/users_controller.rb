@@ -26,10 +26,10 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     if @user.save
-      flash[:notice] = t "app.flash.new_success"
+      flash[:notice] = t 'app.flash.new_success'
       redirect_to users_path
     else
-      flash[:notice] = t "app.flash.new_success"
+      flash[:notice] = t 'app.flash.new_success'
       @shainmasters = Shainmaster.all.has_not_tantousha
       render :new
     end
@@ -39,7 +39,7 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1.json
   def update
     if @user.update_attributes user_params_for_update
-      flash[:notice] = t "app.flash.update_success"
+      flash[:notice] = t 'app.flash.update_success'
       redirect_to root_url
     else
       respond_with @user
@@ -51,6 +51,21 @@ class UsersController < ApplicationController
   def destroy
     if @user.destroy
       redirect_to users_path
+    end
+  end
+
+  def ajax
+    case params[:focus_field]
+    when 'user_削除する'
+      params[:users].each {|user_code|
+        user=User.find(user_code)
+        user.destroy if user
+      }
+      data = {destroy_success: 'success'}
+      respond_to do |format|
+        format.json { render json: data}
+      end
+    else
     end
   end
 
@@ -73,7 +88,8 @@ class UsersController < ApplicationController
           end
           redirect_to root_url
         else
-          redirect_to :back, notice: '新パスワードともう一度パスワードが異なります。'
+          flash[:notice] = t 'app.update_pass_success'
+          redirect_to :back
         end
       else
         redirect_to :back, notice: 'ユーザーIDまたはパスワードが間違っています。'
@@ -86,16 +102,16 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.csv { send_data @users.to_csv, filename: "担当者マスタ.csv" }
+      format.csv { send_data @users.to_csv, filename: '担当者マスタ.csv' }
     end
   end
 
   def import
     if params[:file].nil?
-      flash[:alert] = t "app.flash.file_nil"
+      flash[:alert] = t 'app.flash.file_nil'
       redirect_to users_path
-    elsif File.extname(params[:file].original_filename) != ".csv"
-      flash[:danger] = t "app.flash.file_format_invalid"
+    elsif File.extname(params[:file].original_filename) != '.csv'
+      flash[:danger] = t 'app.flash.file_format_invalid'
       redirect_to users_path
     else
       begin
@@ -122,6 +138,6 @@ class UsersController < ApplicationController
 
   def user_params_for_update
     params.require(:user).permit :担当者名称, :password, :password_confirmation,
-      :avatar, :admin, :有給残数, :email
+      :avatar, :admin, :有給残数, :email, :current_password
   end
 end

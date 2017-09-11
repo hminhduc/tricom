@@ -2,7 +2,7 @@ class YuusensController < ApplicationController
   before_action :require_user!
   before_action :set_yuusen, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource except: :export_csv
-  respond_to :html
+  respond_to :html, :js
 
   def index
     @yuusens = Yuusen.all
@@ -23,13 +23,13 @@ class YuusensController < ApplicationController
 
   def create
     @yuusen = Yuusen.new(yuusen_params)
-    flash[:notice] = t "app.flash.new_success" if @yuusen.save
+    flash[:notice] = t 'app.flash.new_success' if @yuusen.save
     respond_with(@yuusen, location: yuusens_url)
 
   end
 
   def update
-    flash[:nitice] = t "app.flash.update_success" if @yuusen.update(yuusen_params)
+    flash[:nitice] = t 'app.flash.update_success' if @yuusen.update(yuusen_params)
     respond_with(@yuusen, location: yuusens_url)
   end
 
@@ -40,10 +40,10 @@ class YuusensController < ApplicationController
 
   def import
     if params[:file].nil?
-      flash[:alert] = t "app.flash.file_nil"
+      flash[:alert] = t 'app.flash.file_nil'
       redirect_to yuusens_path
-    elsif File.extname(params[:file].original_filename) != ".csv"
-      flash[:danger] = t "app.flash.file_format_invalid"
+    elsif File.extname(params[:file].original_filename) != '.csv'
+      flash[:danger] = t 'app.flash.file_format_invalid'
       redirect_to yuusens_path
     else
       begin
@@ -61,12 +61,26 @@ class YuusensController < ApplicationController
     end
   end
 
+  def ajax
+    case params[:focus_field]
+      when 'yuusen_削除する'
+        yuusenIds = params[:yuusens]
+        yuusenIds.each{ |yuusenId|
+          Yuusen.find_by(優先さ: yuusenId).destroy
+        }
+        data = {destroy_success: 'success'}
+        respond_to do |format|
+        format.json { render json: data}
+      end
+    end
+  end
+
   def export_csv
     @yuusens = Yuusen.all
 
     respond_to do |format|
       format.html
-      format.csv { send_data @yuusens.to_csv, filename: "優先.csv" }
+      format.csv { send_data @yuusens.to_csv, filename: '優先.csv' }
     end
   end
 
@@ -76,6 +90,6 @@ class YuusensController < ApplicationController
     end
 
     def yuusen_params
-      params.require(:yuusen).permit(:優先さ, :名前, :色)
+      params.require(:yuusen).permit(:優先さ, :備考, :色)
     end
 end

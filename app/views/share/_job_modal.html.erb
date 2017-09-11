@@ -30,9 +30,18 @@
           </tbody>
 
         </table>
+        <% if !(defined?(add_CUD)).nil? %>
+          <br>
+          <%=render "share/new_edit_destroy_buttons", object: "jobmaster"%>
+        <% end %>
       </div>
 
       <div class="modal-footer">
+        <div class="pull-left">
+          <%= link_to 'JOBマスタ管理へ',  jobmasters_path %><br>
+          <%= link_to '会社マスタ管理へ', kaishamasters_path %>
+        </div>
+        <button type="button" class="btn btn-default" id="clear_job">選択を解除する</button>
         <button type="button" class="btn btn-primary" data-dismiss="modal" id="job_sentaku_ok">　ＯＫ　</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
       </div>
@@ -40,3 +49,4 @@
     </div>
   </div>
 </div>
+

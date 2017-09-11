@@ -1,4 +1,4 @@
-<%= javascript_include_tag 'kouteimaster' %>
+<%= javascript_include_tag 'kouteimasters' %>
 <%provide(:title, (t 'title.kouteimaster'))%>
 <ol class="breadcrumb">
   <li><%= link_to 'メニュー', main_path %></li>
@@ -9,10 +9,11 @@
 
 <!-- <h1>工程マスタ</h1> -->
 
-<table id="kouteimaster" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+<table id="kouteimaster" class="kouteitable table table-striped table-bordered table-hover" cellspacing="0" width="100%">
 
   <thead>
     <tr>
+      <th></th>
       <th>所属</th>
       <th>工程コード</th>
       <th>工程名</th>
@@ -26,6 +27,7 @@
   <tbody>
     <% @kouteimasters.each do |kouteimaster| %>
       <tr id="koutei_<%= kouteimaster.id %>">
+        <td><%= kouteimaster.所属コード%></td>
         <td><%= kouteimaster.shozokumaster_name %></td>
         <td><%= kouteimaster.code %></td>
         <td><%= kouteimaster.name %></td>
@@ -35,19 +37,9 @@
     <% end %>
   </tbody>
 </table>
-
-<br>
-<%= link_to '新規', new_kouteimaster_path %>
-<% if can? :update, @kouteimasters %>
-  <h4>CSVでのデータをインポート!</h4>
-  <%= form_tag import_kouteimasters_path,class:'form-inline', multipart: true do %>
-      <div class="form-group">
-        <%= label_tag 'selectcsv', nil, class: 'sr-only' %>
-        <%= file_field_tag :file , class: 'btn btn-default' %>
-      </div>
-      <div class="form-group">
-        <%= label_tag 'importcsv', nil, class: 'sr-only' %>
-        <%= submit_tag "Import CSV" , class: 'btn btn-default' %>
-      </div>
-  <% end %>
+<%=render 'share/new_edit_destroy_buttons',object: 'koutei'%>
+<% if can? :update, @kouteimasters %>  
+  <%=render 'share/import_csv_modal',import_path: import_kouteimasters_path %>
 <% end %>
+<%= render 'koutei_new_modal' %>
+<%= render 'koutei_edit_modal' %>

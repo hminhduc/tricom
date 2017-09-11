@@ -1,0 +1,128 @@
+
+<% user = Shainmaster.find(session[:user]) %>
+<% yuukyuu_kyuuka_rireki = YuukyuuKyuukaRireki.find_by(社員番号: session[:user], 年月: @date_param) %>
+<table id="keihi-table-show" cellspacing="0" width="100%" style="font-size: 10px">
+  <tr style="page-break-inside: avoid;">
+    <td colspan="5" style="text-align: left;font-size: 13px"><%=@date_param[0..3] %> 年  <%=@date_param[5..6] %> 月度</td>
+    <td colspan="2" style="font-size: 15px">勤務工数表</td>
+    <td style="font-size: 13px" colspan="2" >氏名： <u><%=user.氏名 %></u></td>
+    <td style="font-size: 13px" colspan="2" >担当者番号： <u><%=user.社員番号 %></u></td>
+    <td></td>
+    <td style="font-size: 13px" rowspan="2" >有給残数</td>
+    <td style="font-size: 13px; border-bottom: 1px solid #000" >月初残: <% if !yuukyuu_kyuuka_rireki.nil? %><%= yuukyuu_kyuuka_rireki.月初有給残 %><% end %>日</td>
+  </tr>
+  <tr style="page-break-inside: avoid;">
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td style="font-size: 12px; border-bottom: 1px solid #000" >月末残: <% if !yuukyuu_kyuuka_rireki.nil? %><%= yuukyuu_kyuuka_rireki.月末有給残 %><% end %>日</td>
+  </tr>
+  <tr style="page-break-inside: avoid;">
+    <td>&nbsp;</td>
+  </tr>
+
+  <tr style="page-break-inside: avoid;">
+    <td rowspan="2" style="width: 4%;text-align: center; border-left: 1px solid #000;border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">日付</td>
+    <td rowspan="2" style="width: 4%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">曜日</td>
+    <td rowspan="2" style="width: 6%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">タイプ</td>
+    <td rowspan="2" style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">出勤時間</td>
+    <td rowspan="2" style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">退社時間</td>
+    <td colspan="6" style="text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">就 業 時 間</td>
+    <td rowspan="2" class="table-width" style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">保守携帯</td>
+    <td rowspan="2" style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">処理区分</td>
+    <td rowspan="2" style="width: 16%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000" >備考</td>
+  </tr>
+  <tr style="page-break-inside: avoid;">
+    <td style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000;">実労働時間</td>
+    <td style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000">遅刻早退</td>
+    <td style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000">普通残業</td>
+    <td style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000">深夜残業</td>
+    <td style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000">普通保守</td>
+    <td style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000">深夜保守</td>
+  </tr>
+  </thead>
+
+  <tbody>
+    <% jitsuroudou = 0 %>
+    <% chikoku = 0 %>
+    <% futsuuzangyou = 0 %>
+    <% shinyazangyou = 0 %>
+    <% futsuuhoshu = 0 %>
+    <% shinyahoshu = 0 %>
+    <% hoshukeitai = 0 %>
+    <% @kintais.each do |kintai| %>
+      <% add_class = '#DCDCDC' if kintai.曜日.in?(['日','土']) ||
+        kintai.try(:holiday) == '1' %>
+      <% add_class = 'success' if kintai.日付 == @date_now %>
+      <tr id="kintai-<%= kintai.id %>" bgcolor="<%= add_class %>" style="page-break-inside: avoid;">
+        <td style="text-align: center; border-left: 1px solid #000;border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.日付.strftime("%d") %></td>
+        <td style="text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.曜日 %></td>
+        <td style="text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.勤務タイプ %></td>
+        <td style="text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.出勤時刻.to_s(:time) unless kintai.出勤時刻.blank? %></td>
+        <td style="text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.退社時刻.to_s(:time) unless kintai.退社時刻.blank? %></td>
+        <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.実労働時間 %></td>
+        <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.遅刻時間 %></td>
+        <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.普通残業時間 %></td>
+        <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.深夜残業時間 %></td>
+        <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.普通保守時間 %></td>
+        <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.深夜保守時間 %></td>
+        <td style="text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000"> <% if kintai.保守携帯回数 == 1 %> 〇 <% end %></td>
+        <td style="text-align: left; border-right: 1px solid #000; border-bottom: 1px solid #000"><% if !kintai.状態1.nil? %><%= kintai.joutaimaster.try(:勤怠状態名) %>
+          <% end %>
+        </td>
+        <td style="text-align: left; border-right: 1px solid #000; border-bottom: 1px solid #000">
+          <% if !kintai.備考.nil? && kintai.備考.length > 20%>
+            <div class = "div_scoll"><%= kintai.備考 %></div>
+          <% else %>
+            <div><%= kintai.備考 %></div>
+          <% end %>
+          </td>
+      </tr>
+      <% if !kintai.実労働時間.nil? %><% jitsuroudou += kintai.実労働時間%><% end %>
+      <% if !kintai.遅刻時間.nil? %><% chikoku += kintai.遅刻時間%><% end %>
+      <% if !kintai.普通残業時間.nil? %><% futsuuzangyou += kintai.普通残業時間%><% end %>
+      <% if !kintai.深夜残業時間.nil? %><% shinyazangyou += kintai.深夜残業時間%><% end %>
+      <% if !kintai.普通保守時間.nil? %><% futsuuhoshu += kintai.普通保守時間%><% end %>
+      <% if !kintai.深夜保守時間.nil? %><% shinyahoshu += kintai.深夜保守時間%><% end %>
+      <% if !kintai.保守携帯回数.nil? %><% hoshukeitai += kintai.保守携帯回数%><% end %>
+    <% end %>
+    <tr style="page-break-inside: avoid;">
+        <td colspan=5 style="text-align: center; border-left: 1px solid #000;border-right: 1px solid #000; border-bottom: 1px solid #000">合　　計</td>
+        <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= jitsuroudou %></td>
+        <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= chikoku %></td>
+        <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= futsuuzangyou %></td>
+        <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= shinyazangyou %></td>
+        <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= futsuuhoshu %></td>
+        <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= shinyahoshu %></td>
+        <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= hoshukeitai %></td>
+        <td colspan=2 style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"></td>
+      </tr>
+      <tr style="page-break-inside: avoid;">
+        <td>&nbsp;</td>
+      </tr>
+      <tr style="page-break-inside: avoid;">
+        <td colspan=11>&nbsp;</td>
+        <td style="text-align: center; border-left: 1px solid #000;border-right: 1px solid #000; border-top: 1px solid #000">課長印</td>
+        <td style="text-align: center; border-right: 1px solid #000;border-top: 1px solid #000">リーダ印</td>
+        <td colspan=2> &nbsp;</td>
+      </tr>
+      <tr style="page-break-inside: avoid;">
+        <td colspan=11>&nbsp;</td>
+        <td rowspan="2" style="text-align: center; border-left: 1px solid #000; border-right: 1px solid #000;border-bottom: 1px  solid #000">&nbsp;</td>
+        <td rowspan="2" style="text-align: center;border-right: 1px solid #000; border-bottom: 1px solid #000">&nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan=11>&nbsp;</td>
+      </tr>
+  </tbody>
+
+</table>

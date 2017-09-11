@@ -2,6 +2,7 @@ class YakushokumastersController < ApplicationController
   before_action :require_user!
   skip_before_action :verify_authenticity_token
   before_action :set_yakushokumaster, only: [:show, :edit, :update, :destroy]
+  before_action :set_param, only: :index
   respond_to :js
   load_and_authorize_resource except: :export_csv
 
@@ -21,13 +22,13 @@ class YakushokumastersController < ApplicationController
 
   def create
     @yakushokumaster = Yakushokumaster.new(yakushokumaster_params)
-    flash[:notice] = t "app.flash.new_success" if @yakushokumaster.save
+    flash[:notice] = t 'app.flash.new_success' if @yakushokumaster.save
     respond_with @yakushokumaster
   end
 
 
   def update
-    flash[:notice] = t "app.flash.update_success" if @yakushokumaster.update yakushokumaster_params_for_update
+    flash[:notice] = t 'app.flash.update_success' if @yakushokumaster.update yakushokumaster_params_for_update
     respond_with @yakushokumaster
 
   end
@@ -39,10 +40,10 @@ class YakushokumastersController < ApplicationController
 
   def import
     if params[:file].nil?
-      flash[:alert] = t "app.flash.file_nil"
+      flash[:alert] = t 'app.flash.file_nil'
       redirect_to yakushokumasters_path
-    elsif File.extname(params[:file].original_filename) != ".csv"
-      flash[:danger] = t "app.flash.file_format_invalid"
+    elsif File.extname(params[:file].original_filename) != '.csv'
+      flash[:danger] = t 'app.flash.file_format_invalid'
       redirect_to yakushokumasters_path
     else
       begin
@@ -65,10 +66,56 @@ class YakushokumastersController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.csv { send_data @yakushokumasters.to_csv, filename: "役職マスタ.csv" }
+      format.csv { send_data @yakushokumasters.to_csv, filename: '役職マスタ.csv' }
     end
   end
 
+   def ajax
+    case params[:focus_field]
+      when 'yakushoku_削除する'
+        params[:yakushokus].each {|yakushoku_code|
+          yakushoku=Yakushokumaster.find(yakushoku_code)
+          yakushoku.destroy if yakushoku
+        }
+        data = {destroy_success: 'success'}
+        respond_to do |format|
+          format.json { render json: data}
+        end
+      when 'yakushoku_before_destroy'
+        associations = Yakushokumaster.find_by(役職コード: params[:yakushoku_id]).check_associations
+
+        data = {associations: associations}
+        respond_to do |format|
+          format.json { render json: data}
+        end
+    end
+  end
+
+  def create_yakushoku
+    @yakushokumaster = Yakushokumaster.new(yakushokumaster_params)
+
+    respond_to do |format|
+      if  @yakushokumaster.save
+        format.js { render 'create_yakushoku'}
+      else
+        format.js { render json: @yakushokumaster.errors, status: :unprocessable_entity}
+      end
+    end
+  end
+
+  def update_yakushoku
+
+    @yakushokumaster = Yakushokumaster.find(yakushokumaster_params[:役職コード])
+
+    respond_to do |format|
+      if  @yakushokumaster.update(yakushokumaster_params)
+        format.js { render 'update_yakushoku'}
+      else
+        format.js { render json: @yakushokumaster.errors, status: :unprocessable_entity}
+      end
+    end
+
+  end
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_yakushokumaster
@@ -83,5 +130,8 @@ class YakushokumastersController < ApplicationController
   def yakushokumaster_params_for_update
     params.require(:yakushokumaster).permit(:役職名)
   end
+  def set_param
+      @yakushokumaster = Yakushokumaster.new
+    end
 
 end

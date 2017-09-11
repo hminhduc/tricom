@@ -11,9 +11,9 @@
 
 
 %ol.breadcrumb
-  %li= link_to 'メニュー', main_path
+  %li= link_to (t 'title.menu'), main_path
   %li= link_to '設備予約', setsubiyoyakus_path
   %li.active 編集
 
-= render 'form'
+= render 'form', modal: "edit"
 = provide(:title, (t 'title.setsubiyoyaku'))

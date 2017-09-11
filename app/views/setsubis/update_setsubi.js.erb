@@ -1,0 +1,8 @@
+ $('#setsubi-edit-modal').modal('hide');
+$(".shonin-table").DataTable().row('tr.selected').remove()
+
+ var table = $('.shonin-table').DataTable();
+ table.row.add( ["<%=@setsubi.設備コード%>","<%=@setsubi.設備名%>","<%=@setsubi.備考%>"] ).draw( false );
+ $("#edit_setsubi").attr("disabled", true);
+ $("#destroy_setsubi").attr("disabled", true);
+

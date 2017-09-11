@@ -3,6 +3,7 @@ class KouteimastersController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_kouteimaster, only: [:show, :edit, :update, :destroy]
   before_action :set_shozoku, only: [:new, :edit, :create, :update]
+  before_action :set_param, only: :index
   respond_to :js
   load_and_authorize_resource except: :export_csv
 
@@ -31,7 +32,7 @@ class KouteimastersController < ApplicationController
   # POST /kouteimasters.json
   def create
     @kouteimaster = Kouteimaster.new kouteimaster_params
-    flash[:notice] = t "app.flash.new_success" if @kouteimaster.save
+    flash[:notice] = t 'app.flash.new_success' if @kouteimaster.save
     respond_with @kouteimaster
   end
 
@@ -39,10 +40,32 @@ class KouteimastersController < ApplicationController
   # PATCH/PUT /kouteimasters/1
   # PATCH/PUT /kouteimasters/1.json
   def update
-    flash[:notice] = t "app.flash.update_success" if @kouteimaster.update kouteimaster_params
+    flash[:notice] = t 'app.flash.update_success' if @kouteimaster.update kouteimaster_params
     respond_with @kouteimaster
   end
+  def create_koutei
+    @kouteimaster = Kouteimaster.new(kouteimaster_params)
 
+    respond_to do |format|
+      if  @kouteimaster.save
+        format.js { render 'create_koutei'}
+      else
+        format.js { render json: @kouteimaster.errors, status: :unprocessable_entity}
+      end
+    end
+  end
+
+  def update_koutei
+    koutei=kouteimaster_params
+    @kouteimaster = Kouteimaster.find("#{koutei[:工程コード]},#{koutei[:所属コード]}")
+    respond_to do |format|
+      if  @kouteimaster.update(koutei)
+        format.js { render 'update_koutei'}
+      else
+        format.js { render json: @kouteimaster.errors, status: :unprocessable_entity}
+      end
+    end
+  end
   # DELETE /kouteimasters/1
   # DELETE /kouteimasters/1.json
   def destroy
@@ -52,10 +75,24 @@ class KouteimastersController < ApplicationController
 
   def ajax
     case params[:id]
-      when "kouteimaster_所属コード"
+      when 'kouteimaster_所属コード'
         shozoku = Shozokumaster.find_by 所属コード: params[:kouteimaster_shozoku_code]
         shozoku_name = shozoku.try(:所属名)
         data = {shozoku_name: shozoku_name}
+        respond_to do |format|
+          format.json { render json: data}
+        end
+      else
+    end
+  end
+  def multi_delete
+    case params[:focus_field]
+      when 'koutei_削除する'
+        params[:kouteis].each{ |kouteiId|
+          koutei=Kouteimaster.find(kouteiId)
+          koutei.destroy if koutei
+        }
+        data = {destroy_success: 'success'}
         respond_to do |format|
           format.json { render json: data}
         end
@@ -64,10 +101,10 @@ class KouteimastersController < ApplicationController
 
   def import
     if params[:file].nil?
-      flash[:alert] = t "app.flash.file_nil"
+      flash[:alert] = t 'app.flash.file_nil'
       redirect_to kouteimasters_path
-    elsif File.extname(params[:file].original_filename) != ".csv"
-      flash[:danger] = t "app.flash.file_format_invalid"
+    elsif File.extname(params[:file].original_filename) != '.csv'
+      flash[:danger] = t 'app.flash.file_format_invalid'
       redirect_to kouteimasters_path
     else
       begin
@@ -90,13 +127,14 @@ class KouteimastersController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.csv { send_data @kouteimasters.to_csv, filename: "工程マスタ.csv" }
+      format.csv { send_data @kouteimasters.to_csv, filename: '工程マスタ.csv' }
     end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
   def set_kouteimaster
+
     @kouteimaster = Kouteimaster.find(params[:id])
   end
 
@@ -112,5 +150,7 @@ class KouteimastersController < ApplicationController
   def param_valid
       params[:kouteimaster][:所属コード].in?(Shozokumaster.pluck(:所属コード))
   end
-
+  def set_param
+      @kouteimaster=Kouteimaster.new
+  end
 end
