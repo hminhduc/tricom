@@ -139,6 +139,29 @@ class SettingsController < ApplicationController
       respond_to do |format|
         format.json {render json: @setting}
       end
+    when 'turning_data_all'
+      @all = Shainmaster.all
+      @all.each do |f|
+        events = f.events.where('Date(開始) < ?',Date.today.prev_month(2).beginning_of_month)
+        events.each do |event|
+          event.destroy
+        end
+        kintais = f.kintais.where('Date(日付) < ?',Date.today.prev_month(2).beginning_of_month)
+        kintais.each do |kintai|
+          kintai.destroy
+        end
+        keihiheads = Keihihead.where(社員番号: f.社員番号).where('Date(清算予定日) < ?',Date.today.prev_month(2).beginning_of_month)
+        keihiheads.each do |keihihead|
+          keihihead.destroy
+        end
+        kairans = f.kairan.where('Date(開始) < ?',Date.today.prev_month(2).beginning_of_month)
+        kairans.each do |kairan|
+          kairan.destroy
+        end
+      end
+      respond_to do |format|
+        format.json {render json: @setting}
+      end
     when 'setting_page_len'
       session[:page_length]=params[:page_len]
       respond_to do |format|

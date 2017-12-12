@@ -248,3 +248,13 @@ jQuery ->
         console.log 'Update setting turning data Successful'
       failure: () ->
         console.log 'Update setting turning data Unsuccessful'
+
+  $('#setting_turning_data_all').change ->
+    $.ajax
+      type: 'POST'
+      url: '/settings/ajax'
+      data: {setting: "turning_data_all" ,turning_data_all: @checked}
+      success: (data) ->
+        console.log 'Update setting turning data Successful'
+      failure: () ->
+        console.log 'Update setting turning data Unsuccessful'
