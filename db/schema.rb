@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170522035720) do
+ActiveRecord::Schema.define(version: 20171212073800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -228,6 +228,7 @@ ActiveRecord::Schema.define(version: 20170522035720) do
     t.string   "local"
     t.string   "select_holiday_vn"
     t.boolean  "turning_data"
+    t.boolean  "turning_data_all"
   end
 
   create_table "tasks", force: :cascade do |t|
