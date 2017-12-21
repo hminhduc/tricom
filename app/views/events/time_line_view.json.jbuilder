@@ -27,7 +27,7 @@ json.events @all_events do |event|
   if comment == ''
     comment = Jobmaster.find_by(job番号: event.try(:JOB)).job名 if Jobmaster.find_by(job番号: event.try(:JOB))
   end
-  title =''
+  title = ''
   title = event.joutaimaster.try(:name) if event.joutaimaster
   json.joutai title
   # title = event.joutaimaster.try(:name) << kisha_flag if event.joutaimaster
