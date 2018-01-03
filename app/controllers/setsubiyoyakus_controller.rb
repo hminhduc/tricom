@@ -13,7 +13,8 @@ class SetsubiyoyakusController < ApplicationController
     if params[:head].present?
       @setsubi_param = params[:head][:setsubicode]       
     end
-    @selected_date= session[:selected_date]||Date.current
+    @selected_date = session[:selected_date]||Date.current
+    @selected_date_session = session[:selected_date]
     @setsubiyoyaku = Setsubiyoyaku.where(設備コード: @setsubi_param) if @setsubi_param.present?
     respond_with(@setsubiyoyaku)
   end
