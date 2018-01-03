@@ -42,16 +42,17 @@
         %th
     %tbody
       - @setsubiyoyaku.each do |setsubiyoyaku|
-        %tr
-          %td= setsubiyoyaku.id
-          %td= setsubiyoyaku.開始
-          %td= setsubiyoyaku.終了
-          %td= setsubiyoyaku.shainmaster.氏名
-          %td= setsubiyoyaku.kaishamaster.nil? ? setsubiyoyaku.相手先 : setsubiyoyaku.kaishamaster.会社名
-          %td= setsubiyoyaku.用件
-          %td= link_to t('title.edit'), edit_setsubiyoyaku_path(setsubiyoyaku)
-          - msg = t 'app.delete_confirm'
-          %td= link_to t('title.delete'), setsubiyoyaku, :method => :delete, :data => { :confirm => msg }
+        - if (setsubiyoyaku.開始 >= DateTime.now.beginning_of_week.strftime("%Y/%m/%d %H:%M"))
+          %tr
+            %td= setsubiyoyaku.id
+            %td= setsubiyoyaku.開始
+            %td= setsubiyoyaku.終了
+            %td= setsubiyoyaku.shainmaster.氏名
+            %td= setsubiyoyaku.kaishamaster.nil? ? setsubiyoyaku.相手先 : setsubiyoyaku.kaishamaster.会社名
+            %td= setsubiyoyaku.用件
+            %td= link_to t('title.edit'), edit_setsubiyoyaku_path(setsubiyoyaku)
+            - msg = t 'app.delete_confirm'
+            %td= link_to t('title.delete'), setsubiyoyaku, :method => :delete, :data => { :confirm => msg }
   
   .row
     .col-md-4.col-xs-4.col-sm-4.col-lg-4     
