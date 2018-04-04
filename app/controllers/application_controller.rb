@@ -115,4 +115,5 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+  # config.paperclip_defaults = { storage: :fog, fog_credentials: { provider: "Local", local_root: "#{Rails.root}/public"}, fog_directory: "avatar", fog_host: "localhost"}
 end
