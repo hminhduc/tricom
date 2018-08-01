@@ -176,7 +176,7 @@ module SessionsHelper
   end
 
   def get_unread_messages
-    Message.eager_load(:conversation,:user)
+    Message.eager_load(:conversation, :sender)
             .where("read_at IS ? AND messages.user != ?", nil, current_user.id)
             .where("conversations.sender_id = ? OR conversations.recipient_id = ?", current_user.id, current_user.id)
             .order(created_at: :desc)
@@ -193,13 +193,13 @@ module SessionsHelper
   def notify_to(conversation_id = nil, receiver_id = nil) 
     receiver_id = session[:user] unless User.find_by(id: receiver_id)
     if(conversation_id)
-      unread_messages = Message.eager_load(:conversation, :user)
+      unread_messages = Message.eager_load(:conversation, :sender)
                             .where("read_at IS ? AND messages.user != ?", nil, receiver_id)
                             .where(conversation_id: conversation_id)
                             .where("conversations.sender_id = ? OR conversations.recipient_id = ?", receiver_id, receiver_id)
                             .order(created_at: :desc)
     else
-      unread_messages = Message.eager_load(:conversation, :user)
+      unread_messages = Message.eager_load(:conversation, :sender)
                             .where("read_at IS ? AND messages.user != ?", nil, receiver_id)
                             .where("conversations.sender_id = ? OR conversations.recipient_id = ?", receiver_id, receiver_id)
                             .order(created_at: :desc)
@@ -214,7 +214,7 @@ module SessionsHelper
 
     unread_messages.each do |message|
       naiyou = message.body.length > 12 ? (message.body[0...12]+ '...') : message.body
-      items += '<li><a class=\" fa fa-wechat icon-left start-conversation \" data-sid=\"'+message.conversation.sender_id+'\" data-rip = \"'+ message.conversation.recipient_id+'\" href=\"#\">&nbsp;&nbsp;&nbsp;'+ message.user&.name.to_s+': '+naiyou+'</a></li>' if message.body
+      items += '<li><a class=\" fa fa-wechat icon-left start-conversation \" data-sid=\"'+message.conversation.sender_id+'\" data-rip = \"'+ message.conversation.recipient_id+'\" href=\"#\">&nbsp;&nbsp;&nbsp;'+ message.sender&.name.to_s+': '+naiyou+'</a></li>' if message.body
     end
     items += '<legend class=\"menu\"></legend>' if unread_messages.any?
 

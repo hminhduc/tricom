@@ -93,7 +93,7 @@
                 /#message-notify
                 -unread_messages.each do |message|
                   -naiyou = message.body.length > 12 ? "#{message.body[0...12]}..." : message.body
-                  %li= link_to raw('&nbsp;&nbsp;&nbsp;')+ message.user.name+': '+naiyou, "#", class: "fa fa-wechat icon-left start-conversation","data-sid" => message.conversation.sender_id, "data-rip" => message.conversation.recipient_id
+                  %li= link_to raw('&nbsp;&nbsp;&nbsp;')+ message.sender&.name.to_s+': '+naiyou, "#", class: "fa fa-wechat icon-left start-conversation","data-sid" => message.conversation.sender_id, "data-rip" => message.conversation.recipient_id
                 -if unread_messages.any?
                   %legend.menu
                 /#kairan-notify

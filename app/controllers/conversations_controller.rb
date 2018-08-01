@@ -26,7 +26,7 @@ class ConversationsController < ApplicationController
   def show
     @conversation = Conversation.find_by(id: params[:id])
     @reciever = interlocutor(@conversation)
-    @messages = Message.eager_load(:conversation, :user).where(conversation_id: @conversation.id).order(created_at: :asc)    
+    @messages = Message.eager_load(:conversation, :sender).where(conversation_id: @conversation.id).order(created_at: :asc)
   end
 
   private

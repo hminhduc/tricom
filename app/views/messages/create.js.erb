@@ -1,7 +1,7 @@
 <% publish_to @path do %>
     var id = "<%= @conversation.id %>";
     var chatbox = $("#chatbox_" + id + " .chatboxcontent");
-    var sender_id = "<%= @message.user.id %>";
+    var sender_id = "<%= @message.sender.id %>";
     var reciever_id = $('meta[name=user-id]').attr("content");
 
     chatbox.append("<%= j render( partial: @message ) %>");

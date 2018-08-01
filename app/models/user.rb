@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
   # validates :email_confirmation, presence: true
   belongs_to :shainmaster, foreign_key: :担当者コード
   has_many :conversations, :foreign_key => :sender_id
+  has_many :messages, foreign_key: 'user', dependent: :destroy
   alias_attribute :id, :担当者コード
   alias_attribute :name, :担当者名称
   validates :password, length: {minimum: 4}, allow_blank: true
