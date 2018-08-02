@@ -10,9 +10,6 @@
     = f.input :password, class: 'form-control', label:false
     = f.label :password_confirmation, (t 'title.repassword')+" ("+(t 'title.nagasayoken', :count => 4)+")"
     = f.input :password_confirmation, class: 'form-control', label:false
-
-    = f.label :email, (t 'title.mail')
-    = f.input :email, label: false
     - if current_user.admin? || current_user.supervisor?
       = f.input :admin, as: :boolean, hint:'アドミニストレータユーザーでデータを出力できるし、担当者マスタも管理できます。', hint_html: { style: "width: 600px"}
     = f.button :submit, class: 'btn btn-primary'

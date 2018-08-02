@@ -29,7 +29,7 @@ class UsersController < ApplicationController
       flash[:notice] = t 'app.flash.new_success'
       redirect_to users_path
     else
-      flash[:notice] = t 'app.flash.new_success'
+      flash[:danger] =  @user.errors.full_messages.join(",")
       @shainmasters = Shainmaster.all.has_not_tantousha
       render :new
     end

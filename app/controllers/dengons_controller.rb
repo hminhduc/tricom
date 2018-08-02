@@ -28,7 +28,7 @@ class DengonsController < ApplicationController
   end
 
   def new
-    @dengon = Dengon.new
+    @dengon = Dengon.new(送信: true)
     @dengon.input_user = Shainmaster.find session[:user]
     respond_with(@dengon)
   end
