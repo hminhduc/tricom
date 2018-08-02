@@ -11,7 +11,13 @@ jQuery ->
         bVisible: false
         bSearchable: false
       }
+      {
+        aTargets: [9]
+        bSortable: false
+        bSearchable: false
+      }
     ]
+    order: [['1', 'desc']]
     oSearch:
       sSearch: queryParameters().search
     buttons: [
