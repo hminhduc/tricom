@@ -18,7 +18,7 @@ jQuery ->
     select:
       style:    'multi'
       selector: 'td:last-child'
-    order: [[ 0, 'des' ]]
+    order: [[ 1, 'desc' ]]
     dom: "<'row'<'col-md-6'l><'col-md-6'f>><'row'<'col-md-7'B><'col-md-5'p>><'row'<'col-md-12'tr>><'row'<'col-md-12'i>>",
     buttons: [
       # {

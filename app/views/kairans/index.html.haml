@@ -33,10 +33,7 @@
           - else
             %td= kairanshosai.件名
           %td.breakAll{style: "white-space: pre-line;"}= kairanshosai.内容
-          - if kairanshosai.状態 == '未確認'
-            %td= '未確認'
-          - else
-            %td= '確認済'
+          %td= kairanshosai.状態 == '未確認' ? '未確認' : ''
           - kairanKaitou = Kairan.find kairanshosai.回覧コード
           - kaito = kairanshosai.kairan.確認要 == true ? '要':''
           - if kairanshosai.対象者 == session[:user]
