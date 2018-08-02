@@ -14,6 +14,7 @@
         %th 件名
         %th 内容
         %th 詳細
+        %th
     %tbody
       - @kairans.each do |kairan|
         %tr
@@ -22,3 +23,4 @@
           %td= kairan.件名
           %td.breakAll= kairan.内容
           %td= link_to '詳細', send_kairan_view_kairan_path(kairan)
+          %td= link_to '', kairan, :method => :delete, :data => { :confirm => t('app.delete_confirm') } , class: "glyphicon glyphicon-remove text-danger remove-underline"

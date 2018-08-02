@@ -125,8 +125,8 @@ class KairansController < ApplicationController
   end
 
   def destroy
-    @kairanShoshai.destroy if @kairanShosai
-    respond_with(@kairanShoshai, location: kairans_url)
+    @kairan.destroy if @kairan
+    respond_with(@kairan, location: kairans_url)
   end
 
   def export_csv

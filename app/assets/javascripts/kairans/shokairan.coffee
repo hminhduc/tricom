@@ -9,7 +9,12 @@ jQuery ->
       { "width": "10%", "targets": 1 },
       { "width": "20%", "targets": 2 },
       { "width": "50%", "targets": 3 },
-      { "width": "5%", "targets": 4 }
+      { "width": "5%", "targets": 4 },
+      {
+        targets: 5
+        sortable: false
+        searchable: false
+      }
     ]
     buttons: [
       # {
@@ -34,4 +39,4 @@ jQuery ->
           window.location = '/kairans/new'
       },
     ],
-    order: [[ 0, 'des' ]]
+    order: [[ 0, 'desc' ]]
