@@ -32,7 +32,7 @@ jQuery ->
         bSearchable: false
       }
     ]
-    order: [['1', 'desc']]
+    order: [['1', 'asc']]
     oSearch:
       sSearch: queryParameters().search
     buttons: [
