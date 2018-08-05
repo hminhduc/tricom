@@ -4,58 +4,57 @@
   %li= link_to (t 'title.menu'), main_path
   %li.active=t 'title.kairan'
 
-= simple_form_for :kairanIndex, html: {class:'form-inline'}, url: kairans_path, method: :get do |f|
-  = render 'header', f: f
-  .spacer
-  %table.kairan-table.table.table-striped.table-bordered.table-hover{cellspacing: 0, width: '100%'}
-    %thead
+= render 'header'
+.spacer
+%table.kairan-table.table.table-striped.table-bordered.table-hover{cellspacing: 0, width: '100%'}
+  %thead
+    %tr
+      %th=t 'title.hakkousha'
+      %th=t 'title.nichiji'
+      %th=t 'title.youkendengon'
+      %th=t 'title.kenmei'
+      %th=t 'title.naiyou'
+      %th=t 'title.kakunin'
+      %th=t 'title.kaitou'
+      %th
+      %th id
+      %th kairanCode
+      %th 対象者
+  %tbody
+    - @kairanShoshais.each do |kairanshosai|
       %tr
-        %th=t 'title.hakkousha'
-        %th=t 'title.nichiji'
-        %th=t 'title.youkendengon'
-        %th=t 'title.kenmei'
-        %th=t 'title.naiyou'
-        %th=t 'title.kakunin'
-        %th=t 'title.kaitou'
-        %th
-        %th id
-        %th kairanCode
-        %th 対象者
-    %tbody
-      - @kairanShoshais.each do |kairanshosai|
-        %tr
-          %td{:style => "background-color:#fff966"}= kairanshosai.kairan.try :氏名
-          %td= kairanshosai.開始
-          %td{:style => "background-color: "+kairanshosai.kairan.kairanyokenmst.yuusen.try(:色).to_s+"; color: Black"}= kairanshosai.kairan.kairanyokenmst.try :名称 if kairanshosai.kairan
-          - if kairanshosai.状態 == '未確認'
-            %td
-              %b= kairanshosai.件名
-          - else
-            %td= kairanshosai.件名
-          %td.breakAll{style: "white-space: pre-line;"}= kairanshosai.内容
-          %td= kairanshosai.状態 == '未確認' ? '未確認' : ''
-          - kairanKaitou = Kairan.find kairanshosai.回覧コード
-          - kaito = kairanshosai.kairan.確認要 == true ? '要':''
-          - if kairanshosai.対象者 == session[:user]
-            - if kairanshosai.kairan.確認要 == true
-              - if kairanshosai.状態 != '回答済'
-                %td= link_to kaito, kaitou_kairan_path(kairanKaitou)
-              - else
-                %td= '回答済'
-            - else
-              %td= ''
-          - else
-            - if kairanshosai.kairan.確認要 == true
-              - if kairanshosai.状態 != '回答済'
-                %td= '要'
-              - else
-                %td= '回答済'
-            - else
-              %td= ''
+        %td{:style => "background-color:#fff966"}= kairanshosai.kairan.try :氏名
+        %td= kairanshosai.開始
+        %td{:style => "background-color: "+kairanshosai.kairan.kairanyokenmst.yuusen.try(:色).to_s+"; color: Black"}= kairanshosai.kairan.kairanyokenmst.try :名称 if kairanshosai.kairan
+        - if kairanshosai.状態 == '未確認'
           %td
-          %td= kairanshosai.id
-          %td= kairanshosai.回覧コード
-          %td= kairanshosai.対象者
-
-  = hidden_field_tag 'checked'
-  = hidden_field_tag 'session_user', session[:user]
+            %b= kairanshosai.件名
+        - else
+          %td= kairanshosai.件名
+        %td.breakAll{style: "white-space: pre-line;"}= kairanshosai.内容
+        - if kairanshosai.状態 == '未確認'
+          %td= '未確認'
+        - else
+          %td= '確認済'
+        - kairanKaitou = Kairan.find kairanshosai.回覧コード
+        - kaito = kairanshosai.kairan.確認要 == true ? '要':''
+        - if kairanshosai.対象者 == session[:user]
+          - if kairanshosai.kairan.確認要 == true
+            - if kairanshosai.状態 != '回答済'
+              %td= link_to kaito, kaitou_kairan_path(kairanKaitou)
+            - else
+              %td= '回答済'
+          - else
+            %td= ''
+        - else
+          - if kairanshosai.kairan.確認要 == true
+            - if kairanshosai.状態 != '回答済'
+              %td= '要'
+            - else
+              %td= '回答済'
+          - else
+            %td= ''
+        %td
+        %td= kairanshosai.id
+        %td= kairanshosai.回覧コード
+        %td= kairanshosai.対象者

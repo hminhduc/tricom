@@ -1,8 +1,15 @@
 .row-fruid
   .form-inline
-    .form-group
-      = label_tag t('title.youkendengon')
-      = select(:head, :youken, Kairanyokenmst.includes(:yuusen).collect {|p| [ p.名称, p.id, {:style => "background-color: "+p.yuusen.try(:色).to_s+"; color: Black"} ] }, {selected: @yoken , include_blank: true }, class: 'form-control')
-      = button_tag (t 'helpers.button.search'), name: :button, id: :search, value: (t 'helpers.button.search'), class:'btn btn-primary'
-    .pull-right
-      = button_tag (t 'helpers.button.confirm'), name: 'button', id: :kakunin, value: (t 'helpers.button.confirm'), class: 'btn btn-primary kakunin-btn btn-custom-datatable'
+    = simple_form_for :kairanIndex, html: {class:'form-inline'}, url: kairans_path, method: :get do |f|
+      = hidden_field_tag 'checked'
+      = hidden_field_tag 'session_user', session[:user]
+      .form-group
+        = label_tag t('title.youkendengon')
+        = select(:head, :youken, Kairanyokenmst.includes(:yuusen).collect {|p| [ p.名称, p.id, {:style => "background-color: "+p.yuusen.try(:色).to_s+"; color: Black"} ] }, {selected: @yoken , include_blank: true }, class: 'form-control')
+        = button_tag (t 'helpers.button.search'), name: :button, id: :search, value: (t 'helpers.button.search'), class:'btn btn-primary'
+        = radio_button_tag 'kakuninzumi', 0, true
+        = label_tag '未確認のみ表示'
+        = radio_button_tag 'kakuninzumi', 1, false
+        = label_tag '確認済も表示'
+      .pull-right
+        = button_tag (t 'helpers.button.confirm'), name: 'button', id: :kakunin, value: (t 'helpers.button.confirm'), class: 'btn btn-primary kakunin-btn btn-custom-datatable'

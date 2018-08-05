@@ -53,7 +53,20 @@ jQuery ->
     oSearch:
     	sSearch: queryParameters().search
 
+  $('#kakuninzumi_0').click ->
+    kairan_table.column(5).search('未確認').draw()
+  $('#kakuninzumi_1').click ->
+    kairan_table.column(5).search('確認済').draw()
+  $('#kakuninzumi_0').trigger('click')
+
   $('#kakunin').addClass('disabled')
+  $('#kakunin').click ()->
+    selected_rows = kairan_table.rows( { selected: true } ).data()
+    kairanNo = []
+    for row in selected_rows
+      kairanNo.push(row[8])
+    $('#checked').val(kairanNo.toString())
+
   kairan_table.on 'select', (e, dt, type, indexes)->
     row = kairan_table[ type ]( indexes ).nodes().to$()
     data = kairan_table.row( indexes ).data()
@@ -70,10 +83,3 @@ jQuery ->
       $('#kakunin').removeClass('disabled')
     else
       $('#kakunin').addClass('disabled')
-
-  $('#kakunin').click ()->
-    selected_rows = kairan_table.rows( { selected: true } ).data()
-    kairanNo = []
-    for row in selected_rows
-      kairanNo.push(row[8])
-    $('#checked').val(kairanNo.toString())
