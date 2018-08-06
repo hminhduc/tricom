@@ -18,10 +18,10 @@ module KintaisHelper
       "<span class='text-gray'>遅刻早退</span>",
       "<span class='text-gray'>普通残業</span>",
       "<span class='text-gray'>深夜残業</span>",
-      "<span class='text-gray'>普通保守</span>",
-      "<span class='text-gray'>深夜保守</span>",
-      "<span class='text-gray'>保守携帯</span>",
-      "<span class='text-gray'>処理区分</span>"
+      "<span class='text-gray'>0.0</span>",
+      "<span class='text-gray'>0.0</span>",
+      "<span class='text-gray'></span>",
+      "<span class='text-gray'></span>"
     ]
   end
 
