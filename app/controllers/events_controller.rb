@@ -473,110 +473,110 @@ class EventsController < ApplicationController
   end
 
   def ajax
-   case params[:id]
-     when 'event_状態コード'
-       joutai_name = Joutaimaster.find_by(状態コード: params[:event_joutai_code]).try(:状態名)
-       # event= [{id: '1', resourceId: 'b', start: '2015-08-07 10:00:00', end: '2015-08-07 14:00:00', title: joutai.name }]
-       # data = {joutai_name: joutai.name, event: event, event_color: joutai.color, event_text_color: joutai.text_color}
-       data = {joutai_name: joutai_name}
-       respond_to do |format|
+    case params[:id]
+      when 'event_状態コード'
+        joutai_name = Joutaimaster.find_by(状態コード: params[:event_joutai_code]).try(:状態名)
+        # event= [{id: '1', resourceId: 'b', start: '2015-08-07 10:00:00', end: '2015-08-07 14:00:00', title: joutai.name }]
+        # data = {joutai_name: joutai.name, event: event, event_color: joutai.color, event_text_color: joutai.text_color}
+        data = {joutai_name: joutai_name}
+        respond_to do |format|
          format.json { render json: data}
-       end
-     when 'event_場所コード'
-       basho_name = Bashomaster.find_by(場所コード: params[:event_basho_code]).try(:場所名)
-       data = {basho_name: basho_name}
-       respond_to do |format|
+        end
+      when 'event_場所コード'
+        basho_name = Bashomaster.find_by(場所コード: params[:event_basho_code]).try(:場所名)
+        data = {basho_name: basho_name}
+        respond_to do |format|
          format.json { render json: data}
-       end
-     when 'event_工程コード'
-       koutei_name = get_koutei_name(params[:event_koutei_code],session[:user])
-       data = {koutei_name: koutei_name}
-       respond_to do |format|
+        end
+      when 'event_工程コード'
+        koutei_name = get_koutei_name(params[:event_koutei_code],session[:user])
+        data = {koutei_name: koutei_name}
+        respond_to do |format|
          format.json { render json: data}
-       end
-     when 'event_job'
-       job_name = Jobmaster.find_by(job番号: params[:event_job_code]).try(:job名)
-       data = {job_name: job_name}
-       respond_to do |format|
-         format.json { render json: data}
-       end
-     when 'save_kinmu_type'
-       kinmu_type = params[:data]
-       shain = Shainmaster.find(session[:user])
-       if shain.update(勤務タイプ: kinmu_type)
-         return_data = {message: 'OK'}
-       else
-         return_data = {message: 'NotOK'}
-       end
-       respond_to do |format|
-         format.json { render json: return_data}
-       end
-     when 'change_shozai'
-       shozai_id = params[:data]
-       shozai = Shozai.find(shozai_id)
-       shain = User.find(session[:selected_shain]).shainmaster
-       shain.shozai = shozai if shozai
-       if shain.save
-         return_data = {message: 'OK'}
-       else
-         return_data = {message: 'NotOK'}
-       end
-       respond_to do |format|
-         format.json { render json: return_data}
-       end
-     when 'change_shozai_timeline'
-       shozai_id = params[:data]
-       shozai = Shozai.find(shozai_id)
-       shain = User.find(session[:user]).shainmaster
-       shain.shozai = shozai if shozai
+        end
+      when 'event_job'
+        job_name = Jobmaster.find_by(job番号: params[:event_job_code]).try(:job名)
+        data = {job_name: job_name}
+        respond_to do |format|
+          format.json { render json: data}
+        end
+      when 'save_kinmu_type'
+        kinmu_type = params[:data]
+        shain = Shainmaster.find(session[:user])
+        if shain.update(勤務タイプ: kinmu_type)
+          return_data = {message: 'OK'}
+        else
+          return_data = {message: 'NotOK'}
+        end
+        respond_to do |format|
+          format.json { render json: return_data}
+        end
+      when 'change_shozai'
+        shozai_id = params[:data]
+        shozai = Shozai.find(shozai_id)
+        shain = User.find(session[:selected_shain]).shainmaster
+        shain.shozai = shozai if shozai
+        if shain.save
+          return_data = {message: 'OK'}
+        else
+          return_data = {message: 'NotOK'}
+        end
+        respond_to do |format|
+          format.json { render json: return_data}
+        end
+      when 'change_shozai_timeline'
+        shozai_id = params[:data]
+        shozai = Shozai.find(shozai_id)
+        shain = User.find(session[:user]).shainmaster
+        shain.shozai = shozai if shozai
 
-       if shain.save
-         joutai = ''
-         joutai = shain.shozai_所在名 if shain.shozai
-         background_color = ''
-         background_color = shain.shozai.try :background_color if shain.shozai
-         text_color = ''
-         text_color = shain.shozai.try :text_color if shain.shozai
-         return_data = {message: 'OK', resourceID: session[:user], joutai: joutai,bgColor: background_color, color: text_color }
-       else
-         return_data = {message: 'NotOK'}
-       end
-       respond_to do |format|
-         format.json { render json: return_data}
-       end
+        if shain.save
+          joutai = ''
+          joutai = shain.shozai_所在名 if shain.shozai
+          background_color = ''
+          background_color = shain.shozai.try :background_color if shain.shozai
+          text_color = ''
+          text_color = shain.shozai.try :text_color if shain.shozai
+          return_data = {message: 'OK', resourceID: session[:user], joutai: joutai,bgColor: background_color, color: text_color }
+        else
+          return_data = {message: 'NotOK'}
+        end
+        respond_to do |format|
+          format.json { render json: return_data}
+        end
       when 'kintai_保守携帯回数'
-       kintai = Kintai.find_by(日付: params[:date_kintai],社員番号: session[:user])
-       kintai.update(保守携帯回数: params[:hoshukeitai]) if kintai
-       respond_to do |format|
-         format.json { render json: { kintai_id: kintai.try(:id) } }
-       end
-     when 'kintai_getData'
-       date = params[:date_kintai].to_date
-       data = ((date.beginning_of_month-7.day)..(date.end_of_month+14.day)).inject({}) { |hash, date| hash[date.to_s] = nil; hash } 
-       Kintai.where(日付: (date.beginning_of_month-7.day)..(date.end_of_month+14.day))
+        kintai = Kintai.find_by(日付: params[:date_kintai], 社員番号: params[:selected_user])
+        kintai.update(保守携帯回数: params[:hoshukeitai]) if kintai
+        respond_to do |format|
+          format.json { render json: { kintai_id: kintai.try(:id) } }
+        end
+      when 'kintai_getData'
+        date = params[:date_kintai].to_date
+        data = ((date.beginning_of_month-7.day)..(date.end_of_month+14.day)).inject({}) { |hash, date| hash[date.to_s] = nil; hash } 
+        Kintai.where(日付: (date.beginning_of_month-7.day)..(date.end_of_month+14.day), 社員番号: params[:selected_user])
               .each_with_object(data) { |kintai, data| data[kintai.日付.to_s] = kintai.保守携帯回数 }
-       respond_to do |format|
-         format.json { render json: data}
-       end
-     when 'roru_getData'
-       @roru = Shainmaster.find(session[:user]).rorumaster
+        respond_to do |format|
+          format.json { render json: data }
+        end
+      when 'roru_getData'
+        @roru = Shainmaster.find(session[:user]).rorumaster
 
-       data = {roru: @roru.try(:ロールコード)}
-       respond_to do |format|
-         format.json { render json: data}
-       end
-     when 'mybasho_削除する'
-       mybasho = Mybashomaster.where(社員番号: params[:shain],場所コード: params[:mybasho_id]).first
-       if !mybasho.nil?
-         mybasho.destroy
-       end
+        data = {roru: @roru.try(:ロールコード)}
+        respond_to do |format|
+          format.json { render json: data}
+        end
+      when 'mybasho_削除する'
+        mybasho = Mybashomaster.where(社員番号: params[:shain],場所コード: params[:mybasho_id]).first
+        if !mybasho.nil?
+          mybasho.destroy
+        end
 
-       data = {destroy_success: 'success'}
-       respond_to do |format|
-         format.json { render json: data}
-         # format.js { render 'delete'}
-       end
-     when 'basho_selected'
+        data = {destroy_success: 'success'}
+        respond_to do |format|
+          format.json { render json: data}
+          # format.js { render 'delete'}
+        end
+      when 'basho_selected'
         @mybasho = Mybashomaster.find_by(社員番号: params[:shain], 場所コード: params[:mybasho_id])
         if @mybasho
           @mybasho.update(updated_at: Time.now)
@@ -595,18 +595,18 @@ class EventsController < ApplicationController
         end
 
 
-     when 'myjob_削除する'
-       myjob = Myjobmaster.where(社員番号: params[:shain],job番号: params[:myjob_id]).first
-       if !myjob.nil?
-         myjob.destroy
-       end
+      when 'myjob_削除する'
+        myjob = Myjobmaster.where(社員番号: params[:shain],job番号: params[:myjob_id]).first
+        if !myjob.nil?
+          myjob.destroy
+        end
 
-       data = {destroy_success: 'success'}
-       respond_to do |format|
-         format.json { render json: data}
-         # format.js { render 'delete'}
-       end
-     when 'job_selected'
+        data = {destroy_success: 'success'}
+        respond_to do |format|
+          format.json { render json: data}
+          # format.js { render 'delete'}
+        end
+      when 'job_selected'
         @myjob = Myjobmaster.find_by(社員番号: params[:shain], job番号: params[:myjob_id])
         if @myjob
           @myjob.update(updated_at: Time.now)
@@ -626,7 +626,7 @@ class EventsController < ApplicationController
           end
         end
 
-     when 'event_drag_update'
+      when 'event_drag_update'
         event = Event.find(params[:eventId])
         event.update(社員番号: params[:shainId],開始: params[:event_start], 終了: params[:event_end])
         data = {event: event.id}
@@ -643,7 +643,7 @@ class EventsController < ApplicationController
      #    respond_to do |format|
      #      format.json { render json: data}
      #    end
-     when 'event_destroy'
+      when 'event_destroy'
         eventIds = params[:events]
         eventIds.each{ |eventId|
           Event.find_by(id: eventId).destroy
@@ -652,51 +652,51 @@ class EventsController < ApplicationController
         respond_to do |format|
           format.json { render json: data}
         end
-     when 'get_job_selected'
-      job = Jobmaster.find(params[:job_id])
-      data = {job: job}
-      respond_to do |format|
-         format.json { render json: data}
-       end
-     when 'get_basho_selected'
-      basho = Bashomaster.find(params[:basho_id])
-      data = {basho: basho}
-      respond_to do |format|
-         format.json { render json: data}
-       end
-     when 'create_kitaku_event'
-      @kitaku_events = Shainmaster.find(session[:user]).events.
-      where('開始 <= ?',DateTime.parse(params[:time_start]).to_s(:db)).
-      where('終了 >= ?',DateTime.parse(params[:time_start]).to_s(:db))
-      # where('DateTime(終了) <= ?',params[:time_start].to_date.to_s(:db))
-      if @kitaku_events.count > 0
-        data = {create_message: 'FAIL'}
-      else
-        event = Event.create(社員番号: session[:user], 開始: params[:time_start], 終了: params[:time_end], 状態コード: '99')
-        data = {create_message: 'OK'}
-      end
-      respond_to do |format|
-         format.json { render json: data}
-      end
-     when 'get_kousuu'
-      kousuu = caculate_koushuu(params[:start_time], params[:end_time]).to_f.round(2)
-      data = {kousuu: kousuu}
-      respond_to do |format|
-         format.json { render json: data}
-      end
-     when 'get_kintais'
-      case params[:joutai]
-      when '105' then joutai_aite = '103'
-      when '109' then joutai_aite = '107'
-      when '113' then joutai_aite = '111'
-      end
-      @kintais = Kintai.where(社員番号: params[:shain], 代休取得区分: '0',状態1: joutai_aite )
-                       .select(:日付, :id)
-      respond_to do |format|
-        # format.json { render json: 'data'}
-        format.js { render 'reset_daikyu_modal'}
-      end
-   end
+      when 'get_job_selected'
+        job = Jobmaster.find(params[:job_id])
+        data = {job: job}
+        respond_to do |format|
+          format.json { render json: data}
+        end
+      when 'get_basho_selected'
+        basho = Bashomaster.find(params[:basho_id])
+        data = {basho: basho}
+        respond_to do |format|
+          format.json { render json: data}
+        end
+      when 'create_kitaku_event'
+        @kitaku_events = Shainmaster.find(session[:user]).events.
+        where('開始 <= ?',DateTime.parse(params[:time_start]).to_s(:db)).
+        where('終了 >= ?',DateTime.parse(params[:time_start]).to_s(:db))
+        # where('DateTime(終了) <= ?',params[:time_start].to_date.to_s(:db))
+        if @kitaku_events.count > 0
+          data = {create_message: 'FAIL'}
+        else
+          event = Event.create(社員番号: session[:user], 開始: params[:time_start], 終了: params[:time_end], 状態コード: '99')
+          data = {create_message: 'OK'}
+        end
+        respond_to do |format|
+           format.json { render json: data}
+        end
+      when 'get_kousuu'
+        kousuu = caculate_koushuu(params[:start_time], params[:end_time]).to_f.round(2)
+        data = {kousuu: kousuu}
+        respond_to do |format|
+          format.json { render json: data}
+        end
+      when 'get_kintais'
+        case params[:joutai]
+        when '105' then joutai_aite = '103'
+        when '109' then joutai_aite = '107'
+        when '113' then joutai_aite = '111'
+        end
+        @kintais = Kintai.where(社員番号: params[:shain], 代休取得区分: '0',状態1: joutai_aite )
+                         .select(:日付, :id)
+        respond_to do |format|
+          # format.json { render json: 'data'}
+          format.js { render 'reset_daikyu_modal'}
+        end
+    end
   end
 
   def import

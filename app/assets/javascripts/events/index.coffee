@@ -46,36 +46,6 @@ $ ->
     false
   )
 
-showModal = (date, hoshukeitai) ->
-  # if(bt_val==1) hoshukeitai=0;
-  # else if(hoshukeitai=1;
-  if hoshukeitai == '1'
-    $('#bt-hoshu-1' + date).show()
-    $('#bt-hoshu-0' + date).hide()
-  else
-    $('#bt-hoshu-1' + date).hide()
-    $('#bt-hoshu-0' + date).show()
-  if !date or !hoshukeitai
-    return
-  $.post
-    url: '/events/ajax'
-    data:
-      id: 'kintai_保守携帯回数'
-      hoshukeitai: hoshukeitai
-      date_kintai: date
-    success: (data) ->
-      if data.kintai_id != null
-        console.log 'getAjax kintai_id:' + data.kintai_id
-      else
-        console.log 'getAjax kintai_id:' + data.kintai_id
-      return
-    failure: ->
-      console.log 'kintai_保守携帯回数 keydown Unsuccessful'
-      return
-  $('#bt-hoshu-1').show()
-  $('#bt-hoshu-0').hide()
-  return
-
 updateEvent = (the_event) ->
   $.post
     url: '/events/ajax'
@@ -127,48 +97,26 @@ create_calendar = (data) ->
     editable: true
     defaultDate: moment($('#goto_date').val())
     viewRender: (view, element) ->
-      jQuery.ajax
+      $.post
         url: '/events/ajax'
         data:
           id: 'kintai_getData'
-          date_kintai: $('#calendar-month-view').fullCalendar('getDate').format()
-        type: 'POST'
+          selected_user: $('#selected_user').val()
+          date_kintai: $('#calendar-month-view').fullCalendar('getDate').format('YYYY-MM-DD')
         success: (data) ->
           jQuery.each data, (key, val) ->
             cell = element.find('.fc-bg td.fc-day[data-date=' + key + ']')
             if cell.length > 0
-              color = cell.css('background-color')
-              cell.append '<button id=\'bt-hoshu-1' + key + '\' onclick=\'showModal("' + key + '","0"); return false;\' ' + 'value=1 class=\'btn btn-hoshu\' type=\'button\'>携帯</button>' + '<button id=\'bt-hoshu-0' + key + '\' onclick=\'showModal("' + key + '","1"); return false;\' ' + 'value=0 class=\'btn btn-text\' style=\'background-color:' + color + '\' type=\'button\'>携帯</button>'
-              if val == 1
-                $('#bt-hoshu-1' + key).show()
-                $('#bt-hoshu-0' + key).hide()
-              else
-                $('#bt-hoshu-1' + key).hide()
-                $('#bt-hoshu-0' + key).show()
-            return
-          return
+              style = if val == 1 then '' else 'background-color: ' + cell.css('background-color')              
+              klass = if val == 1 then 'btn btn-hoshu' else 'btn btn-text'
+              cell.append "<button id='bt-hoshu' class='" + klass + "' date='" + key + "' value='" + (val || 0) + "' type='button' style='" + style + "'>携帯</button>"
         failure: ->
           console.log 'kintai_保守携帯回数 keydown Unsuccessful'
-          return
-      return
     dayClick: (date, jsEvent, view) ->
-      #window.open('http://misuzu.herokuapp.com/events/new?start_at='+date.format());
       calendar = document.getElementById('calendar-month-view')
-
       calendar.ondblclick = ->
         location.href = '/events/new?start_at=' + date.format('YYYY/MM/DD')
         return
-
-      #alert(data.sUrl);
-      return
-    dayRender: (date, element, view) ->
-      # var date_convert = new Date(date.format());
-      # if(date_convert.getDay()!==6 && date_convert.getDay()!==0&&hoshukeitai!=null)
-      #     element.append("<a id='abc' value=100 onclick='showModal(\""+date.format()+"\"); return false;' style='cursor: pointer;'><i class='fa fa-pencil'>"+hoshukeitai+"</i></a>");
-      # var date_convert = new Date(date.format());
-      # if(date_convert.getDay()!==6 && date_convert.getDay()!==0)
-      #     element.append("<a id='abc' onclick='showModal(\""+date.format()+"\"); return false;' style='cursor: pointer;'><i class='fa fa-pencil'>保守携帯</i></a>");
-      return
     eventRender: (event, element, view) ->
       if view.name == 'agendaDay' or view.name == 'agendaWeek'
         if event.job != undefined or event.comment != undefined
@@ -182,7 +130,8 @@ create_calendar = (data) ->
       updateEvent event
       return
     eventMouseover: (event, jsEvent, view) ->
-      tooltip = '<div class="tooltipevent hover-end">' + '<div>' + event.start.format('YYYY/MM/DD HH:mm') + '</div>' + '<div>' + event.end.format('YYYY/MM/DD HH:mm') + '</div>'
+      end_time = if event.end != null then event.end.format('YYYY/MM/DD HH:mm') else ''
+      tooltip = '<div class="tooltipevent hover-end">' + '<div>' + event.start.format('YYYY/MM/DD HH:mm') + '</div>' + '<div>' + end_time + '</div>'
       tooltip += '<div>' + event.title
       tooltip += (if event.job != undefined then ' ' + event.bashomei else '') + '</div>'
       if event.job != undefined
@@ -219,6 +168,39 @@ create_calendar = (data) ->
   $('#calendar-month-view').fullCalendar 'addEventSource', data.holidays
 
 jQuery ->
+  $('#calendar-month-view').on 'click', 'td.fc-day #bt-hoshu', ->
+    if $('#selected_user').val() == $('#current_user').val()
+      val = $(this).attr('value')
+      if val == '0'
+        style = ''
+        klass = 'btn btn-hoshu'
+        val = '1'
+      else
+        style = 'background-color: ' + $(this).parent().css('background-color')
+        klass = 'btn btn-text'
+        val = '0'
+      $(this).attr('class', klass)
+      $(this).attr('style', style)
+      $(this).attr('value', val)
+
+      $.post
+        url: '/events/ajax'
+        data:
+          id: 'kintai_保守携帯回数'
+          hoshukeitai: val
+          date_kintai: $(this).attr('date')
+          selected_user: $('#selected_user').val()
+        success: (data) ->
+          if data.kintai_id != null
+            console.log 'getAjax kintai_id:' + data.kintai_id
+          else
+            console.log 'getAjax kintai_id:' + data.kintai_id
+
+        failure: ->
+          console.log 'kintai_保守携帯回数 keydown Unsuccessful'
+    else
+      console.log('Not you')
+
   $('#shainmaster_kinmutype').on 'change', ()->
     $.post
       url: '/events/ajax'
