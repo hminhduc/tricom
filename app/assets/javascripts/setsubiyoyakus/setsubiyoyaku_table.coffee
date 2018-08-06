@@ -33,6 +33,7 @@ jQuery ->
       }
     ]
     order: [['1', 'asc']]
+    pageLength: 100
     oSearch:
       sSearch: queryParameters().search
     buttons: [
