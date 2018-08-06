@@ -5,8 +5,8 @@
     = f.input :from1, label: '相手先会社'
     = f.input :from2, label: (t 'title.namae')
     = f.input :日付, label: '入力日付', as: :date_time_picker
-    = f.association :input_user, label_method: :氏名, value_method: :社員番号, label: (t 'title.nyuuryokusha')
-    = f.association :to_user, label_method: :氏名, value_method: :社員番号, label: '送信先社員'
+    = f.association :input_user, label_method: :氏名, value_method: :社員番号, label: (t 'title.nyuuryokusha'), disabled: @dengon.persisted?
+    = f.association :to_user, label_method: :氏名, value_method: :社員番号, label: '送信先社員', disabled: @dengon.persisted?
     = f.association :dengonyouken, label: '要件', collection: Dengonyouken.includes(:yuusen).order(:優先さ).collect { |k| [k.種類名, k.id, {:style => "background-color: "+k.yuusen.try(:色).to_s+"; color: Black"}] }
     = f.association :dengonkaitou, label_method: :種類名, value_method: :id, label: (t 'title.kaitou'), collection: Dengonkaitou.all.order(:備考)
   .col-md-3.col-xs-3.col-sm-3.col-lg-3.col-md-offset-1.col-xs-offset-1.col-sm-offset-1.col-lg-offset-1

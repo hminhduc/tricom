@@ -40,7 +40,7 @@ class DengonsController < ApplicationController
     @dengon = Dengon.new(dengon_params)
     if @dengon.save
       send_notify_mail(@dengon)    
-      update_dengon_counter dengon_params
+      update_dengon_counter @dengon.社員番号
       notify_to(nil, @dengon.社員番号)
     end
   rescue ActiveRecord::RecordNotFound
@@ -53,11 +53,11 @@ class DengonsController < ApplicationController
 
   def update
     mail_has_send = @dengon.送信
-    if @dengon.update(dengon_params)
+    if @dengon.update(dengon_params.except(:入力者, :社員番号))
       unless mail_has_send
         send_notify_mail(@dengon)
       end
-      update_dengon_counter dengon_params
+      update_dengon_counter @dengon.社員番号
     end
 
   rescue ActiveRecord::RecordNotFound
