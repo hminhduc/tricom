@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180713141836) do
+ActiveRecord::Schema.define(version: 20180807041403) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,7 +31,18 @@ ActiveRecord::Schema.define(version: 20180713141836) do
     t.string   "備考"
     t.integer  "受注金額"
     t.date     "納期"
+    t.string   "JOB内訳区分"
     t.index ["job番号"], name: "index_JOBマスタ_on_job番号", unique: true, using: :btree
+  end
+
+  create_table "JOB内訳マスタ", force: :cascade do |t|
+    t.string   "ジョブ番号"
+    t.string   "ジョブ内訳番号"
+    t.datetime "受付日時"
+    t.string   "件名"
+    t.string   "受付種別"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "MYJOBマスタ", id: false, force: :cascade do |t|
@@ -98,6 +109,8 @@ ActiveRecord::Schema.define(version: 20180713141836) do
     t.datetime "updated_at", null: false
     t.string   "有無"
     t.boolean  "経費精算"
+    t.string   "JOB内訳番"
+    t.string   "作業区分"
   end
 
   create_table "jpt_holiday_msts", force: :cascade do |t|
@@ -303,6 +316,13 @@ ActiveRecord::Schema.define(version: 20180713141836) do
     t.datetime "updated_at", null: false
     t.string   "color"
     t.integer  "優先さ"
+  end
+
+  create_table "作業区分内訳", force: :cascade do |t|
+    t.string   "作業区分"
+    t.string   "作業区分名称"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "優先", force: :cascade do |t|

@@ -22,6 +22,7 @@ class Jobmaster < ActiveRecord::Base
   belongs_to :jobkanren, class_name: :Jobmaster, foreign_key: :関連Job番号
   has_many :jobmaster, foreign_key: :関連Job番号, dependent: :nullify
   has_many :myjobmaster, dependent: :destroy, foreign_key: :job番号
+  has_many :jobuchiwake, dependent: :destroy, foreign_key: :ジョブ番号
   alias_attribute :id, :job番号
   alias_attribute :job_name, :job名
   delegate :分類名, to: :bunrui, prefix: :bunrui, allow_nil: true

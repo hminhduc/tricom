@@ -168,6 +168,8 @@ Jpt::Application.routes.draw do
   resources :kintaiteeburus do
     collection {post :import,:ajax}
   end
+
+  resources :jobuchiwakes, :sagyoukubuns
   
   root to: 'main#index'
 end

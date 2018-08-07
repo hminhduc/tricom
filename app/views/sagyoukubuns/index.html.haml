@@ -1,0 +1,22 @@
+= javascript_include_tag 'sagyoukubuns/index'
+= provide(:title, '作業区分マスタ')
+%ol.breadcrumb
+  %li= link_to (t 'title.menu'), main_path
+  %li.active 作業区分マスタ
+
+%table#sagyoukubunmaster.table.table-striped.table-bordered.table-hover{cellspacing:0, width: '100%'}
+  %thead
+    %tr
+      %th
+      %th 作業区分
+      %th 作業区分名称
+      %th
+  %tbody
+    - @sagyoukubuns.each do |sagyoukubun|
+      %tr
+        %td= sagyoukubun.id
+        %td= sagyoukubun.作業区分
+        %td= sagyoukubun.作業区分名称
+        %td= link_to '', sagyoukubun, method: :delete, data: { confirm: '削除して宜しいですか？' } , class: "glyphicon glyphicon-remove text-danger remove-underline"
+= render 'new'
+= render 'edit'

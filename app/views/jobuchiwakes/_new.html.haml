@@ -1,0 +1,24 @@
+.modal#jobuchiwake-new-modal{tabindex:-1, role: :dialog, 'aria-labelledby'=>"myModalLabel", 'aria-hidden'=>"true"}
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-header
+        %button.close{type: :button, 'data-dismiss'=>"modal", 'aria-hidden'=>"true"} &times;
+        %h4.modal-title#myModalLabel JOB内訳新規
+      .modal-body
+        = simple_form_for :jobuchiwake, url: jobuchiwakes_path, method: :post, :remote => true, html: { id: 'new_jobuchiwake', role: :form, 'data-model' => 'jobuchiwake'} do |f|
+          = f.input :ジョブ番号 do
+            = f.input_field :ジョブ番号, class: 'form-control'
+            .span.help-block
+          = f.input :ジョブ内訳番号 do
+            = f.input_field :ジョブ内訳番号, class: 'form-control'
+            .span.help-block
+          = f.input :受付日時 do
+            =f.input_field :受付日時, as: :date_time_picker
+            %span.help-block
+          = f.input :件名 do
+            = f.input_field :件名, class: 'form-control'
+            .span.help-block
+          = f.input :受付種別 do
+            = f.input_field :受付種別, :collection => Jobuchiwake::UKETSUKESHUBETSU.map{ |k, v| [v, k] }, class: 'form-control'
+            .span.help-block
+          = f.button :submit, class: 'btn btn-primary'

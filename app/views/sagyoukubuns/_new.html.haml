@@ -1,0 +1,15 @@
+.modal#sagyoukubun-new-modal{tabindex:-1, role: :dialog, 'aria-labelledby'=>"myModalLabel", 'aria-hidden'=>"true"}
+  .modal-dialog.modal-sm
+    .modal-content
+      .modal-header
+        %button.close{type: :button, 'data-dismiss'=>"modal", 'aria-hidden'=>"true"} &times;
+        %h4.modal-title#myModalLabel 作業区分新規
+      .modal-body
+        = simple_form_for :sagyoukubun, url: sagyoukubuns_path, method: :post, :remote => true, html: { id: 'new_sagyoukubun', role: :form, 'data-model' => 'sagyoukubun'} do |f|
+          = f.input :作業区分 do
+            = f.input_field :作業区分, class: 'form-control'
+            .span.help-block
+          = f.input :作業区分名称 do
+            = f.input_field :作業区分名称, class: 'form-control'
+            .span.help-block
+          = f.button :submit, class: 'btn btn-primary'

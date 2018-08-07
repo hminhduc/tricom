@@ -1,0 +1,18 @@
+model = 'jobuchiwake'
+
+$('form#new_' + model).clear_previous_errors()
+
+<% if @jobuchiwake.errors.any? %>
+  $('form#new_' + model).render_form_errors(model, '<%=@jobuchiwake.errors.messages.to_json.html_safe%>')
+<% else %>
+  $('#jobuchiwake-new-modal').modal('hide');
+  $('#jobuchiwakemaster').DataTable().row.add( [
+    "<%=@jobuchiwake.id%>",
+    "<%=@jobuchiwake.ジョブ番号%>",
+    "<%=@jobuchiwake.ジョブ内訳番号%>",
+    "<%=@jobuchiwake.受付日時&.strftime('%Y/%m/%d %H:%m')%>",
+    "<%=@jobuchiwake.件名%>",
+    "<%=@jobuchiwake.受付種別%>",
+    "<%=escape_javascript link_to '', @jobuchiwake, method: :delete, data: { confirm: '削除して宜しいですか？' } , class: 'glyphicon glyphicon-remove text-danger remove-underline'%>"
+  ]).draw( false );
+<% end %>

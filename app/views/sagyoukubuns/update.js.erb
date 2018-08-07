@@ -1,0 +1,17 @@
+model = 'sagyoukubun'
+
+$('form#edit_' + model).clear_previous_errors()
+
+<% if @sagyoukubun.errors.any? %>
+  $('form#edit_' + model).render_form_errors(model, '<%=@sagyoukubun.errors.messages.to_json.html_safe%>')
+<% else %>
+  $('#sagyoukubun-edit-modal').modal('hide');
+  $("#sagyoukubunmaster").DataTable().row('tr.selected').remove();
+  $('#sagyoukubunmaster').DataTable().row.add([
+    "<%=@sagyoukubun.id%>",
+    "<%=@sagyoukubun.作業区分%>",
+    "<%=@sagyoukubun.作業区分名称%>",
+    "<%=escape_javascript link_to '', @sagyoukubun, method: :delete, data: { confirm: '削除して宜しいですか？' } , class: 'glyphicon glyphicon-remove text-danger remove-underline'%>"
+    ]).draw( false );
+  $('#sagyoukubunmaster').DataTable().buttons('#edit, #destroy').nodes().addClass('disabled');
+<% end %>
