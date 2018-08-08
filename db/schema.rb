@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20180807041403) do
     t.string   "備考"
     t.integer  "受注金額"
     t.date     "納期"
-    t.string   "JOB内訳区分"
+    t.boolean  "JOB内訳区分"
     t.index ["job番号"], name: "index_JOBマスタ_on_job番号", unique: true, using: :btree
   end
 

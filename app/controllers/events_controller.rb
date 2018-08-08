@@ -192,7 +192,7 @@ class EventsController < ApplicationController
   end
 
   def edit
-    # @event.build_joutaimaster if @event.joutaimaster.nil?
+    @jobuchiwakes = Jobuchiwake.where(ジョブ番号: @event.JOB)
   end
 
   def new
@@ -696,6 +696,11 @@ class EventsController < ApplicationController
           # format.json { render json: 'data'}
           format.js { render 'reset_daikyu_modal'}
         end
+      when 'get_jobuchiwakes'
+        @jobuchiwakes = Jobuchiwake.where(ジョブ番号: params[:job_id])
+        respond_to do |format|
+          format.js { render 'reset_jobuchiwake_modal'}
+        end
     end
   end
 
@@ -771,7 +776,7 @@ private
 # Never trust parameters from the scary internet, only allow the white list through.
   def event_params
     params.require(:event).permit(:社員番号, :開始, :終了, :状態コード, :場所コード, :JOB, :所属コード, :工程コード, :工数,
-                                  :計上, :所在コード, :comment, :有無, :帰社区分, :経費精算)
+                                  :計上, :所在コード, :comment, :有無, :帰社区分, :経費精算, :JOB内訳番, :作業区分)
                           .merge(:kintai_daikyu_date => params[:kintai_daikyu])
 
   end

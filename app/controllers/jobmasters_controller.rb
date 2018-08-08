@@ -120,7 +120,7 @@ class JobmastersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def jobmaster_params
-      params.require(:jobmaster).permit(:job番号, :job名, :開始日, :終了日, :受注金額, :納期, :ユーザ番号, :ユーザ名, :入力社員番号, :分類コード, :分類名, :関連Job番号, :備考)
+      params.require(:jobmaster).permit(:job番号, :job名, :開始日, :終了日, :受注金額, :納期, :ユーザ番号, :ユーザ名, :入力社員番号, :分類コード, :分類名, :関連Job番号, :備考, :JOB内訳区分)
     end
 
   def set_refer

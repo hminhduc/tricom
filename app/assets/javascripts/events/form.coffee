@@ -43,6 +43,36 @@ jQuery ->
       $('#event_場所コード').prop('disabled', tmp)
       $('#event_JOB').prop('disabled', tmp)
       $('#event_工程コード').prop('disabled', tmp)
+  $('#event_JOB').change (e, selected_data)->
+    $('#event_JOB内訳番').val('')
+    if selected_data == undefined
+      code = $(this).val()
+      table = $('#job_table').DataTable()
+      row = table.row (idx, data, node) ->
+        if data[0] == code then true else false
+      if row.length > 0
+        selected_data = row.data()
+
+    if selected_data != undefined
+      # fill data to this input
+      $('#event_JOB').val(selected_data[0])
+      $('#event_JOB').closest('.form-group').find('span.help-block').remove()
+      $('#event_JOB').closest('.form-group').removeClass('has-error')
+
+      # hide or show uchiwake div
+      job_code = $('#event_JOB').val()
+      if selected_data[4] == 'true'
+        $.post
+          url: '/events/ajax'
+          data:
+            id: 'get_jobuchiwakes'
+            job_id: job_code
+          success: (data)->
+            console.log("OK")
+          failure: ()->
+            console.log("Unsuccessful")
+      else
+        $('.row#uchiwake').hide()
 
   $('.event_開始 > .form-inline > .datetime').datetimepicker
     format: 'YYYY/MM/DD HH:mm'
@@ -75,6 +105,7 @@ jQuery ->
         when 'event_状態コード' then $('#joutai_search_modal').trigger('show', [input.val()])
         when 'event_場所コード' then $('#basho_search_modal').trigger('show', [input.val()])
         when 'event_JOB' then $('#job_search_modal').trigger('show', [input.val()])
+        when 'event_JOB内訳番' then $('#jobuchiwake_search_modal').trigger('show', [input.val()])
   $('.search-history').click ()->
     input = $(this).prev().prev()
     unless input.is(':disabled')
@@ -122,13 +153,18 @@ jQuery ->
       $('.hint-job-refer').text(selected_data[1])
       $('#event_JOB').closest('.form-group').find('span.help-block').remove()
       $('#event_JOB').closest('.form-group').removeClass('has-error')
+      $('#event_JOB').trigger('change', [selected_data])
   $('#myjob_table').on 'choose_myjob', (e, selected_data)->
     if selected_data != undefined
       $('#event_JOB').val(selected_data[1])
       $('.hint-job-refer').text(selected_data[2])
       $('#event_JOB').closest('.form-group').find('span.help-block').remove()
       $('#event_JOB').closest('.form-group').removeClass('has-error')
-
+  $('#jobuchiwake_table').on 'choose_jobuchiwake', (e, selected_data)->
+    if selected_data != undefined
+      $('#event_JOB内訳番').val(selected_data[0])
+      $('#event_JOB内訳番').closest('.form-group').find('span.help-block').remove()
+      $('#event_JOB内訳番').closest('.form-group').removeClass('has-error')
   # nut co tac dung goi ajax de tinh so gio lam dua theo 2 thoi diem da nhap
   $('#koushuusaikeisan').click (event)->
     start_time = $('#event_開始').val()
