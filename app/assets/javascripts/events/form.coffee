@@ -44,7 +44,6 @@ jQuery ->
       $('#event_JOB').prop('disabled', tmp)
       $('#event_工程コード').prop('disabled', tmp)
   $('#event_JOB').change (e, selected_data)->
-    $('#event_JOB内訳番').val('')
     if selected_data == undefined
       code = $(this).val()
       table = $('#job_table').DataTable()
@@ -73,7 +72,9 @@ jQuery ->
             console.log("Unsuccessful")
       else
         $('.row#uchiwake').hide()
-
+    else
+      $('#event_JOB内訳番').val('')
+      $('.row#uchiwake').hide()
   $('.event_開始 > .form-inline > .datetime').datetimepicker
     format: 'YYYY/MM/DD HH:mm'
     showTodayButton: true
