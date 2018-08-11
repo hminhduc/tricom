@@ -19,6 +19,6 @@
             = f.input_field :件名, class: 'form-control'
             .span.help-block
           = f.input :受付種別 do
-            = f.input_field :受付種別, :collection => Jobuchiwake::UKETSUKESHUBETSU.map{ |k, v| [v, k] }, class: 'form-control'
+            = f.input_field :受付種別, :collection => Jobuchiwake::UKETSUKESHUBETSU.map{ |k, v| [k + " : " + v, k]  }, class: 'form-control'
             .span.help-block
           = f.button :submit, class: 'btn btn-primary'

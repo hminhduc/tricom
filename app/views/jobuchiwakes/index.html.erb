@@ -1,0 +1,37 @@
+<%= javascript_include_tag 'jobuchiwakes/index' %>
+<% provide(:title, 'JOB内訳マスタ') %>
+<ol class="breadcrumb">
+    <li><%= link_to 'メニュー', main_path %></li>
+    <!-- <li><a href="#">基準情報</a></li> -->
+    <!-- <li><a href="#">セキュリティ管理</a></li> -->
+    <li class="active">JOB内訳マスタ</li>
+</ol>
+<table class='table table-striped table-bordered table-hover' id='jobuchiwakemaster' cellspacing="0" width="100%">
+    <thead>
+    <tr>
+        <th></th>
+        <th>ジョブ番号</th>
+        <th>ジョブ内訳番号</th>
+        <th>受付日時</th>
+        <th>件名</th>
+        <th>受付種別</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @jobuchiwakes.each do |jobuchiwake| %>
+        <tr id="jobuchiwake_<%= jobuchiwake.id %>">
+            <td><%= jobuchiwake.id %></td>
+            <td><%= jobuchiwake.ジョブ番号 %></td>
+            <td><%= jobuchiwake.ジョブ内訳番号 %></td>
+            <td><%= jobuchiwake.受付日時.strftime('%Y/%m/%d %H:%M') %></td>
+            <td><%= jobuchiwake.件名 %></td>
+            <% findKey = Jobuchiwake::UKETSUKESHUBETSU.find {|k, v| k == jobuchiwake.受付種別} %>
+            <td><%= findKey[0] + " : " + findKey[1] %></td>
+            <td><%= link_to '', jobuchiwake, method: :delete, data: {confirm: '削除して宜しいですか？'}, class: "glyphicon glyphicon-remove text-danger remove-underline" %></td>
+        </tr>
+    <% end %>
+    </tbody>
+</table>
+<%= render 'new' %>
+<%= render 'edit' %>

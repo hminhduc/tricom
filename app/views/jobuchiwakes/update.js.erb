@@ -11,7 +11,7 @@ $('form#edit_' + model).clear_previous_errors()
     "<%=@jobuchiwake.id%>",
     "<%=@jobuchiwake.ジョブ番号%>",
     "<%=@jobuchiwake.ジョブ内訳番号%>",
-    "<%=@jobuchiwake.受付日時&.strftime('%Y/%m/%d %H:%m')%>",
+    "<%=@jobuchiwake.受付日時&.strftime('%Y/%m/%d %H:%M')%>",
     "<%=@jobuchiwake.件名%>",
     "<%=@jobuchiwake.受付種別%>",
     "<%=escape_javascript link_to '', @jobuchiwake, method: :delete, data: { confirm: '削除して宜しいですか？' } , class: 'glyphicon glyphicon-remove text-danger remove-underline'%>"
