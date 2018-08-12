@@ -3,18 +3,18 @@ class JobuchiwakesController < ApplicationController
   respond_to :json, :js
 
   def index
-    @jobuchiwakes = Jobuchiwake.all
+    @jobuchiwakes = Jobuchiwake.all.decorate
     respond_with(@jobuchiwakes)
   end
 
   def create
-    @jobuchiwake = Jobuchiwake.new(jobuchiwake_params)
+    @jobuchiwake = Jobuchiwake.new(jobuchiwake_params).decorate
     flash[:notice] = t 'app.flash.new_success' if @jobuchiwake.save
-    respond_with(@jobuchiwake)
+    respond_with(@jobuchiwake.decorate)
   end
 
   def update
-    @jobuchiwake = Jobuchiwake.find_by(ジョブ内訳番号: jobuchiwake_params[:ジョブ内訳番号])
+    @jobuchiwake = Jobuchiwake.find_by(ジョブ内訳番号: jobuchiwake_params[:ジョブ内訳番号]).decorate
     flash[:notice] = t 'app.flash.update_success' if @jobuchiwake.update(jobuchiwake_params)
     respond_with(@jobuchiwake)
   end
