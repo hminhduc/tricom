@@ -1,42 +1,47 @@
 = javascript_include_tag 'events/form'
 = stylesheet_link_tag 'events'
 = simple_form_for @event do |f|
-  .col-md-5.col-xs-5.col-sm-5.col-lg-5.col-md-offset-1.col-xs-offset-1.col-sm-offset-1.col-lg-offset-1
-    - if !request["shain_id"].nil?
-      = f.input :社員番号, label: (t 'title.shainbangou'), input_html: {style: 'width:100px', value: request["shain_id"]}, hint:"#{Shainmaster.find(request["shain_id"]).try :氏名}", hint_html: {class: 'hint-shain-refer'}
-    - else
-      = f.input :社員番号, label: (t 'title.shainbangou'), input_html: {style: 'width:100px'}, hint:"#{@event.shainmaster.try :氏名}", hint_html: {class: 'hint-shain-refer'}
+  .col-lg-5.col-sm-5.col-lg-offset-1.col-sm-offset-1
     .row
-      .col-md-4.col-xs-4.col-sm-4.col-lg-4
+      .col-lg-12.col-sm-12
+        - if !request["shain_id"].nil?
+          = f.input :社員番号, label: (t 'title.shainbangou'), input_html: {style: 'width:100px', value: request["shain_id"]}, hint:"#{Shainmaster.find(request["shain_id"]).try :氏名}", hint_html: {class: 'hint-shain-refer'}
+        - else
+          = f.input :社員番号, label: (t 'title.shainbangou'), input_html: {style: 'width:100px'}, hint:"#{@event.shainmaster.try :氏名}", hint_html: {class: 'hint-shain-refer'}
+    .row
+      .col-lg-4.col-sm-12
         = f.input :状態コード, label: (t 'title.joutai'), as: :search_field, hint:"#{@event.joutaimaster.try :状態名}", hint_html: {class: 'hint-joutai-refer'}
-      .col-md-3.col-xs-3.col-sm-3.col-lg-3.col-md-offset-1.col-xs-offset-1.col-sm-offset-1.col-lg-offset-1
-        = f.input :経費精算, label: (t 'title.keihiseisan'), input_html: {style: 'margin: 1px 0px 0px 1px'}, as: :boolean, boolean_style: :inline, checked_value: true, unchecked_value: false
-      .col-md-3.col-xs-3.col-sm-3.col-lg-3.col-md-offset-1.col-xs-offset-1.col-sm-offset-1.col-lg-offset-1
+      .col-lg-3.col-sm-12
         = f.input (t 'title.kisha') do
           = f.select :有無, options_for_select(["帰社", "直帰", "連続"], :selected => @event.有無), {include_blank: true },{ class: 'form-control', style: 'width:100px'}
-    = f.input :場所コード, label: (t 'title.basho'), input_html: {style: 'width:100px'}, as: :search_history, hint:"#{@event.bashomaster.try :場所名}", hint_html: {class: 'hint-basho-refer'}
-    %span.comment-text#999= t 'title.basho999'
+      .col-lg-3.col-sm-12
+        = f.input :経費精算, label: (t 'title.keihiseisan'), input_html: {style: 'margin: 1px 0px 0px 1px'}, as: :boolean, boolean_style: :inline, checked_value: true, unchecked_value: false
     .row
-      .col-md-4.col-xs-4.col-sm-4.col-lg-4
+      .col-lg-12.col-sm-12
+        = f.input :場所コード, label: (t 'title.basho'), input_html: {style: 'width:100px'}, as: :search_history, hint:"#{@event.bashomaster.try :場所名}", hint_html: {class: 'hint-basho-refer'}
+        %span.comment-text#999= t 'title.basho999'
+    .row
+      .col-lg-6.col-sm-12
         = f.input :JOB, input_html: {style: 'width:100px'}, as: :search_history, hint:"#{@event.jobmaster.try :job名}", hint_html: {class: 'hint-job-refer'}
-      .col-md-3.col-xs-3.col-sm-3.col-lg-3.col-md-offset-1.col-xs-offset-1.col-sm-offset-1.col-lg-offset-1
+      .col-lg-6.col-sm-12
         = f.input (t 'title.kouteicode') do
           = f.select :工程コード, @kouteis.map { |k| [k.工程名, k.工程コード] }, {include_blank: true}, {class: 'form-control', style: 'width:180px'}
     .row#uchiwake{style: 'display: ' + (@event.jobmaster&.JOB内訳区分 ? 'block' : 'none')}
-      .col-md-4.col-xs-4.col-sm-4.col-lg-4
+      .col-lg-6.col-sm-12
         = f.input :JOB内訳番, input_html: {style: 'width:100px'}, as: :search_field
-      .col-md-3.col-xs-3.col-sm-3.col-lg-3.col-md-offset-1.col-xs-offset-1.col-sm-offset-1.col-lg-offset-1
+      .col-lg-6.col-sm-12
         = f.input :作業区分 do
           = f.select :作業区分, Sagyoukubun.pluck(:作業区分名称, :作業区分), {include_blank: true}, {class: 'form-control', style: 'width:180px'}
-    - if request["shain_id"]
-      = f.input :所属コード, label: (t 'title.shozokucode'), input_html: { value: Shainmaster.find_by(id: request["shain_id"]).try(:所属コード) } , as: :hidden
-    - else
-      = f.input :所属コード, label: (t 'title.shozokucode'), input_html: { value: @event.shainmaster.try(:所属コード) } , as: :hidden
-  .col-md-5.col-xs-4.col-sm-4.col-lg-4
+    .row
+      .col-lg-12.col-sm-12
+        - if request["shain_id"]
+          = f.input :所属コード, label: (t 'title.shozokucode'), input_html: { value: Shainmaster.find_by(id: request["shain_id"]).try(:所属コード) } , as: :hidden
+        - else
+          = f.input :所属コード, label: (t 'title.shozokucode'), input_html: { value: @event.shainmaster.try(:所属コード) } , as: :hidden
+  .col-lg-4.col-sm-4
     = f.input :開始, label: (t 'title.kaishi'), as: :date_time_picker
     = f.input :終了, label: (t 'title.shyuuryou'), as: :date_time_picker
     = f.input :工数, label: (t 'title.koushuu'), input_html: {style: 'width:100px'}, hint: (t 'title.tani'), readonly: true
-    -#= text_field_tag :kyukei, '', placeholder: '休憩時間', style: 'width:100px'
     = f.button :button, (t 'title.koushuusaikeisan'), type: :button, id: :koushuusaikeisan
     = f.input :comment, label: (t 'title.comment')
 
@@ -58,7 +63,7 @@
       - else
         = f.button :submit, (t 'helpers.submit.destroy_other'), class: 'btn btn-primary', id: 'event', data: {confirm: (t 'app.delete_confirm')}
 
-  .col-md-2.col-xs-2.col-sm-2.col-lg-2
+  .col-lg-2.col-sm-2
     - if mode == 'new'
       - param = request["param"].nil?? param: request["param"]
       - param = 'event' if param.nil?
