@@ -14,6 +14,13 @@
             = text_field_tag :search, @date.strftime("%Y/%m"), placeholder: t('title.hidzuke'), class: "form-control", size: 5
             %span.input-group-addon
               %span.glyphicon.glyphicon-calendar
+      .col-md-3.col-xs-6.col-sm-6.col-lg-3.col-md-offset-1.col-lg-offset-1
+        = label_tag 'JOB'
+        .form-group
+          .input-group
+            = text_field_tag :search_job, nil, placeholder: 'job番号', class: "form-control", size: 5
+            %span.input-group-addon.search_job
+              %span.glyphicon.glyphicon-search
     %table#kintaisumikakunin.table.table-striped.table-bordered
       %thead
         %tr
@@ -28,3 +35,4 @@
             %td= kintai[:社員番号]
             %td= kintai[:日付].strftime("%Y/%m")
             %td= kintai[:入力済] == '1' ? '入力済' : ''
+=render 'share/job_modal'

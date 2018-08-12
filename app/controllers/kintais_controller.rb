@@ -512,6 +512,45 @@ class KintaisController < ApplicationController
         end
     end
 
+    def export_pdf
+        begin
+            date = params[:date].to_date
+        rescue
+            date = Date.today
+        end
+        @job = Jobmaster.find_by(job番号: params[:job])
+        @events = []
+        @begin_t, @end_t = date.beginning_of_month, date.end_of_month
+        Event.joins('INNER JOIN "JOB内訳マスタ" ON "JOB内訳マスタ"."ジョブ内訳番号" = "events"."JOB内訳番" INNER JOIN "社員マスタ" ON "社員マスタ"."社員番号" = "events"."社員番号" INNER JOIN "作業区分内訳" ON "作業区分内訳"."作業区分" = "events"."作業区分"')
+            .where(JOB: params[:job])
+            .where('Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) >= ? AND Date(終了) <= ?',
+                           @begin_t, @begin_t, @end_t, @end_t, @begin_t, @end_t)
+            .order(:JOB内訳番, :社員番号, :開始, :作業区分)
+            .select(:JOB内訳番, '"JOB内訳マスタ"."件名" AS kenmei', :社員番号, '"社員マスタ"."氏名" AS minmei', 'Date(開始) AS day', :作業区分, '"作業区分内訳"."作業区分名称" AS meishou', :工数, :comment)
+            .each do |event|
+                @events << {
+                        JOB内訳番号: event.JOB内訳番,
+                        件名: event.kenmei,
+                        社員コード: event.社員番号,
+                        社員名: event.minmei,
+                        受付日: event.day,
+                        作業区分: event.作業区分,
+                        名称: event.meishou,
+                        実労時間: event.工数,
+                        コメント: event.comment
+                    }
+        end
+        respond_to do |format|
+            format.pdf do
+                render  pdf: 'event_job_pdf',
+                    title: 'JOB内訳番号別の工数詳細',
+                    template: 'kintais/export_pdf.pdf.erb',
+                    encoding: 'utf8',
+                    orientation: 'Landscape'
+            end
+        end
+    end
+
     def sumikakunin
         begin
             @date = params[:date].to_date
@@ -527,6 +566,7 @@ class KintaisController < ApplicationController
                 入力済: kintai.try(:入力済)
             }
         end
+        @jobs = Jobmaster.includes(:bunrui)
     end
 
     private

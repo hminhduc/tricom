@@ -77,7 +77,7 @@ Jpt::Application.routes.draw do
   resources :kintais do
     collection {get :search,:pdf_show,:sumikakunin}
     collection {post :import, :ajax}
-    collection {get :export_csv}
+    collection {get :export_csv, :export_pdf}
   end
 
   resources :events, only: [:index, :new, :create, :edit, :update] do

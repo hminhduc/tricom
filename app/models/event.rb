@@ -23,6 +23,7 @@ class Event < ActiveRecord::Base
   # belongs_to :shozai
   belongs_to :jobmaster, foreign_key: :JOB
   belongs_to :jobuchiwake, foreign_key: :JOB内訳番
+  belongs_to :sagyoukubun, foreign_key: :作業区分
 
   delegate :job名, to: :jobmaster, prefix: :job, allow_nil: true
   delegate :状態名, to: :joutaimaster, prefix: :joutai, allow_nil: true

@@ -49,6 +49,17 @@ jQuery ->
                 "titleAttr": 'カレンダ・詳細一覧のデータ出力'
                 action: ( e, dt, node, config ) ->
                   window.open('/kintais/export_csv.csv?tai=1&date='+$("#search").val())
+            },
+            {
+                "extend":    'csvHtml5',
+                "text":      'JOB内訳印刷',
+                "titleAttr": 'JOB内訳番号別の工数詳細一覧を印刷出力'
+                action: ( e, dt, node, config ) ->
+                  jobbangou = $("#search_job").val()
+                  if jobbangou != '' && jobbangou != undefined
+                    window.open('/kintais/export_pdf.pdf?date='+$("#search").val()+'&job='+$("#search_job").val())
+                  else
+                    swal('JOB番号を入力してください')
             }
             ]
   })
@@ -74,3 +85,9 @@ jQuery ->
     .on 'blur',()->
       if $(this).val()!=""&&$(this).val()!=current_date
         window.location="/kintais/sumikakunin?date="+ $(this).val()
+
+  $('.search_job').click ->
+    $('#job_search_modal').trigger('show', [$('#search_job').val()])
+  $('#job_search_modal').on 'choose_job', (e, selected_data)->
+    if selected_data != undefined
+      $('#search_job').val(selected_data[0])

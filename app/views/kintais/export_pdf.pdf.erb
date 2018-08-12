@@ -1,0 +1,118 @@
+<style>
+    tr {
+        page-break-inside: avoid;
+    }
+    tr td:first-child {
+        border-left: 1px solid #000;
+    }
+    thead th {
+        width: 9%;
+        text-align: center;
+        height: 30px;
+        border-top: 1px solid #000;
+        border-right: 1px solid #000;
+        border-bottom: 1px solid #000;
+        background-color: #e0b1b5;
+    }
+    tbody td {
+        text-align: center;
+        border-right: 1px solid #000;
+        border-bottom: 1px solid #000;
+    }
+</style>
+<table id="event-table-show" cellspacing="0" width="100%" style="font-size: 10px">
+    <thead>
+        <tr>
+            <td colspan="9" style="font-size: 20px; border: none;" align="center">受付番号別保守工数詳細一覧</td>
+        </tr>
+        <tr>
+            <td align="right" style="border: none;">JOB番号:</td>
+            <td colspan="2"><%= @job.job番号 %> <%= @job.job名 %></td>
+        </tr>
+        <tr>
+            <td align="right" style="border: none;">作業日:</td>
+            <td colspan="2"><%= @begin_t.strftime('%Y/%m/%d') %> ~ <%= @end_t.strftime('%Y/%m/%d') %></td>
+        </tr>
+        <tr>
+            <th style="border-left: 1px solid #000">JOB内訳番号</th>
+            <th>件名</th>
+            <th>社員コード</th>
+            <th>社員名</th>
+            <th>受付日</th>
+            <th>作業区分</th>
+            <th>名称</th>
+            <th>実労時間</th>
+            <th>コメント</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% 
+            iterator = {}
+            previous_column_is_new = nil
+            total_sum_kousuu = sum_of_kousuu = 0.0
+        %>
+        <% @events.each do |event| %>
+            <% if iterator[:JOB内訳番号] && iterator[:JOB内訳番号] != event[:JOB内訳番号] %>
+                <tr style="background-color: #9fdbe6">
+                    <td colspan="6">&nbsp;</td>
+                    <td>合計</td>
+                    <td><%= sum_of_kousuu %> H</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <% total_sum_kousuu += sum_of_kousuu %>
+                <% sum_of_kousuu = event[:実労時間].to_f %>
+            <% else %>
+                <% sum_of_kousuu += event[:実労時間].to_f %>
+            <% end %>
+            <tr>
+                <td>
+                    <% if iterator[:JOB内訳番号] != event[:JOB内訳番号] %>
+                        <% previous_column_is_new = true %>
+                        <% iterator[:JOB内訳番号] = event[:JOB内訳番号] %>
+                        <%= iterator[:JOB内訳番号] %>
+                    <% else %>
+                        <% previous_column_is_new = false %>
+                    <% end %>
+                </td>
+                <td>
+                    <% if previous_column_is_new || (previous_column_is_new = iterator[:件名] != event[:件名] ) %>
+                        <% iterator[:件名] = event[:件名] %>
+                        <%= iterator[:件名] %>
+                    <% end %>
+                </td>
+                <td>
+                    <% if previous_column_is_new || (previous_column_is_new = iterator[:社員コード] != event[:社員コード] ) %>
+                        <% iterator[:社員コード] = event[:社員コード] %>
+                        <%= iterator[:社員コード] %>
+                    <% end %>
+                </td>
+                <td>
+                    <% if previous_column_is_new || (previous_column_is_new = iterator[:社員名] != event[:社員名] ) %>
+                        <% iterator[:社員名] = event[:社員名] %>
+                        <%= iterator[:社員名] %>
+                    <% end %>
+                </td>
+                <td><%= event[:受付日].strftime('%Y/%m/%d') %></td>
+                <td><%= event[:作業区分] %></td>
+                <td><%= event[:名称] %></td>
+                <td><%= event[:実労時間] %></td>
+                <td><%= event[:コメント] %></td>
+            </tr>
+            <% if event == @events.last %>
+                <tr style="background-color: #9fdbe6">
+                    <td colspan="6">&nbsp;</td>
+                    <td>合計</td>
+                    <td><%= sum_of_kousuu %> H</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <% total_sum_kousuu += sum_of_kousuu %>
+            <% end %>
+        <% end %>
+        <tr style="background-color: green">
+            <td colspan="6">&nbsp;</td>
+            <td>実労時間計</td>
+            <td><%= total_sum_kousuu %> H</td>
+            <td>&nbsp;</td>
+        </tr>
+    </tbody>
+</table>
