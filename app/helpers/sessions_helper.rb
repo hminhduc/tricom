@@ -11,11 +11,7 @@ module SessionsHelper
         Shainmaster.update_all 所在コード: nil, login_time: Date.today
       end
     end
-        # 現在保留
-    # check_shozai()
     check_kintai_at_day_by_user(user.id, Date.today)
-    # reset_data_search
-    respond_with user, location: time_line_view_events_url
   end
   def set_data_search
     if logged_in?

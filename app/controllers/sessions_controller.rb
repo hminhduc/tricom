@@ -65,17 +65,34 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by 担当者コード:params[:session][:担当者コード]
     if user && (user.authenticate params[:session][:password])
-      flash[:notice] = t 'app.flash.wellcome_to'
-      log_in user
+      respond_to do |f|
+        f.html do
+          flash[:notice] = t 'app.flash.wellcome_to'
+          log_in user
+          respond_with user, location: time_line_view_events_url
+        end
+        f.json do
+          log_in user
+          render json: { message: t('app.flash.wellcome_to') }, status: :ok
+        end
+      end
     else
-      flash[:danger] = t 'app.flash.login_field'
-      render 'new'
+      respond_to do |f|
+        f.html do
+          flash[:danger] = t 'app.flash.login_field'
+          render 'new'
+        end
+        f.json { render json: { message: t('app.flash.login_field') }, status: 404 }
+      end
     end
   end
 
   def destroy
     log_out if logged_in?
-    redirect_to root_path
+    respond_to do |f|
+      f.html { redirect_to root_path }
+      f.json
+    end
   end
 
   private
