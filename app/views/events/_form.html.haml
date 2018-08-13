@@ -23,9 +23,6 @@
     .row
       .col-lg-6.col-sm-12
         = f.input :JOB, input_html: {style: 'width:100px'}, as: :search_history, hint:"#{@event.jobmaster.try :job名}", hint_html: {class: 'hint-job-refer'}
-      .col-lg-6.col-sm-12
-        = f.input (t 'title.kouteicode') do
-          = f.select :工程コード, @kouteis.map { |k| [k.工程名, k.工程コード] }, {include_blank: true}, {class: 'form-control', style: 'width:180px'}
     .row#uchiwake{style: 'display: ' + (@event.jobmaster&.JOB内訳区分 ? 'block' : 'none')}
       .col-lg-6.col-sm-12
         = f.input :JOB内訳番, input_html: {style: 'width:100px'}, as: :search_field
@@ -39,6 +36,8 @@
         - else
           = f.input :所属コード, label: (t 'title.shozokucode'), input_html: { value: @event.shainmaster.try(:所属コード) } , as: :hidden
   .col-lg-4.col-sm-4
+    = f.input (t 'title.kouteicode') do
+      = f.select :工程コード, @kouteis.map { |k| [k.工程名, k.工程コード] }, {include_blank: true}, {class: 'form-control', style: 'width:180px'}
     = f.input :開始, label: (t 'title.kaishi'), as: :date_time_picker
     = f.input :終了, label: (t 'title.shyuuryou'), as: :date_time_picker
     = f.input :工数, label: (t 'title.koushuu'), input_html: {style: 'width:100px'}, hint: (t 'title.tani'), readonly: true

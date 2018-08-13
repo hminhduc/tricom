@@ -12,7 +12,6 @@
         border-top: 1px solid #000;
         border-right: 1px solid #000;
         border-bottom: 1px solid #000;
-        background-color: #e0b1b5;
     }
     tbody td {
         text-align: center;
@@ -53,7 +52,7 @@
         %>
         <% @events.each do |event| %>
             <% if iterator[:JOB内訳番号] && iterator[:JOB内訳番号] != event[:JOB内訳番号] %>
-                <tr style="background-color: #9fdbe6">
+                <tr>
                     <td colspan="6">&nbsp;</td>
                     <td>合計</td>
                     <td><%= sum_of_kousuu %> H</td>
@@ -99,7 +98,7 @@
                 <td><%= event[:コメント] %></td>
             </tr>
             <% if event == @events.last %>
-                <tr style="background-color: #9fdbe6">
+                <tr>
                     <td colspan="6">&nbsp;</td>
                     <td>合計</td>
                     <td><%= sum_of_kousuu %> H</td>
@@ -108,7 +107,7 @@
                 <% total_sum_kousuu += sum_of_kousuu %>
             <% end %>
         <% end %>
-        <tr style="background-color: green">
+        <tr>
             <td colspan="6">&nbsp;</td>
             <td>実労時間計</td>
             <td><%= total_sum_kousuu %> H</td>
