@@ -126,6 +126,11 @@ jQuery ->
     input: $('#event_JOB')
     output: $('.hint-job-refer')
     table: $('#job_table')
+  setup_tab_render_name
+    input: $('#event_JOB内訳番')
+    output: $('.hint-jobuchiwake-refer')
+    table: $('#jobuchiwake_table')
+    index_of_output: 2
 
   $('#joutai_table').on 'choose_joutai', (e, selected_data)->
     if selected_data != undefined
@@ -161,11 +166,14 @@ jQuery ->
       $('.hint-job-refer').text(selected_data[2])
       $('#event_JOB').closest('.form-group').find('span.help-block').remove()
       $('#event_JOB').closest('.form-group').removeClass('has-error')
+
   $('#jobuchiwake_table').on 'choose_jobuchiwake', (e, selected_data)->
     if selected_data != undefined
       $('#event_JOB内訳番').val(selected_data[0])
+      $('.hint-jobuchiwake-refer').text(selected_data[2])
       $('#event_JOB内訳番').closest('.form-group').find('span.help-block').remove()
       $('#event_JOB内訳番').closest('.form-group').removeClass('has-error')
+
   # nut co tac dung goi ajax de tinh so gio lam dua theo 2 thoi diem da nhap
   $('#koushuusaikeisan').click (event)->
     start_time = $('#event_開始').val()
