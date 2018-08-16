@@ -4,7 +4,7 @@ table.clear().draw();
   <% @jobuchiwakes.each do |jobuchiwake| %>
     table.row.add( [
       "<%= jobuchiwake.ジョブ内訳番号%>",
-      "<%= jobuchiwake.受付日時&.strftime('%Y/%M/%D %H:%M') %>",
+      "<%= jobuchiwake.受付日時&.strftime('%Y/%m/%d %H:%M') %>",
       "<%= jobuchiwake.件名 %>",
       "<%= jobuchiwake.受付種別 %>"
       ] ).draw(false);
