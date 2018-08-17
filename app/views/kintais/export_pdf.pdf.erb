@@ -3,7 +3,7 @@
         page-break-inside: avoid;
     }
     tr td:first-child {
-        border-left: 1px solid #000;
+        /*border-left: 1px solid #000;*/
     }
     thead th {
         width: 9%;
@@ -15,33 +15,37 @@
     }
     tbody td {
         text-align: center;
-        border-right: 1px solid #000;
-        border-bottom: 1px solid #000;
+        /*border-right: 1px solid #000;
+        border-bottom: 1px solid #000;*/
     }
 </style>
-<table id="event-table-show" cellspacing="0" width="100%" style="font-size: 10px">
+
+<table style="width: 100%">
     <thead>
         <tr>
-            <td colspan="9" style="font-size: 20px; border: none;" align="center">受付番号別保守工数詳細一覧</td>
+            <td colspan="9" style="font-size: 30px; border: none; width: 100%" align="center">受付番号別保守工数詳細一覧</td>
         </tr>
         <tr>
-            <td align="right" style="border: none;">JOB番号:</td>
+            <td align="right" style="border: none; width: 7%">JOB番号:</td>
             <td colspan="2"><%= @job.job番号 %> <%= @job.job名 %></td>
         </tr>
         <tr>
             <td align="right" style="border: none;">作業日:</td>
             <td colspan="2"><%= @begin_t.strftime('%Y/%m/%d') %> ~ <%= @end_t.strftime('%Y/%m/%d') %></td>
         </tr>
+    </thead>
+</table>
+
+<table id="event_by_jobuchiwake_pdf" cellspacing="0" width="100%" style="font-size: 10px">
+    <thead>
         <tr>
-            <th style="border-left: 1px solid #000">JOB内訳番号</th>
-            <th>件名</th>
-            <th>社員コード</th>
-            <th>社員名</th>
-            <th>受付日</th>
-            <th>作業区分</th>
-            <th>名称</th>
-            <th>実労時間</th>
-            <th>コメント</th>
+            <th style="border-left: 1px solid #000; width: 4%">JOB内訳番号</th>
+            <th style="width: 10%">件名</th>
+            <th style="width: 5%" colspan="2">社員</th>
+            <th style="width: 5%">受付日</th>
+            <th style="width: 5%">作業区分</th>
+            <th style="width: 5%">実労時間</th>
+            <th style="width: 20%">コメント</th>
         </tr>
     </thead>
     <tbody>
@@ -52,9 +56,10 @@
         %>
         <% @events.each do |event| %>
             <% if iterator[:JOB内訳番号] && iterator[:JOB内訳番号] != event[:JOB内訳番号] %>
+                <tr><td colspan="8"><hr></td></tr>
                 <tr>
-                    <td colspan="6">&nbsp;</td>
-                    <td>合計</td>
+                    <td colspan="5">&nbsp;</td>
+                    <td>【合計】</td>
                     <td><%= sum_of_kousuu %> H</td>
                     <td>&nbsp;</td>
                 </tr>
@@ -62,6 +67,9 @@
                 <% sum_of_kousuu = event[:実労時間].to_f %>
             <% else %>
                 <% sum_of_kousuu += event[:実労時間].to_f %>
+            <% end %>
+            <% if iterator[:社員コード] && iterator[:社員コード] != event[:社員コード] %>
+                <tr><td colspan="2"></td><td colspan="8"><hr></td></tr>
             <% end %>
             <tr>
                 <td>
@@ -92,15 +100,15 @@
                     <% end %>
                 </td>
                 <td><%= event[:受付日].strftime('%Y/%m/%d') %></td>
-                <td><%= event[:作業区分] %></td>
-                <td><%= event[:名称] %></td>
+                <td><%= "#{event[:作業区分]} : #{event[:名称]}" %></td>
                 <td><%= event[:実労時間] %></td>
                 <td><%= event[:コメント] %></td>
             </tr>
             <% if event == @events.last %>
+                <tr><td colspan="8"><hr></td></tr>
                 <tr>
-                    <td colspan="6">&nbsp;</td>
-                    <td>合計</td>
+                    <td colspan="5">&nbsp;</td>
+                    <td>【合計】</td>
                     <td><%= sum_of_kousuu %> H</td>
                     <td>&nbsp;</td>
                 </tr>
@@ -108,7 +116,8 @@
             <% end %>
         <% end %>
         <tr>
-            <td colspan="6">&nbsp;</td>
+            <tr><td colspan="8"><hr></td></tr>
+            <td colspan="5">&nbsp;</td>
             <td>実労時間計</td>
             <td><%= total_sum_kousuu %> H</td>
             <td>&nbsp;</td>
