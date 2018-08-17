@@ -21,4 +21,5 @@
           = f.input :受付種別 do
             = f.input_field :受付種別, :collection => Jobuchiwake::UKETSUKESHUBETSU.map{ |k, v| [k + " : " + v, k]  }, class: 'form-control'
             .span.help-block
+          = f.input :完了区分, as: :boolean, checked_value: '1', unchecked_value: '0', class: 'form-control'
           = f.button :submit, class: 'btn btn-primary'

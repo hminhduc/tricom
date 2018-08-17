@@ -19,6 +19,7 @@ jQuery ->
     $('#jobuchiwake_受付日時').val('')
     $('#jobuchiwake_件名').val('')
     $('#jobuchiwake_受付種別').val('')
+    $('#jobuchiwake_完了区分').prop('checked', true)
     $('.form-group.has-error').each ()->
       $('.help-block', $(this)).html('')
       $(this).removeClass('has-error')
@@ -29,7 +30,8 @@ jQuery ->
     $('#jobuchiwake_ジョブ内訳番号').val(selected_row_data[2])
     $('#jobuchiwake_受付日時').val(selected_row_data[3])
     $('#jobuchiwake_件名').val(selected_row_data[4])
-    $('#jobuchiwake_受付種別').val(selected_row_data[5])
+    $('#jobuchiwake_受付種別').val(selected_row_data[5].split(' : ')[0])
+    $('#jobuchiwake_完了区分').prop('checked', if selected_row_data[6] == "" then false else true)
     $('.form-group.has-error').each ()->
       $('.help-block', $(this)).html('')
       $(this).removeClass('has-error')

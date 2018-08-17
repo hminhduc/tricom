@@ -192,7 +192,7 @@ class EventsController < ApplicationController
   end
 
   def edit
-    @jobuchiwakes = Jobuchiwake.where(ジョブ番号: @event.JOB).decorate
+    @jobuchiwakes = Jobuchiwake.where(ジョブ番号: @event.JOB, 完了区分: false).decorate
   end
 
   def new
@@ -697,7 +697,7 @@ class EventsController < ApplicationController
           format.js { render 'reset_daikyu_modal'}
         end
       when 'get_jobuchiwakes'
-        @jobuchiwakes = Jobuchiwake.where(ジョブ番号: params[:job_id]).decorate
+        @jobuchiwakes = Jobuchiwake.where(ジョブ番号: params[:job_id], 完了区分: false).decorate
         respond_to do |format|
           format.js { render 'reset_jobuchiwake_modal'}
         end

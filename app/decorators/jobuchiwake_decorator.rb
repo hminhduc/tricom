@@ -17,6 +17,10 @@ class JobuchiwakeDecorator < Draper::Decorator
     "#{ jobuchiwake.受付種別 } : #{ Jobuchiwake::UKETSUKESHUBETSU[jobuchiwake.受付種別] }"
   end
 
+  def kanryoukubun
+    "<span class='glyphicon glyphicon-ok text-success'></span>".html_safe if jobuchiwake.完了区分
+  end
+
   def delete_link
     h.link_to '', jobuchiwake, method: :delete, data: {confirm: '削除して宜しいですか？'}, class: "glyphicon glyphicon-remove text-danger remove-underline"
   end
