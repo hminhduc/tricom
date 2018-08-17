@@ -192,7 +192,7 @@ class EventsController < ApplicationController
   end
 
   def edit
-    @jobuchiwakes = Jobuchiwake.where(ジョブ番号: @event.JOB)
+    @jobuchiwakes = Jobuchiwake.where(ジョブ番号: @event.JOB).decorate
   end
 
   def new
@@ -697,7 +697,7 @@ class EventsController < ApplicationController
           format.js { render 'reset_daikyu_modal'}
         end
       when 'get_jobuchiwakes'
-        @jobuchiwakes = Jobuchiwake.where(ジョブ番号: params[:job_id])
+        @jobuchiwakes = Jobuchiwake.where(ジョブ番号: params[:job_id]).decorate
         respond_to do |format|
           format.js { render 'reset_jobuchiwake_modal'}
         end
@@ -759,10 +759,10 @@ private
     @kaishamasters = Kaishamaster.all
     if vars['shain_id'].nil?
       @mybashos = Mybashomaster.includes(:kaishamaster).where(社員番号: session[:selected_shain]).order('updated_at desc')
-      @myjobs = Myjobmaster.includes(:bunrui).where(社員番号: session[:selected_shain]).order('updated_at desc')
+      @myjobs = Myjobmaster.includes(:bunrui, :jobmaster).where(社員番号: session[:selected_shain]).order('updated_at desc')
     else
       @mybashos = Mybashomaster.includes(:kaishamaster).where(社員番号: vars['shain_id']).order('updated_at desc')
-      @myjobs = Myjobmaster.includes(:bunrui).where(社員番号: vars['shain_id']).order('updated_at desc')
+      @myjobs = Myjobmaster.includes(:bunrui, :jobmaster).where(社員番号: vars['shain_id']).order('updated_at desc')
     end
     max_job = Jobmaster.pluck(:job番号).map {|i| i.to_i}.max + 1
     # max_job = Jobmaster.maximum(:job番号) + 1

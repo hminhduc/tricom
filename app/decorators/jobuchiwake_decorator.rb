@@ -13,7 +13,7 @@ class JobuchiwakeDecorator < Draper::Decorator
     jobuchiwake.受付日時&.strftime('%Y/%m/%d %H:%M')
   end
 
-  def jushinshorui
+  def jushinshubetsu
     "#{ jobuchiwake.受付種別 } : #{ Jobuchiwake::UKETSUKESHUBETSU[jobuchiwake.受付種別] }"
   end
 

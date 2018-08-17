@@ -166,6 +166,7 @@ jQuery ->
       $('.hint-job-refer').text(selected_data[2])
       $('#event_JOB').closest('.form-group').find('span.help-block').remove()
       $('#event_JOB').closest('.form-group').removeClass('has-error')
+      $('#event_JOB').trigger('change', [selected_data].slice(1))
 
   $('#jobuchiwake_table').on 'choose_jobuchiwake', (e, selected_data)->
     if selected_data != undefined

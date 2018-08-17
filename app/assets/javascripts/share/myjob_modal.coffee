@@ -6,3 +6,4 @@ jQuery ->
     clear_button: $('#clear_myjob')
     trigger_name: 'choose_myjob'
     order_columns: [1, 'asc']
+    invisible_columns: 5

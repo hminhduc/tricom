@@ -20,9 +20,9 @@
           <% @jobuchiwakes.each do |jobuchiwake| %>
               <tr>
                 <td><%= jobuchiwake.ジョブ内訳番号 %></td>
-                <td><%= jobuchiwake.受付日時&.strftime('%Y/%d/%m %H:%M') %></td>
+                <td><%= jobuchiwake.jushinnichiji %></td>
                 <td><%= jobuchiwake.件名 %></td>
-                <td><%= jobuchiwake.受付種別 %></td>
+                <td><%= jobuchiwake.jushinshubetsu %></td>
               </tr>
           <% end if @jobuchiwakes %>
           </tbody>
