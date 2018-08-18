@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_user
   # before_filter :current_user
 
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :null_session
 
 
   # @todo enable_authorization

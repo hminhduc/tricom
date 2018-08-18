@@ -180,6 +180,7 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (6.0.1)
       railties (>= 3.2.16)
+    jwt (2.1.0)
     kaminari (1.0.1)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.0.1)
@@ -391,6 +392,7 @@ DEPENDENCIES
   jbuilder
   jquery-rails
   jquery-ui-rails
+  jwt
   kaminari
   kaminari-bootstrap (~> 3.0.1)
   mail
@@ -427,6 +429,9 @@ DEPENDENCIES
   whenever
   wicked_pdf
   wkhtmltopdf-binary
+
+RUBY VERSION
+   ruby 2.3.1p112
 
 BUNDLED WITH
    1.16.2

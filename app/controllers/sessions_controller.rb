@@ -63,26 +63,30 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.find_by 担当者コード:params[:session][:担当者コード]
-    if user && (user.authenticate params[:session][:password])
-      respond_to do |f|
-        f.html do
-          flash[:notice] = t 'app.flash.wellcome_to'
-          log_in user
-          respond_with user, location: time_line_view_events_url
-        end
-        f.json do
-          log_in user
-          render json: { message: t('app.flash.wellcome_to') }, status: :ok
-        end
-      end
+    if request.headers['Connect-Type'] == 'api'
+      authenticate_user
     else
-      respond_to do |f|
-        f.html do
-          flash[:danger] = t 'app.flash.login_field'
-          render 'new'
+      user = User.find_by 担当者コード: params[:session][:担当者コード]
+      if user && (user.authenticate params[:session][:password])
+        respond_to do |f|
+          f.html do
+            flash[:notice] = t 'app.flash.wellcome_to'
+            log_in user
+            respond_with user, location: time_line_view_events_url
+          end
+          f.json do
+            log_in user
+            render json: { message: t('app.flash.wellcome_to') }, status: :ok
+          end
         end
-        f.json { render json: { message: t('app.flash.login_field') }, status: 404 }
+      else
+        respond_to do |f|
+          f.html do
+            flash[:danger] = t 'app.flash.login_field'
+            render 'new'
+          end
+          f.json { render json: { message: t('app.flash.login_field') }, status: 404 }
+        end
       end
     end
   end
@@ -101,5 +105,24 @@ class SessionsController < ApplicationController
       flash[:notice] = t 'app.login.logged_in'
       redirect_to main_path
     end
+  end
+
+  def authenticate_user
+    user = User.find_by(担当者コード: params[:担当者コード])
+    if user&.authenticate(params[:password])
+      render json: payload(user)
+    else
+      render json: { errors: ['Invalid Username/Password'] }, status: :unauthorized
+    end
+  end
+
+  private
+
+  def payload(user)
+    return nil unless user&.id
+    {
+      auth_token: JsonWebToken.encode(user_id: user.id),
+      user: { id: user.id, 担当者コード: user.担当者コード }
+    }
   end
 end
