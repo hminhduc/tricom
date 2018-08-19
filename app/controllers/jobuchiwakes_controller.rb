@@ -27,9 +27,8 @@ class JobuchiwakesController < ApplicationController
         format.json { render json: data }
       end
     else
-      @jobuchiwake = Jobuchiwake.find_by_id(params[:id])
+      @jobuchiwake = Jobuchiwake.find_by(ジョブ内訳番号: params[:id])
       @jobuchiwake.destroy if @jobuchiwake
-      respond_with(@jobuchiwake)
     end
   end
 

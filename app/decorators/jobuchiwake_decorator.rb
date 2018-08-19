@@ -22,6 +22,6 @@ class JobuchiwakeDecorator < Draper::Decorator
   end
 
   def delete_link
-    h.link_to '', jobuchiwake, method: :delete, data: {confirm: '削除して宜しいですか？'}, class: "glyphicon glyphicon-remove text-danger remove-underline"
+    h.link_to '', jobuchiwake, method: :delete, remote: true, data: {confirm: '削除して宜しいですか？'}, class: "glyphicon glyphicon-remove text-danger remove-underline"
   end
 end
