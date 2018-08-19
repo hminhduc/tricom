@@ -1,0 +1,15 @@
+%tr{ id: "jobmaster_#{ jobmaster.id }" }
+  %td= jobmaster.job番号
+  %td= jobmaster.job名
+  %td= jobmaster.開始日.try(:strftime, '%Y/%m/%d')
+  %td= jobmaster.終了日.try(:strftime, '%Y/%m/%d')
+  %td= jobmaster.受注金額
+  %td= jobmaster.納期.try(:strftime, '%Y/%m/%d')
+  %td= jobmaster.ユーザ番号
+  %td= jobmaster.ユーザ名
+  %td= jobmaster.入力社員番号
+  %td= jobmaster.分類コード
+  %td= jobmaster.関連Job番号
+  %td= jobmaster.備考
+  %td= link_to '', edit_jobmaster_path(jobmaster), class: "glyphicon glyphicon-edit remove-underline"
+  %td= link_to '', jobmaster, method: :delete, remote: true, data: { confirm: '削除して宜しいですか？' } , class: "glyphicon glyphicon-remove text-danger remove-underline"

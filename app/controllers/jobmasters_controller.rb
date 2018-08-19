@@ -60,7 +60,6 @@ class JobmastersController < ApplicationController
     else
       @jobmaster = Jobmaster.find_by_id(params[:id])
       @jobmaster.destroy if @jobmaster
-      respond_with @jobmaster, location: jobmasters_url
     end
   end
 
