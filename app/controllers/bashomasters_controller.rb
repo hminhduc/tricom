@@ -7,7 +7,7 @@ class BashomastersController < ApplicationController
   respond_to :js
 
   def index
-    @bashomasters = Bashomaster.all
+    @bashomasters = Bashomaster.includes(:bashokubunmst, :kaishamaster).order(:場所コード)
   end
 
 
@@ -43,7 +43,6 @@ class BashomastersController < ApplicationController
     else
       @bashomaster = Bashomaster.find_by_id(params[:id])
       @bashomaster.destroy if @bashomaster
-      respond_with @bashomaster, location: bashomasters_url
     end
   end
 

@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   self.responder = ApplicationResponder
   respond_to :html
 
-  before_action :set_locale, :set_page_len
+  before_action :set_page_len
   helper_method :current_user
   # before_filter :current_user
 
@@ -30,6 +30,7 @@ class ApplicationController < ActionController::Base
       flash[:danger] = t 'app.login.let_login'
       redirect_to login_path
     end
+    set_locale_for(current_user)
   end
   # @todo record not found
   # rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
@@ -49,20 +50,14 @@ class ApplicationController < ActionController::Base
   # a Rails application; logging in sets the session value and
   # logging out removes it.
 
-  def set_locale
-    return if current_user.nil? || current_user.shainmaster.nil?
+  def set_locale_for(current_user)
     I18n.locale = params[:locale] || I18n.default_locale
-    if logged_in?
-      if !current_user.shainmaster.setting.nil?
-        if !current_user.shainmaster.setting.local.nil? && current_user.shainmaster.setting.local != ''
-          I18n.locale = current_user.shainmaster.setting.local
-        end
-      end
-    end
+    local = current_user&.shainmaster&.setting&.local
+    I18n.locale = current_user.shainmaster.setting.local if local.present?
   end
 
   def set_page_len
-    @page_length=session[:page_length]||10
+    @page_length = session[:page_length] || 10
   end
 
   def default_url_options

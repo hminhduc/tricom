@@ -1,2 +1,1 @@
-// remove from selected id
-$('#bashomaster_<%= @bashomaster.id %>').remove();
+$('table#bashomaster').DataTable().row('tr#bashomaster_<%= @bashomaster.id %>').remove().draw(false);

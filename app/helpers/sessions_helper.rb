@@ -77,15 +77,12 @@ module SessionsHelper
     end
   end
   def current_user
-    if session[:current_user_id]
-      @current_user ||= User.find_by id: session[:current_user_id]
-    elsif request.headers['Connect-Type'] == 'api'
-      @current_user = User.find(auth_token[:user_id]) if user_id_in_token?
-    end
+    user_id_in_token = auth_token[:user_id] if user_id_in_token?
+    @current_user ||= User.find_by id: session[:current_user_id] || user_id_in_token
   end
 
   def logged_in?
-    !current_user.nil?
+    current_user
   end
 
   def log_out
