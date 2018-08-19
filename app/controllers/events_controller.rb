@@ -359,7 +359,7 @@ class EventsController < ApplicationController
         attributes[:工程コード] = ''
       end
     end
-    @event = User.find(session[:user]).shainmaster.events.new attributes
+    @event = Event.new attributes
     case params[:commit]
     when (t 'helpers.submit.create')
       respond_to do |format|
@@ -375,6 +375,12 @@ class EventsController < ApplicationController
     when (t 'helpers.submit.create_other')
       flash[:notice] = t 'app.flash.new_success' if @event.save        
       respond_with @event, location: events_url
+    else
+      if @event.save
+        render json: { event: @event.as_json }, status: :ok
+      else
+        render json: { errors: @event.errors.full_messages.as_json }, status: 402
+      end
     end
   end
 
