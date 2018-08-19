@@ -26,23 +26,6 @@
   </thead>
 
   <tbody>
-  <% @joutaimasters.each do |joutai| %>
-      <tr id="joutaimaster_<%= joutai.id %>">
-        <td><%= joutai.状態コード %></td>
-        <td><%= joutai.状態名 %></td>
-        <td><%= joutai.状態区分 %></td>
-        <td><%= joutai.勤怠状態名 %></td>
-        <td><%= joutai.マーク %></td>
-        <td style = "background-color: <%= joutai.try(:色).to_s %>"><%= joutai.色 %></td>
-        <td style = "background-color: <%= joutai.try(:色).to_s%> ;color: <%= joutai.try(:text_color).to_s %>"><%= joutai.text_color %></td>
-        <td><%= joutai.WEB使用区分 %></td>
-        <td><%= joutai.勤怠使用区分 %></td>
-        <td><%= joutai.残業計算外区分 %></td>
-      </tr>
-  <% end %>
+    <%= render @joutaimasters %>
   </tbody>
 </table>
-
-<% if can? :update, @joutaimasters %>
-  <%=render 'share/import_csv_modal',import_path: import_joutaimasters_path%>
-<% end %>

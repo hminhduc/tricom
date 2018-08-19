@@ -56,7 +56,6 @@ class JoutaimastersController < ApplicationController
     else
       @joutaimaster = Joutaimaster.find_by_id(params[:id])
       @joutaimaster.destroy if @joutaimaster
-      respond_with @joutaimaster, location: joutaimasters_url
     end
   end
 

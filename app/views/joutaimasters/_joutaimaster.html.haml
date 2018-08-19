@@ -1,0 +1,11 @@
+%tr{ id: "joutaimastermaster_#{ joutaimaster.id }" }
+  %td= joutaimaster.状態コード
+  %td= joutaimaster.状態名
+  %td= joutaimaster.状態区分
+  %td= joutaimaster.勤怠状態名
+  %td= joutaimaster.マーク
+  %td{ style: "background-color: #{ joutaimaster.try(:色).to_s }" }= joutaimaster.色
+  %td{ style: "background-color: #{ joutaimaster.try(:色).to_s }; color: #{ joutaimaster.try(:text_color).to_s }" }= joutaimaster.text_color
+  %td= joutaimaster.WEB使用区分
+  %td= joutaimaster.勤怠使用区分
+  %td= joutaimaster.残業計算外区分
