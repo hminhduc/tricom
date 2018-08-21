@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180817155945) do
+ActiveRecord::Schema.define(version: 20180821155337) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,9 +41,9 @@ ActiveRecord::Schema.define(version: 20180817155945) do
     t.datetime "受付日時"
     t.string   "件名"
     t.string   "受付種別"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean  "完了区分"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.boolean  "完了区分",       default: false
   end
 
   create_table "MYJOBマスタ", id: false, force: :cascade do |t|
