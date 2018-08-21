@@ -33,5 +33,5 @@ every '3 0 * * *' do
   rake "backup:gitpush"
 end
 every 1.days do
-  rake "data:remove"
+  rake "serverchat:start"
 end
