@@ -6,6 +6,7 @@ jQuery ->
     delete_path: '/jpt_holiday_msts/id'
     invisible_columns: [0]
     no_search_columns: [0]
+    no_sort_columns: [4]
     search_params: queryParameters().search
     get_id_from_row_data: (data)->
       return data[0]

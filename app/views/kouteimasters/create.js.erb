@@ -11,6 +11,8 @@ $('form#new_' + model).clear_previous_errors()
     "<%=@kouteimaster.所属コード%>",
     "<%=@kouteimaster.shozokumaster_name%>",
     "<%=@kouteimaster.code%>",
-    "<%=@kouteimaster.name%>"
-  ]).draw( false );
+    "<%=@kouteimaster.name%>",
+    "<%=escape_javascript link_to_delete(@kouteimaster)%>"
+  ]).node().id = 'kouteimaster_<%= @kouteimaster.id.to_s.gsub(',', '-') %>';
+  $('#kouteimaster').DataTable().draw( false );
 <% end %>

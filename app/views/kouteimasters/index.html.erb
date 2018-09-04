@@ -12,22 +12,12 @@
       <th>所属名</th>
       <th>工程コード</th>
       <th>工程名</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
-    <% @kouteimasters.each do |kouteimaster| %>
-      <tr id="koutei_<%= kouteimaster.id %>">
-        <td><%= kouteimaster.id %></td>
-        <td><%= kouteimaster.所属コード %></td>
-        <td><%= kouteimaster.shozokumaster_name %></td>
-        <td><%= kouteimaster.code %></td>
-        <td><%= kouteimaster.name %></td>
-      </tr>
-    <% end %>
+    <%= render @kouteimasters %>
   </tbody>
 </table>
-<% if can? :update, @kouteimasters %>  
-  <%=render 'share/import_csv_modal',import_path: import_kouteimasters_path %>
-<% end %>
 <%= render 'new' %>
 <%= render 'edit' %>

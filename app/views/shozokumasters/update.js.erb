@@ -9,7 +9,9 @@ $('form#edit_' + model).clear_previous_errors()
   $("#shozokumaster").DataTable().row('tr.selected').remove();
   $('#shozokumaster').DataTable().row.add([
     "<%=@shozokumaster.所属コード%>",
-    "<%=@shozokumaster.所属名%>"
-    ]).draw( false );
+    "<%=@shozokumaster.所属名%>",
+    "<%=escape_javascript link_to_delete(@shozokumaster)%>"
+  ]).node().id = 'shozokumaster_<%= @shozokumaster.id %>';
+  $('#shozokumaster').DataTable().draw( false );
   $('#shozokumaster').DataTable().buttons('#edit, #destroy').nodes().addClass('disabled');
 <% end %>

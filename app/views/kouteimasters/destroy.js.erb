@@ -1,0 +1,1 @@
+$('table#kouteimaster').DataTable().row('tr#kouteimaster_<%= @kouteimaster.id.to_s.gsub(',', '-') %>').remove().draw(false);

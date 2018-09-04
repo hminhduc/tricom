@@ -10,13 +10,13 @@ class ShozokumastersController < ApplicationController
   def create
     @shozokumaster = Shozokumaster.new(shozokumaster_params)
     flash[:notice] = t 'app.flash.new_success' if @shozokumaster.save
-    respond_with @shozokumaster
+    respond_with @shozokumaster, location: shozokumasters_url
   end
 
   def update
     @shozokumaster = Shozokumaster.find(shozokumaster_params[:所属コード])
     flash[:notice] = t 'app.flash.update_success' if @shozokumaster.update(shozokumaster_params)
-    respond_with @shozokumaster
+    respond_with @shozokumaster, location: shozokumasters_url
   end
 
   def destroy

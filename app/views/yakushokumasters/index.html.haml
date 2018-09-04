@@ -9,12 +9,8 @@
     %tr
       %th 役職コード
       %th 役職名
+      %th
   %tbody
-    - @yakushokumasters.each do |yakushoku|
-      %tr{ id: "yakushoku_#{yakushoku.id}" }
-        %td= yakushoku.役職コード
-        %td= yakushoku.役職名
-- if can? :update, @yakushokumasters
-  =render 'share/import_csv_modal',import_path: import_yakushokumasters_path
+    = render @yakushokumasters
 = render 'new'
 = render 'edit'

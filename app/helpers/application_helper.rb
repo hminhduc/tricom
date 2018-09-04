@@ -13,7 +13,9 @@ module ApplicationHelper
       page_title
     end
   end
-
+  def link_to_delete(object)
+    link_to '', object, method: :delete, remote: true, data: { confirm: (t 'title.delete_confirm') } , class: 'glyphicon glyphicon-remove text-danger remove-underline'
+  end
 end
 
 # Add to config/initializers/form.rb or the end of app/helpers/application_helper.rb

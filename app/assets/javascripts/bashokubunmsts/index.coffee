@@ -4,6 +4,7 @@ jQuery ->
     new_modal_id: '#bashokubunmst-new-modal'
     edit_modal_id: '#bashokubunmst-edit-modal'
     delete_path: '/bashokubunmsts/id'
+    no_sort_columns: [2]
     search_params: queryParameters().search
     get_id_from_row_data: (data)->
       return data[0]

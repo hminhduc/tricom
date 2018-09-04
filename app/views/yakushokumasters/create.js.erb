@@ -8,6 +8,8 @@ $('form#new_' + model).clear_previous_errors()
   $('#yakushoku-new-modal').modal('hide');
   $('#yakushokumaster').DataTable().row.add( [
     "<%=@yakushokumaster.役職コード%>",
-    "<%=@yakushokumaster.役職名%>"
-  ]).draw( false );
+    "<%=@yakushokumaster.役職名%>",
+    "<%=escape_javascript link_to_delete(@yakushokumaster)%>"
+  ]).node().id = 'yakushokumaster_<%= @yakushokumaster.id %>';
+  $('#yakushokumaster').DataTable().draw( false );
 <% end %>
