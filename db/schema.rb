@@ -85,14 +85,6 @@ ActiveRecord::Schema.define(version: 20180821155337) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "TESTマスタ", id: false, force: :cascade do |t|
-    t.string   "会社コード",                    null: false
-    t.string   "会社名"
-    t.text     "備考"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "conversations", force: :cascade do |t|
     t.string   "sender_id"
     t.string   "recipient_id"

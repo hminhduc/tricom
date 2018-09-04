@@ -15,7 +15,7 @@
         = f.input (t 'title.kisha') do
           = f.select :有無, options_for_select(["帰社", "直帰", "連続"], :selected => @event.有無), {include_blank: true },{ class: 'form-control', style: 'width:100px'}
       .col-lg-3.col-sm-12
-        = f.input :経費精算, label: (t 'title.keihiseisan'), input_html: {style: 'margin: 1px 0px 0px 1px'}, as: :boolean, boolean_style: :inline, checked_value: true, unchecked_value: false
+        = f.input :経費精算, label: (t 'title.keihiseisan'), input_html: {style: 'margin: 1px 0px 0px 1px'}, as: :boolean, boolean_style: :inline
     .row
       .col-lg-12.col-sm-12
         = f.input :場所コード, label: (t 'title.basho'), input_html: {style: 'width:100px'}, as: :search_history, hint:"#{@event.bashomaster.try :場所名}", hint_html: {class: 'hint-basho-refer'}
