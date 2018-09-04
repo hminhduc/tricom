@@ -25,12 +25,12 @@ class BashomastersController < ApplicationController
   def create
     @bashomaster = Bashomaster.new(bashomaster_params)
     flash[:notice] = t 'app.flash.new_success' if @bashomaster.save
-    respond_with @bashomaster
+    respond_with @bashomaster, location: bashomasters_path
   end
 
   def update
     flash[:notice] = t 'app.flash.update_success' if @bashomaster.update bashomaster_params
-    respond_with @bashomaster
+    respond_with @bashomaster, location: bashomasters_path
   end
 
   def destroy
