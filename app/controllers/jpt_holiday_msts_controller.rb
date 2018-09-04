@@ -12,13 +12,13 @@ class JptHolidayMstsController < ApplicationController
     @jpt_holiday_mst = JptHolidayMst.new(jpt_holiday_mst_params)
     flash[:notice] = t 'app.flash.new_success' if @jpt_holiday_mst.save
     puts @jpt_holiday_mst.errors.full_messages
-    respond_with(@jpt_holiday_mst)
+    respond_with(@jpt_holiday_mst, location: jpt_holiday_msts_path)
   end
 
   def update
     @jpt_holiday_mst = JptHolidayMst.find_by(id: jpt_holiday_mst_params[:id])
     flash[:notice] = t 'app.flash.update_success' if @jpt_holiday_mst.update(jpt_holiday_mst_params)
-    respond_with(@jpt_holiday_mst)
+    respond_with(@jpt_holiday_mst, location: jpt_holiday_msts_path)
   end
 
   def destroy

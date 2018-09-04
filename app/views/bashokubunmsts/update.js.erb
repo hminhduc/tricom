@@ -9,7 +9,9 @@ $('form#edit_' + model).clear_previous_errors()
   $("#bashokubunmst_table").DataTable().row('tr.selected').remove();
   $('#bashokubunmst_table').DataTable().row.add([
     "<%=@bashokubunmst.場所区分コード%>",
-    "<%=@bashokubunmst.場所区分名%>"
-    ]).draw( false );
+    "<%=@bashokubunmst.場所区分名%>",
+    "<%=escape_javascript link_to_delete(@bashokubunmst)%>"
+  ]).node().id = 'bashokubunmst_<%= @bashokubunmst.id %>';
+  $('#bashokubunmst_table').DataTable().draw( false );
   $('#bashokubunmst_table').DataTable().buttons('#edit, #destroy').nodes().addClass('disabled');
 <% end %>

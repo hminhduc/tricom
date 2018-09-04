@@ -1,0 +1,6 @@
+%tr{ id: "jpt_holiday_mst_#{ jpt_holiday_mst.id }"}
+  %td= jpt_holiday_mst.id
+  %td= jpt_holiday_mst.event_date.try(:strftime, '%Y/%m/%d')
+  %td= jpt_holiday_mst.title
+  %td= jpt_holiday_mst.description
+  %td= link_to_delete(jpt_holiday_mst)

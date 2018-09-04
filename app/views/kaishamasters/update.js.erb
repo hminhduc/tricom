@@ -8,7 +8,8 @@ $('form#edit_' + model).clear_previous_errors()
   $('#kaisha-edit-modal').modal('hide');
   $("#kaishamaster").DataTable().row('tr.selected').remove();
   $('#kaishamaster').DataTable().row.add([
-    "<%=@kaishamaster.会社コード%>","<%=@kaishamaster.会社名%>","<%=@kaishamaster.備考%>"
-    ]).draw( false );
+    "<%=@kaishamaster.会社コード%>","<%=@kaishamaster.会社名%>","<%=@kaishamaster.備考%>","<%=escape_javascript link_to_delete(@kaishamaster)%>"
+  ]).node().id = 'kaishamaster_<%= @kaishamaster.id %>';
+  $('#kaishamaster').DataTable().draw( false );
   $('#kaishamaster').DataTable().buttons('#edit, #destroy').nodes().addClass('disabled');
 <% end %>

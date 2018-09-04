@@ -11,7 +11,9 @@ $('form#edit_' + model).clear_previous_errors()
     "<%=@jpt_holiday_mst.id%>",
     "<%=@jpt_holiday_mst.event_date.try(:strftime, '%Y/%m/%d')%>",
     "<%=@jpt_holiday_mst.title%>",
-    "<%=@jpt_holiday_mst.description%>"
-    ]).draw( false );
+    "<%=@jpt_holiday_mst.description%>",
+    "<%=escape_javascript link_to_delete(@jpt_holiday_mst)%>"
+  ]).node().id = 'jpt_holiday_mst_<%= @jpt_holiday_mst.id %>';
+  $('#holiday_table').DataTable().draw( false );
   $('#holiday_table').DataTable().buttons('#edit, #destroy').nodes().addClass('disabled');
 <% end %>

@@ -9,15 +9,10 @@
     %tr
       %th= (t 'title.bashokubuncode')
       %th= (t 'title.bashokubunmei')
-
+      %th
 
   %tbody
-    - @bashokubunmsts.each do |bashokubunmst|
-      %tr
-        %td= bashokubunmst.場所区分コード
-        %td= bashokubunmst.場所区分名
+    = render @bashokubunmsts
 
-- if can? :update, @bashokubunmsts
-  = render 'share/import_csv_modal' ,import_path: import_bashokubunmsts_path
 = render 'new'
 = render 'edit'

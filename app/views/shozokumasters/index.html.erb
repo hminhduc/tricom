@@ -10,20 +10,13 @@
     <tr>
       <th>所属コード</th>
       <th>所属名</th>
+      <th></th>
     </tr>
   </thead>
 
   <tbody>
-    <% @shozokumasters.each do |shozoku| %>
-      <tr id="shozokumaster_<%= shozoku.id %>">
-        <td><%= shozoku.所属コード %></td>
-        <td><%= shozoku.所属名 %></td>
-      </tr>
-    <% end %>
+    <%= render @shozokumasters %>
   </tbody>
 </table>
-<% if current_user.admin? %>
-  <%=render 'share/import_csv_modal',import_path: import_shozokumasters_path%>
-<% end %>
 <%= render 'new' %>
 <%= render 'edit' %>

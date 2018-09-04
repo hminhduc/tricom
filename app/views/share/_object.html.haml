@@ -1,0 +1,4 @@
+%tr{ id: "#{obj.class.name.downcase}_#{obj.id}" }
+  - attr_list.each do |attr|
+    %td= obj.send(attr)
+  %td= link_to_delete(obj)

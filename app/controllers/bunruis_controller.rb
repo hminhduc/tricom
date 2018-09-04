@@ -9,13 +9,13 @@ class BunruisController < ApplicationController
   def create
     @bunrui = Bunrui.new(bunrui_params)
     flash[:notice] = t 'app.flash.new_success' if @bunrui.save
-    respond_with(@bunrui)
+    render 'share/create', locals: { obj: @bunrui, table_id: 'bunrui_table', attr_list: %w(分類コード 分類名) }
   end
 
   def update
     @bunrui = Bunrui.find_by(分類コード: bunrui_params[:分類コード])
     flash[:notice] = t 'app.flash.update_success' if @bunrui.update(bunrui_params)
-    respond_with(@bunrui)
+    render 'share/update', locals: { obj: @bunrui, table_id: 'bunrui_table', attr_list: %w(分類コード 分類名) }
   end
 
   def destroy
@@ -28,7 +28,7 @@ class BunruisController < ApplicationController
     else
       @bunrui = Bunrui.find_by(分類コード: params[:id])
       @bunrui.destroy if @bunrui
-      respond_with(@bunrui)
+      render 'share/destroy', locals: { obj: @bunrui, table_id: 'bunrui_table' }
     end
   end
 

@@ -1,0 +1,21 @@
+<% model_name ||= obj.class.name.downcase %>
+<% table_id ||= obj.class.name.downcase %>
+<% obj_id ||= obj.id %>
+<% modal_id ||= "#{ model_name }-edit-modal" %>
+
+$('form#edit_<%= model_name %>').clear_previous_errors()
+
+<% if obj.errors.any? %>
+  $('form#edit_<%= model_name %>').render_form_errors(model_name, '<%=obj.errors.messages.to_json.html_safe%>')
+<% else %>
+  $('#<%=modal_id%>').modal('hide');
+  $('#<%=table_id%>').DataTable().row('tr.selected').remove();
+  row = []
+  <% attr_list.each do |attr| %>
+    row.push('<%=obj.send(attr)%>')
+  <% end %>
+  row.push('<%=escape_javascript link_to_delete(obj)%>')
+  $('#<%=table_id%>').DataTable().row.add(row).node().id = '<%=model_name%>_<%=obj_id%>';
+  $('#<%=table_id%>').DataTable().draw( false );
+  $('#<%=table_id%>').DataTable().buttons('#edit, #destroy').nodes().addClass('disabled');
+<% end %>

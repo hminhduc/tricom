@@ -7,6 +7,7 @@ $('form#new_' + model).clear_previous_errors()
 <% else %>
   $('#kaisha-new-modal').modal('hide');
   $('#kaishamaster').DataTable().row.add( [
-    "<%=@kaishamaster.会社コード%>","<%=@kaishamaster.会社名%>","<%=@kaishamaster.備考%>"
-  ]).draw( false );
+    "<%=@kaishamaster.会社コード%>","<%=@kaishamaster.会社名%>","<%=@kaishamaster.備考%>","<%=escape_javascript link_to_delete(@kaishamaster)%>"
+  ]).node().id = 'kaishamaster_<%= @kaishamaster.id %>';
+  $('#kaishamaster').DataTable().draw( false );
 <% end %>

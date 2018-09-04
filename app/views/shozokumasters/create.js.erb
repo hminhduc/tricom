@@ -8,6 +8,8 @@ $('form#new_' + model).clear_previous_errors()
   $('#shozoku-new-modal').modal('hide');
   $('#shozokumaster').DataTable().row.add( [
     "<%=@shozokumaster.所属コード%>",
-    "<%=@shozokumaster.所属名%>"
-  ]).draw( false );
+    "<%=@shozokumaster.所属名%>",
+    "<%=escape_javascript link_to_delete(@shozokumaster)%>"
+  ]).node().id = 'shozokumaster_<%= @shozokumaster.id %>';
+  $('#shozokumaster').DataTable().draw( false );
 <% end %>
