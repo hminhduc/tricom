@@ -1,0 +1,5 @@
+%tr{ id: "yuusen_#{yuusen.id}" }
+  %td= yuusen.優先さ
+  %td{:style => "background-color:" + yuusen.try(:色).to_s}= yuusen.色
+  %td= yuusen.備考
+  %td= link_to_delete(yuusen)
