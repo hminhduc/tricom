@@ -375,6 +375,30 @@ class EventsController < ApplicationController
     when (t 'helpers.submit.create_other')
       flash[:notice] = t 'app.flash.new_success' if @event.save        
       respond_with @event, location: events_url
+    when '挿入登録'
+      begin
+        shain = @event.shainmaster
+        event = shain.events.find { |event| event.開始.to_datetime <= @event.開始.to_datetime && @event.終了.to_datetime <= event.終了.to_datetime }
+        success = false
+        if event
+          Event.transaction do
+            event2 = event.dup
+            event.終了 = @event.開始
+            event2.開始 = @event.終了
+            success = event.save && @event.save && event2.save
+          end
+        else
+          success = @event.save
+        end
+        if success
+          flash[:notice] = t 'app.flash.new_success'
+          redirect_to time_line_view_events_url
+        else
+          render action: 'new', locals: { param: 'timeline'}
+        end
+      rescue Exception => err
+        puts err.message
+      end
     else
       if @event.save
         render json: { event: @event.as_json }, status: :ok
@@ -441,6 +465,32 @@ class EventsController < ApplicationController
             format.xml { render xml: @event.errors, status: :unprocessable_entity }
           end
         end
+      when '挿入登録'
+        @event.attributes = attributes
+        begin
+          shain = @event.shainmaster
+          event = shain.events.find { |event| event.開始.to_datetime <= @event.開始.to_datetime && @event.終了.to_datetime <= event.終了.to_datetime }
+          success = false
+          if event
+            Event.transaction do
+              event2 = event.dup
+              event.終了 = @event.開始
+              event2.開始 = @event.終了
+              success = event.save && @event.save && event2.save
+            end
+          else
+            success = @event.save
+          end
+          if success
+            flash[:notice] = t 'app.flash.update_success'
+            redirect_to time_line_view_events_url
+          else
+            render action: 'new', locals: { param: 'timeline'}
+          end
+        rescue Exception => err
+          puts err.message
+        end
+      else
     end
   end
 
