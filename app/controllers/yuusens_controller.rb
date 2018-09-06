@@ -24,13 +24,13 @@ class YuusensController < ApplicationController
   def create
     @yuusen = Yuusen.new(yuusen_params)
     flash[:notice] = t 'app.flash.new_success' if @yuusen.save
-    respond_with(@yuusen, location: yuusens_url)
+    respond_with(@yuusen, location: yuusens_path)
 
   end
 
   def update
     flash[:nitice] = t 'app.flash.update_success' if @yuusen.update(yuusen_params)
-    respond_with(@yuusen, location: yuusens_url)
+    respond_with(@yuusen, location: yuusens_path)
   end
 
   def destroy
@@ -42,8 +42,8 @@ class YuusensController < ApplicationController
       end
     else
       @yuusen = Yuusen.find_by_id(params[:id])
-      @yuusen.destroy if @yuusen
-      respond_with(@yuusen, location: yuusens_url)
+      # @yuusen.destroy if @yuusen
+      render 'share/destroy', locals: { obj: @yuusen, obj_id: params[:id] }
     end
   end
 
@@ -88,7 +88,6 @@ class YuusensController < ApplicationController
     @yuusens = Yuusen.all
 
     respond_to do |format|
-      format.html
       format.csv { send_data @yuusens.to_csv, filename: '優先.csv' }
     end
   end

@@ -56,6 +56,7 @@ class JoutaimastersController < ApplicationController
     else
       @joutaimaster = Joutaimaster.find_by_id(params[:id])
       @joutaimaster.destroy if @joutaimaster
+      render 'share/destroy', locals: { obj: @joutaimaster }
     end
   end
 

@@ -4,17 +4,12 @@
   %li= link_to (t 'title.menu'), main_path
   %li.active=(t 'title.yuusen')
 
-%table#yuusen_table.table.table-striped.table-bordered.table-hover{cellspacing:0, width: '100%'}
+%table#yuusen.table.table-striped.table-bordered.table-hover{cellspacing:0, width: '100%'}
   %thead
     %tr
       %th 優先さ
       %th 色
       %th 備考
+      %th
   %tbody
-    - @yuusens.each do |yuusen|
-      %tr        
-        %td= yuusen.優先さ
-        %td{:style => "background-color:"+yuusen.try(:色).to_s}= yuusen.色
-        %td= yuusen.備考
-- if can? :update, @yuusens
-  =render 'share/import_csv_modal',import_path: import_yuusens_path
+    = render @yuusens

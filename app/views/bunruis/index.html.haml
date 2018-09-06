@@ -9,14 +9,8 @@
     %tr
       %th= (t 'title.bunruicode')
       %th= (t 'title.bunruimei')
-
+      %th
   %tbody
-    - @bunruis.each do |bunrui|
-      %tr
-        %td= bunrui.分類コード
-        %td= bunrui.分類名
-%br
-- if can? :update, @bunruis
-  =render 'share/import_csv_modal',import_path: import_bunruis_path
+    = render @bunruis
 = render 'new'
 = render 'edit'
