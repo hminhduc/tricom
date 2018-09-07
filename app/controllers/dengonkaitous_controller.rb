@@ -10,13 +10,13 @@ class DengonkaitousController < ApplicationController
   def create
     @dengonkaitou = Dengonkaitou.new(dengonkaitou_params)
     @dengonkaitou.save
-    respond_with(@dengonkaitou, location: dengonkaitous_url)
+    render 'share/create', locals: { obj: @dengonkaitou, table_id: 'dengonkaitoumaster', attr_list: %w(id 種類名 備考) }
   end
 
   def update
     @dengonkaitou = Dengonkaitou.find_by(id: dengonkaitou_params[:id])
     @dengonkaitou.update(dengonkaitou_params)
-    respond_with(@dengonkaitou, location: dengonkaitous_url)
+    render 'share/update', locals: { obj: @dengonkaitou, table_id: 'dengonkaitoumaster', attr_list: %w(id 種類名 備考) }
   end
 
   def destroy
@@ -29,7 +29,7 @@ class DengonkaitousController < ApplicationController
     else
       @dengonkaitou = Dengonkaitou.find_by_id(params[:id])
       @dengonkaitou.destroy if @dengonkaitou
-      respond_with(@dengonkaitou)
+      render 'share/destroy', locals: { obj: @dengonkaitou, table_id: 'dengonkaitoumaster' }
     end
   end
 

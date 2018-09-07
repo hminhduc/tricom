@@ -42,7 +42,7 @@ class YuusensController < ApplicationController
       end
     else
       @yuusen = Yuusen.find_by_id(params[:id])
-      # @yuusen.destroy if @yuusen
+      @yuusen.destroy if @yuusen
       render 'share/destroy', locals: { obj: @yuusen, obj_id: params[:id] }
     end
   end
