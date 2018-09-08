@@ -1,6 +1,6 @@
 require 'rails_helper'
 require 'rake'
-
+Jpt::Application.load_tasks
 RSpec.describe Rake::Task, type: :task do
   describe 'Reset mat khau cua user' do
     before do

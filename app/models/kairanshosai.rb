@@ -1,5 +1,6 @@
-class Kairanshosai < ActiveRecord::Base
+class Kairanshosai < ApplicationRecord
   self.table_name = :回覧詳細
+  CSV_HEADERS = %w(回覧コード 対象者 created_at updated_at 状態)
   # include PgSearch
   # multisearchable :against => %w{回覧コード 対象者 created_at updated_at 状態}
   belongs_to :kairan, foreign_key: :回覧コード, class_name: Kairan
@@ -11,23 +12,4 @@ class Kairanshosai < ActiveRecord::Base
   delegate :内容, to: :kairan, allow_nil: true
   # delegate :確認, to: :kairan, allow_nil: true
   enum 状態: [:未確認, :確認済, :回答済]
-
-
-
-
-  def self.to_csv
-    	attributes = %w{回覧コード 対象者 created_at updated_at 状態}
-
-    	CSV.generate(headers: true) do |csv|
-      		csv << attributes
-
-      		all.each do |kairanshosai|
-        		csv << attributes.map{ |attr| kairanshosai.send(attr) }
-      		end
-    	end
-  end
-  # Naive approach
-  # def self.rebuild_pg_search_documents
-  #   find_each { |record| record.update_pg_search_document }
-  # end
 end

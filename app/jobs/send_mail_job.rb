@@ -3,7 +3,7 @@ class SendMailJob < ApplicationJob
 
   def perform(to, from, subject, body)
     # Do something later
-    Mail.deliver do 
+    Mail.deliver do
       to to
       from from
       subject subject

@@ -6,4 +6,3 @@ namespace :tricom do
         .try(:update, password_digest: new_password)
   end
 end
-f

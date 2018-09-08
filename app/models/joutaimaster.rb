@@ -1,6 +1,7 @@
-class Joutaimaster < ActiveRecord::Base
+class Joutaimaster < ApplicationRecord
   self.table_name = :状態マスタ
   self.primary_key = :状態コード
+  CSV_HEADERS = %w(状態コード 状態名 状態区分 勤怠状態名 マーク 色 文字色 WEB使用区分 勤怠使用区分)
   include PgSearch
   multisearchable :against => %w{状態コード 状態名 状態区分 勤怠状態名 マーク 色 文字色 WEB使用区分 勤怠使用区分}
   scope :web_use, -> { where( WEB使用区分:'1')}
@@ -18,45 +19,7 @@ class Joutaimaster < ActiveRecord::Base
 
   scope :active, ->(kubunlist) { where(勤怠使用区分: '1', 状態区分:kubunlist) }
 
-# scope :active, ->(wday,holiday) {
-#     case wday
-#       when '5','6'
-#         where(勤怠使用区分: '1', 状態区分:[1,5])
-#       when '0'..'4'
-#         if holiday == '1'
-#           where(勤怠使用区分: '1', 状態区分:[1,5])
-#         else
-#           where(勤怠使用区分: '1', 状態区分:[1,2,6])
-#         end
-#     end
-#   }
-
   def events
     super || build_events
-  end
-
-  # a class method import, with file passed through as an argument
-  def self.import(file)
-    # a block that runs through a loop in our CSV data
-    CSV.foreach(file.path, headers: true) do |row|
-      # creates a user for each row in the CSV file
-      Joutaimaster.create! row.to_hash
-    end
-  end
-
-  def self.to_csv
-    attributes = %w{状態コード 状態名 状態区分 勤怠状態名 マーク 色 文字色 WEB使用区分 勤怠使用区分}
-
-    CSV.generate(headers: true) do |csv|
-      csv << attributes
-
-      all.each do |joutaimaster|
-        csv << attributes.map{ |attr| joutaimaster.send(attr) }
-      end
-    end
-  end
-  # Naive approach
-  def self.rebuild_pg_search_documents
-    find_each { |record| record.update_pg_search_document }
   end
 end
