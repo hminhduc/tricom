@@ -95,3 +95,4 @@ latest.dump
 latest.dump.*
 .ruby-version
 lib/tasks/tricom.rake
+coverage/*
