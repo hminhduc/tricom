@@ -85,21 +85,7 @@ class JobmastersController < ApplicationController
   end
 
   def import
-    if params[:file].nil?
-      flash[:alert] = t 'app.flash.file_nil'
-      redirect_to jobmasters_path
-    elsif File.extname(params[:file].original_filename) != '.csv'
-      flash[:danger] = t 'app.flash.file_format_invalid'
-      redirect_to jobmasters_path
-    else
-      if notice = import_from_csv(Jobmaster, params[:file])
-        flash[:danger] = notice
-        redirect_to jobmasters_path
-      else
-        notice = t 'app.flash.import_csv'
-        redirect_to :back, notice: notice
-      end
-    end
+    super(Jobmaster, jobmasters_path)
   end
 
   def export_csv

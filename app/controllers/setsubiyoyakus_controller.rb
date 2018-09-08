@@ -119,26 +119,7 @@ class SetsubiyoyakusController < ApplicationController
     end
   end
   def import
-    if params[:file].nil?
-      flash[:alert] = t 'app.flash.file_nil'
-      redirect_to setsubiyoyakus_path
-    elsif File.extname(params[:file].original_filename) != '.csv'
-      flash[:danger] = t 'app.flash.file_format_invalid'
-      redirect_to setsubiyoyakus_path
-    else
-      begin
-        Setsubiyoyaku.transaction do
-          Setsubiyoyaku.delete_all
-          Setsubiyoyaku.reset_pk_sequence
-          Setsubiyoyaku.import(params[:file])
-          notice = t 'app.flash.import_csv'
-          redirect_to :back, notice: notice
-        end
-      rescue => err
-        flash[:danger] = err.to_s
-        redirect_to setsubiyoyakus_path
-      end
-    end
+    super(Setsubiyoyaku, setsubiyoyakus_path)
   end
 
   def export_csv

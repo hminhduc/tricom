@@ -35,26 +35,7 @@ class KaishamastersController < ApplicationController
   end
 
   def import
-    if params[:file].nil?
-      flash[:alert] = t 'app.flash.file_nil'
-      redirect_to kaishamasters_path
-    elsif File.extname(params[:file].original_filename) != '.csv'
-      flash[:danger] = t 'app.flash.file_format_invalid'
-      redirect_to kaishamasters_path
-    else
-      begin
-        Kaishamaster.transaction do
-          Kaishamaster.delete_all
-          Kaishamaster.reset_pk_sequence
-          Kaishamaster.import(params[:file])
-          notice = t 'app.flash.import_csv'
-          redirect_to :back, notice: notice
-        end
-      rescue => err
-        flash[:danger] = err.to_s
-        redirect_to kaishamasters_path
-      end
-    end
+    super(Kaishamaster, kaishamasters_path)
   end
 
   def export_csv

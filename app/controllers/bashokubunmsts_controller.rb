@@ -34,26 +34,7 @@ class BashokubunmstsController < ApplicationController
   end
 
   def import
-    if params[:file].nil?
-      flash[:alert] = t 'app.flash.file_nil'
-      redirect_to bashokubunmsts_path
-    elsif File.extname(params[:file].original_filename) != '.csv'
-      flash[:danger] = t 'app.flash.file_format_invalid'
-      redirect_to bashokubunmsts_path
-    else
-      begin
-        Bashokubunmst.transaction do
-          Bashokubunmst.delete_all
-          Bashokubunmst.reset_pk_sequence
-          Bashokubunmst.import(params[:file])
-          notice = t 'app.flash.import_csv'
-          redirect_to :back, notice: notice
-        end
-      rescue => err
-        flash[:danger] = err.to_s
-        redirect_to bashokubunmsts_path
-      end
-    end
+    super(Bashokubunmst, bashokubunmsts_path)
   end
 
   def export_csv

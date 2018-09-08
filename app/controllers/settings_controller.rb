@@ -67,26 +67,7 @@ class SettingsController < ApplicationController
   end
 
   def import
-    if params[:file].nil?
-      flash[:alert] = t 'app.flash.file_nil'
-      redirect_to settings_path
-    elsif File.extname(params[:file].original_filename) != '.csv'
-      flash[:danger] = t 'app.flash.file_format_invalid'
-      redirect_to settings_path
-    else
-      begin
-        Setting.transaction do
-          Setting.delete_all
-          Setting.reset_pk_sequence
-          Setting.import(params[:file])
-          notice = t 'app.flash.import_csv'
-          redirect_to :back, notice: notice
-        end
-      rescue => err
-        flash[:danger] = err.to_s
-        redirect_to settings_path
-      end
-    end
+    super(Setting, settings_path)
   end
 
   def export_csv

@@ -47,26 +47,7 @@ class RorumenbasController < ApplicationController
   end
 
   def import
-    if params[:file].nil?
-      flash[:alert] = t 'app.flash.file_nil'
-      redirect_to rorumenbas_path
-    elsif File.extname(params[:file].original_filename) != '.csv'
-      flash[:danger] = t 'app.flash.file_format_invalid'
-      redirect_to rorumenbas_path
-    else
-      begin
-        Rorumenba.transaction do
-          Rorumenba.delete_all
-          Rorumenba.reset_pk_sequence
-          Rorumenba.import(params[:file])
-          notice = t 'app.flash.import_csv'
-          redirect_to :back, notice: notice
-        end
-      rescue => err
-        flash[:danger] = err.to_s
-        redirect_to rorumenbas_path
-      end
-    end
+    super(Rorumenba, rorumenbas_path)
   end
 
   def export_csv

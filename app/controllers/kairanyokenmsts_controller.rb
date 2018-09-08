@@ -34,26 +34,7 @@ class KairanyokenmstsController < ApplicationController
   end
 
   def import
-    if params[:file].nil?
-      flash[:alert] = t 'app.flash.file_nil'
-      redirect_to kairanyokenmsts_path
-    elsif File.extname(params[:file].original_filename) != '.csv'
-      flash[:danger] = t 'app.flash.file_format_invalid'
-      redirect_to kairanyokenmsts_path
-    else
-      begin
-        Kairanyokenmst.transaction do
-          Kairanyokenmst.delete_all
-          Kairanyokenmst.reset_pk_sequence
-          Kairanyokenmst.import(params[:file])
-          notice = t 'app.flash.import_csv'
-          redirect_to :back, notice: notice
-        end
-      rescue => err
-        flash[:danger] = err.to_s
-        redirect_to kairanyokenmsts_path
-      end
-    end
+    super(Kairanyokenmst, kairanyokenmsts_path)
   end
 
   def export_csv

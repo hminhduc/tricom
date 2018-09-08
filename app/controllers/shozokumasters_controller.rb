@@ -34,26 +34,7 @@ class ShozokumastersController < ApplicationController
   end
 
   def import
-    if params[:file].nil?
-      flash[:alert] = t 'app.flash.file_nil'
-      redirect_to shozokumasters_path
-    elsif File.extname(params[:file].original_filename) != '.csv'
-      flash[:danger] = t 'app.flash.file_format_invalid'
-      redirect_to shozokumasters_path
-    else
-      begin
-        Shozokumaster.transaction do
-          Shozokumaster.delete_all
-          Shozokumaster.reset_pk_sequence
-          Shozokumaster.import(params[:file])
-          notice = t 'app.flash.import_csv'
-          redirect_to :back, notice: notice
-        end
-      rescue => err
-        flash[:danger] = err.to_s
-        redirect_to shozokumasters_path
-      end
-    end
+    super(Shozokumaster, shozokumasters_path)
   end
 
   def export_csv

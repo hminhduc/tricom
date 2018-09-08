@@ -62,26 +62,7 @@ class ShozaisController < ApplicationController
     end
   end
   def import
-    if params[:file].nil?
-      flash[:alert] = t 'app.flash.file_nil'
-      redirect_to shozais_path
-    elsif File.extname(params[:file].original_filename) != '.csv'
-      flash[:danger] = t 'app.flash.file_format_invalid'
-      redirect_to shozais_path
-    else
-      begin
-        Shozai.transaction do
-          Shozai.delete_all
-          Shozai.reset_pk_sequence
-          Shozai.import(params[:file])
-          notice = t 'app.flash.import_csv'
-          redirect_to :back, notice: notice
-        end
-      rescue => err
-        flash[:danger] = err.to_s
-        redirect_to shozais_path
-      end
-    end
+    super(Shozai, shozais_path)
   end
 
   def export_csv

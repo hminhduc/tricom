@@ -103,26 +103,7 @@ class JoutaimastersController < ApplicationController
   end
 
   def import
-    if params[:file].nil?
-      flash[:alert] = t 'app.flash.file_nil'
-      redirect_to joutaimasters_path
-    elsif File.extname(params[:file].original_filename) != '.csv'
-      flash[:danger] = t 'app.flash.file_format_invalid'
-      redirect_to joutaimasters_path
-    else
-      begin
-        Joutaimaster.transaction do
-          Joutaimaster.delete_all
-          Joutaimaster.reset_pk_sequence
-          Joutaimaster.import(params[:file])
-          notice = t 'app.flash.import_csv'
-          redirect_to :back, notice: notice
-        end
-      rescue => err
-        flash[:danger] = err.to_s
-        redirect_to joutaimasters_path
-      end
-    end
+    super(Joutaimaster, joutaimasters_path)
   end
 
   def export_csv
