@@ -1,7 +1,8 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   mount_uploader :avatar, AvatarUploader
   self.table_name = :担当者マスタ
   self.primary_key = :担当者コード
+  CSV_HEADERS = %w{担当者コード 担当者名称 admin email supervisor}
   include PgSearch
   multisearchable :against => %w{担当者コード 担当者名称}
   attr_accessor :current_password
@@ -39,16 +40,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.to_csv
-    attributes = %w{担当者コード 担当者名称 admin email supervisor}
-    CSV.generate(headers: true) do |csv|
-      csv << attributes
-      all.each do |user|
-        csv << attributes.map{ |attr| user.send(attr) }
-      end
-    end
-  end
-
   def self.import(file)
     # a block that runs through a loop in our CSV data
     CSV.foreach(file.path, headers: true) do |row|
@@ -73,10 +64,7 @@ class User < ActiveRecord::Base
       end
     end
   end
-  # Naive approach
-  def self.rebuild_pg_search_documents
-    find_each { |record| record.update_pg_search_document }
-  end
+
   # Get avatar url
   def avatar_link
     avatar? ? avatar_url : AvatarUploader::DEFAULT_URL

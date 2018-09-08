@@ -1,6 +1,8 @@
-class Bashomaster < ActiveRecord::Base
+class Bashomaster < ApplicationRecord
   self.table_name = :場所マスタ
   self.primary_key = :場所コード
+  HEADERS = CSV_HEADERS = %w(場所コード 場所名 場所名カナ SUB 場所区分 会社コード)
+  PRIMARY_KEYS = %w(場所コード)
   after_update :doUpdateMybasho
   include PgSearch
   multisearchable :against => %w{場所コード 場所名 場所名カナ SUB bashokubun_場所区分名 kaisha_name}
@@ -24,44 +26,8 @@ class Bashomaster < ActiveRecord::Base
   def basho_kubun?
     場所区分 == '2'
   end
+
   def doUpdateMybasho
     mybashos = Mybashomaster.where(場所コード: self.場所コード).update_all(場所名: self.場所名,場所名カナ: self.場所名カナ,SUB: self.SUB,場所区分: self.場所区分,会社コード: self.会社コード)
-  end
-  # a class method import, with file passed through as an argument
-  def self.import(file)
-    # a block that runs through a loop in our CSV data
-    CSV.foreach(file.path, headers: true) do |row|
-      # creates a user for each row in the CSV file
-
-      Bashomaster.create! row.to_hash
-
-      # basho.kaishamaster = Kaishamaster.find_by(会社コード: row_hash['会社コード'])
-      # basho.save
-
-    end
-
-    # reset foreign key
-    # unless Kaishamaster.count == 0
-    #   Bashomaster.all.each do |basho|
-    #     basho.kaishamaster = Kaishamaster.find_by(会社コード: basho.会社コード)
-    #     basho.save
-    #   end
-    # end
-  end
-
-  def self.to_csv
-    attributes = %w{場所コード 場所名 場所名カナ SUB 場所区分 会社コード}
-
-    CSV.generate(headers: true) do |csv|
-      csv << attributes
-
-      all.each do |bashomaster|
-        csv << attributes.map{ |attr| bashomaster.send(attr) }
-      end
-    end
-  end
-  # Naive approach
-  def self.rebuild_pg_search_documents
-    find_each { |record| record.update_pg_search_document }
   end
 end

@@ -1,4 +1,4 @@
-class Mykaishamaster < ActiveRecord::Base
+class Mykaishamaster < ApplicationRecord
   self.table_name = :MY会社マスタ
   self.primary_key = :会社コード, :社員番号
 

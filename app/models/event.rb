@@ -1,6 +1,7 @@
-class Event < ActiveRecord::Base
+class Event < ApplicationRecord
   attr_accessor :kintai_daikyu_date
   self.table_name = :events
+  CSV_HEADERS = %w(社員番号 開始 終了 状態コード 場所コード JOB 所属コード 工程コード 工数 計上 comment)
   include PgSearch
   multisearchable :against => %w{開始 終了 joutai_状態名 basho_name job_job名 koutei_工程名 計上}
   
@@ -185,28 +186,5 @@ class Event < ActiveRecord::Base
         myjob.save        
       end
     end
-  end
-
-  def self.import(file)
-    # a block that runs through a loop in our CSV data
-    CSV.foreach(file.path, headers: true) do |row|
-      # creates a user for each row in the CSV file
-      Event.create! row.to_hash
-    end
-  end
-  def self.to_csv
-    attributes = %w{社員番号 開始 終了 状態コード 場所コード JOB 所属コード 工程コード 工数 計上 comment}
-
-    CSV.generate(headers: true) do |csv|
-      csv << attributes
-
-      all.each do |event|
-        csv << attributes.map{ |attr| event.send(attr) }
-      end
-    end
-  end
-  # Naive approach
-  def self.rebuild_pg_search_documents
-    find_each { |record| record.update_pg_search_document }
   end
 end

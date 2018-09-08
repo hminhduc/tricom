@@ -1,6 +1,7 @@
-class Kaishamaster < ActiveRecord::Base
+class Kaishamaster < ApplicationRecord
   self.table_name = :会社マスタ
   self.primary_key = :会社コード
+  CSV_HEADERS = %w(会社コード 会社名 備考)
   after_update :doUpdateMykaisha
   include PgSearch
   multisearchable :against => %w{会社コード 会社名 備考}
@@ -17,33 +18,5 @@ class Kaishamaster < ActiveRecord::Base
 
   def doUpdateMykaisha
     mykaishas = Mykaishamaster.where(会社コード: self.会社コード).update_all(会社名: self.会社名,備考: self.備考)
-  end
-# a class method import, with file passed through as an argument
-  def self.import(file)
-    # a block that runs through a loop in our CSV data
-    CSV.foreach(file.path, headers: true) do |row|
-      # creates a user for each row in the CSV file
-      Kaishamaster.create! row.to_hash
-    end
-  end
-
-  def to_param
-    id.parameterize
-  end
-
-  def self.to_csv
-    attributes = %w{会社コード 会社名 備考}
-
-    CSV.generate(headers: true) do |csv|
-      csv << attributes
-
-      all.each do |kaishamaster|
-        csv << attributes.map{ |attr| kaishamaster.send(attr) }
-      end
-    end
-  end
-  # Naive approach
-  def self.rebuild_pg_search_documents
-    find_each { |record| record.update_pg_search_document }
   end
 end

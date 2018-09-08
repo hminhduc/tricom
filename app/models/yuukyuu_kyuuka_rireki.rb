@@ -1,6 +1,7 @@
-class YuukyuuKyuukaRireki < ActiveRecord::Base
+class YuukyuuKyuukaRireki < ApplicationRecord
   self.table_name = :有給休暇履歴
   self.primary_key = :社員番号, :年月
+  CSV_HEADERS = %w{社員番号 年月 月初有給残 月末有給残}
   include PgSearch
   multisearchable :against => %w{社員番号 年月 }
   validates :年月,:社員番号, presence: true
@@ -38,7 +39,7 @@ class YuukyuuKyuukaRireki < ActiveRecord::Base
 
   def calculate_getmatsuzan(kintais = [])
     date = 年月.to_date
-    kintais = Kintai.where(社員番号: 社員番号, 日付: date.beginning_of_month..date.end_of_month).order(:日付) if kintais.any?
+    kintais = Kintai.where(社員番号: 社員番号, 日付: date.beginning_of_month..date.end_of_month).order(:日付) if kintais.empty?
     yuukyu = 0
     kintais.each do |kintai|
       case kintai.状態1
@@ -49,29 +50,5 @@ class YuukyuuKyuukaRireki < ActiveRecord::Base
     calculate_getshozan if 月初有給残.blank?
     self.月末有給残 = (月初有給残.to_f - yuukyu).to_f
     self.月末有給残 = 0.0 if self.月末有給残 < 0.0
-  end
-
-  def self.import(file)
-    # a block that runs through a loop in our CSV data
-    CSV.foreach(file.path, headers: true) do |row|
-      # creates a user for each row in the CSV file
-      YuukyuuKyuukaRireki.create! row.to_hash
-    end
-  end
-
-  def self.to_csv
-    attributes = %w{社員番号 年月 月初有給残 月末有給残}
-
-    CSV.generate(headers: true) do |csv|
-      csv << attributes
-
-      all.each do |yuukyuu_kyuuka|
-        csv << attributes.map{ |attr| yuukyuu_kyuuka.send(attr) }
-      end
-    end
-  end
-  # Naive approach
-  def self.rebuild_pg_search_documents
-    find_each { |record| record.update_pg_search_document }
   end
 end
