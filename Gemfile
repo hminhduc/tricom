@@ -89,20 +89,21 @@ gem 'whenever', require: false
 gem 'draper'
 gem 'jwt'
 group :development, :test do
- gem 'better_errors'
- gem 'binding_of_caller', :platforms=>[:mri_19, :mri_20, :rbx]
- gem 'hub', :require=>nil
- #gem 'quiet_assets'
- gem 'rails_layout'
+ 	gem 'better_errors'
+ 	gem 'binding_of_caller', :platforms=>[:mri_19, :mri_20, :rbx]
+ 	gem 'hub', :require=>nil
+ 	#gem 'quiet_assets'
+ 	gem 'rails_layout'
 
- gem 'rspec-rails'
- gem 'capybara'
- gem 'poltergeist'
- gem 'rails-controller-testing'
- 
+ 	gem 'rspec-rails'
+ 	gem 'capybara'
+ 	gem 'poltergeist'
+ 	gem 'rails-controller-testing'
+ 	gem 'factory_bot_rails'
+ 	gem 'rubocop'
   gem 'byebug'
- #gem 'web-console', '~> 2.0'
- gem 'spring'
+ 	#gem 'web-console', '~> 2.0'
+ 	gem 'spring'
 end
 gem 'web-console', group: :development
 group :test do
