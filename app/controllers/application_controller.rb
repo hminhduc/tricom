@@ -43,6 +43,24 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def import(model, path)
+    if params[:file].nil?
+      flash[:alert] = t 'app.flash.file.nil'
+      redirect_to path
+    elsif File.extname(params[:file].original_filename) != '.csv'
+      flash[:danger] = t 'app.flash.file_format_invalid'
+      redirect_to path
+    else
+      if notice = import_from_csv(model, params[:file])
+        flash[:danger] = notice
+        redirect_to path
+      else
+        notice = t 'app.flash.import_csv'
+        redirect_to :back, notice: notice
+      end
+    end
+  end
+
   private
 
   # Finds the User with the ID stored in the session with the key

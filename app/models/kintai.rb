@@ -64,6 +64,6 @@ class Kintai < ApplicationRecord
   end
 
   def check_joutai1
-    errors.add(:状態1, I18n.t('app.model.check_joutai1')) unless 状態1.present? && Joutaimaster.find_by(状態コード: 状態1)
+    errors.add(:状態1, I18n.t('app.model.check_joutai1')) unless 状態1.blank? || Joutaimaster.find_by(状態コード: 状態1)
   end
 end

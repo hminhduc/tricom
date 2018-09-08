@@ -34,26 +34,7 @@ class SetsubisController < ApplicationController
   end
 
   def import
-    if params[:file].nil?
-      flash[:alert] = t 'app.flash.file_nil'
-      redirect_to setsubis_path
-    elsif File.extname(params[:file].original_filename) != '.csv'
-      flash[:danger] = t 'app.flash.file_format_invalid'
-      redirect_to setsubis_path
-    else
-      begin
-        Setsubi.transaction do
-          Setsubi.delete_all
-          Setsubi.reset_pk_sequence
-          Setsubi.import(params[:file])
-          notice = t 'app.flash.import_csv'
-          redirect_to :back, notice: notice
-        end
-      rescue => err
-        flash[:danger] = err.to_s
-        redirect_to setsubis_path
-      end
-    end
+    super(Setsubi, setsubis_path)
   end
 
   def export_csv

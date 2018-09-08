@@ -418,26 +418,7 @@ class KintaisController < ApplicationController
     end
 
     def import
-        if params[:file].nil?
-            flash[:alert] = t 'app.flash.file_nil'
-            redirect_to kintais_path
-        elsif File.extname(params[:file].original_filename) != '.csv'
-            flash[:danger] = t 'app.flash.file_format_invalid'
-            redirect_to kintais_path
-        else
-            begin
-                Kintai.transaction do
-                    Kintai.delete_all
-                    Kintai.reset_pk_sequence
-                    Kintai.import(params[:file])
-                    notice = t 'app.flash.import_csv'
-                    redirect_to :back, notice: notice, param_import: 'test'
-                end
-            rescue => err
-                flash[:danger] = err.to_s
-                redirect_to kintais_path
-            end
-        end
+        super(Kintai, kintais_path)
     end
 
     def export_csv

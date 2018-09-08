@@ -34,26 +34,7 @@ class RorumastersController < ApplicationController
   end
 
   def import
-    if params[:file].nil?
-      flash[:alert] = t 'app.flash.file_nil'
-      redirect_to rorumasters_path
-    elsif File.extname(params[:file].original_filename) != '.csv'
-      flash[:danger] = t 'app.flash.file_format_invalid'
-      redirect_to rorumasters_path
-    else
-      begin
-        Rorumaster.transaction do
-          Rorumaster.delete_all
-          Rorumaster.reset_pk_sequence
-          Rorumaster.import(params[:file])
-          notice = t 'app.flash.import_csv'
-          redirect_to :back, notice: notice
-        end
-      rescue => err
-        flash[:danger] = err.to_s
-        redirect_to rorumasters_path
-      end
-    end
+    super(Rorumaster, rorumasters_path)
   end
 
   def export_csv

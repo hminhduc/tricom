@@ -116,26 +116,7 @@ class UsersController < ApplicationController
   end
 
   def import
-    if params[:file].nil?
-      flash[:alert] = t 'app.flash.file_nil'
-      redirect_to users_path
-    elsif File.extname(params[:file].original_filename) != '.csv'
-      flash[:danger] = t 'app.flash.file_format_invalid'
-      redirect_to users_path
-    else
-      begin
-        User.transaction do
-          User.destroy_all
-          User.reset_pk_sequence
-          User.import(params[:file])
-        end
-        notice = t 'app.flash.import_csv'
-        redirect_to :back, notice: notice
-      rescue => err
-        flash[:danger] = err.to_s
-        redirect_to users_path
-      end
-    end
+    super(User, users_path)
   end
 
   private

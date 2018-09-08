@@ -48,26 +48,7 @@ class YuusensController < ApplicationController
   end
 
   def import
-    if params[:file].nil?
-      flash[:alert] = t 'app.flash.file_nil'
-      redirect_to yuusens_path
-    elsif File.extname(params[:file].original_filename) != '.csv'
-      flash[:danger] = t 'app.flash.file_format_invalid'
-      redirect_to yuusens_path
-    else
-      begin
-        Yuusen.transaction do
-          Yuusen.delete_all
-          Yuusen.reset_pk_sequence
-          Yuusen.import(params[:file])
-          notice = t 'app.flash.import_csv'
-          redirect_to :back, notice: notice
-        end
-      rescue => err
-        flash[:danger] = err.to_s
-        redirect_to yuusens_path
-      end
-    end
+    super(Yuusen, yuusens_path)
   end
 
   def ajax

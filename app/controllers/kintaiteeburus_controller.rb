@@ -60,24 +60,7 @@ class KintaiteeburusController < ApplicationController
       end
   end
   def import
-    if params[:file].nil?
-        flash[:alert] = t 'app.flash.file_nil'
-        redirect_to kintaiteeburus_path
-      elsif File.extname(params[:file].original_filename) != '.csv'
-        flash[:danger] = t 'app.flash.file_format_invalid'
-        redirect_to kintaiteeburus_path
-      else
-        begin
-          Kintaiteeburu.transaction do
-            Kintaiteeburu.delete_all            
-            Kintaiteeburu.import(params[:file])            
-            redirect_back fallback_location: kintaiteeburus_path,notice: t('app.flash.import_csv')
-          end
-        rescue => err
-          flash[:danger] = err.to_s
-          redirect_to kintaiteeburus_path
-        end
-      end
+    super(Kintaiteeburu, kintaiteeburus_path)
   end
   private
   def kintaiteeburu_params

@@ -33,22 +33,7 @@ class BunruisController < ApplicationController
   end
 
   def import
-    if params[:file].nil?
-      flash[:alert] = t 'app.flash.file.nil'
-      redirect_to bunruis_path
-    elsif File.extname(params[:file].original_filename) != '.csv'
-      flash[:danger] = t 'app.flash.file_format_invalid'
-      redirect_to bunruis_path
-    else
-      if notice = import_from_csv(Bunrui, params[:file])
-        flash[:danger] = notice
-        redirect_to bunruis_path
-      else
-        notice = t 'app.flash.import_csv'
-        redirect_to :back, notice: notice
-      end
-      end
-    end
+    super(Bunrui, bunruis_path)
   end
 
   def export_csv
