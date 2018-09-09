@@ -3,6 +3,7 @@ class Bashomaster < ApplicationRecord
   self.primary_key = :場所コード
   HEADERS = CSV_HEADERS = %w(場所コード 場所名 場所名カナ SUB 場所区分 会社コード)
   PRIMARY_KEYS = %w(場所コード)
+  SHOW_ATTRS = %w(場所コード 場所名 場所名カナ SUB bashokubun_場所区分名 kaisha_name)
   after_update :doUpdateMybasho
   include PgSearch
   multisearchable :against => %w{場所コード 場所名 場所名カナ SUB bashokubun_場所区分名 kaisha_name}

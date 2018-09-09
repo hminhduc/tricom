@@ -10,13 +10,13 @@ class ShozokumastersController < ApplicationController
   def create
     @shozokumaster = Shozokumaster.new(shozokumaster_params)
     flash[:notice] = t 'app.flash.new_success' if @shozokumaster.save
-    respond_with @shozokumaster, location: shozokumasters_url
+    render 'share/create', locals: { obj: @shozokumaster, attr_list: Shozokumaster::SHOW_ATTRS }
   end
 
   def update
     @shozokumaster = Shozokumaster.find(shozokumaster_params[:所属コード])
     flash[:notice] = t 'app.flash.update_success' if @shozokumaster.update(shozokumaster_params)
-    respond_with @shozokumaster, location: shozokumasters_url
+    render 'share/update', locals: { obj: @shozokumaster, attr_list: Shozokumaster::SHOW_ATTRS }
   end
 
   def destroy
@@ -29,7 +29,7 @@ class ShozokumastersController < ApplicationController
     else
       @shozokumaster = Shozokumaster.find_by_id(params[:id])
       @shozokumaster.destroy if @shozokumaster
-      respond_with @shozokumaster, location: shozokumasters_url
+      render 'share/destroy', locals: { obj: @shozokumaster }
     end
   end
 

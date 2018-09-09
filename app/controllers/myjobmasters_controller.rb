@@ -62,7 +62,7 @@ class MyjobmastersController < ApplicationController
       begin
         @myjobmaster = Myjobmaster.find(params[:id])
         @myjobmaster.destroy if @myjobmaster
-        respond_with @myjobmaster, location: myjobmasters_url
+        render 'share/destroy', locals: { obj: @myjobmaster, obj_id: @myjobmaster.id.try(:join, '-') }
       rescue
       end
     end

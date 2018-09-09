@@ -7,7 +7,7 @@
   <li class="active">所在マスタ</li>
 </ol>
 
-<table id="shozais" class="shozaitable table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+<table id="shozai" class="shozaitable table table-striped table-bordered table-hover" cellspacing="0" width="100%">
 
   <thead>
   <tr>
@@ -21,18 +21,6 @@
   </thead>
 
   <tbody>
-  <% @shozais.each do |shozai| %>
-      <tr id="shozai_<%= shozai.id %>">
-        <td><%= shozai.所在コード %></td>
-        <td><%= shozai.所在名 %></td>
-        <td style="background-color: <%= shozai.try(:background_color).to_s %>" ><%= shozai.background_color %></td>
-        <td style="background-color: <%= shozai.try(:background_color).to_s %>; color: <%= shozai.try(:text_color).to_s %>" ><%= shozai.text_color %></td>
-        <td><%= link_to '', edit_shozai_path(shozai), class: "glyphicon glyphicon-edit remove-underline" %></td>
-        <td><%= link_to '', shozai, method: :delete, data: { confirm: '削除して宜しいですか？' } , class: "glyphicon glyphicon-remove text-danger remove-underline" %></td>
-      </tr>
-  <% end %>
+    <%= render @shozais %>
   </tbody>
 </table>
-<% if can? :update, @shozais %>
-  <%=render 'share/import_csv_modal',import_path: import_shozais_path %>
-<% end %>

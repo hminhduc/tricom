@@ -1,9 +1,10 @@
 jQuery ->
   create_datatable
-    table_id: '#ekimaster'
+    table_id: '#eki'
     new_modal_id: '#eki-new-modal'
     edit_modal_id: '#eki-edit-modal'
     delete_path: '/ekis/id'
+    no_sort_columns: [3]
     search_params: queryParameters().search
     get_id_from_row_data: (data)->
       return data[0]

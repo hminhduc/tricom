@@ -1,11 +1,12 @@
 jQuery ->
   create_datatable
-    table_id: '#tsushinseigyoumaster'
+    table_id: '#tsushinseigyou'
     new_modal_id: '#tsushinseigyou-new-modal'
     edit_modal_id: '#tsushinseigyou-edit-modal'
     delete_path: '/tsushinseigyous/id'
     invisible_columns: [0]
     no_search_columns: [0]
+    no_sort_columns: [4]
     search_params: queryParameters().search
     get_id_from_row_data: (data)->
       return data[0]

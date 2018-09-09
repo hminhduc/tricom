@@ -4,22 +4,15 @@
   %li= link_to (t 'title.menu'), main_path
   %li.active 回覧用件マスタ
 
-%table#kairanyoukenmaster.table.table-striped.table-bordered.table-hover{cellspacing:0, width: '100%'}
+%table#kairanyokenmst.table.table-striped.table-bordered.table-hover{cellspacing:0, width: '100%'}
   %thead
     %tr
       %th id
       %th 名称
       %th 備考
       %th 優先さ
+      %th
   %tbody
-    - @kairanyokenmsts.each do |kairanyokenmst|
-      %tr
-        %td= kairanyokenmst.id
-        %td= kairanyokenmst.名称
-        %td= kairanyokenmst.備考
-        %td= kairanyokenmst.優先さ
-%br
-- if can? :update, @kairanyokenmsts
-  =render 'share/import_csv_modal',import_path: import_kairanyokenmsts_path      
+    = render @kairanyokenmsts
 = render 'new'
 = render 'edit'

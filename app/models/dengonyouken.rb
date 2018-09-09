@@ -1,6 +1,7 @@
 class Dengonyouken < ApplicationRecord
   self.table_name = :伝言用件マスタ
   CSV_HEADERS = %w(id 種類名 備考 優先さ)
+  SHOW_ATTRS = %w(id 種類名 備考 優先さ)
   include PgSearch
   multisearchable :against => %w{種類名 備考}
   validates :種類名, presence: true

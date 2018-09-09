@@ -58,7 +58,7 @@ class UsersController < ApplicationController
     else
       @user = User.find_by_id(params[:id])
       @user.destroy if @user
-      redirect_to users_path
+      render 'share/destroy', locals: { obj: @user }
     end
   rescue
   end

@@ -10,13 +10,13 @@ class SagyoukubunsController < ApplicationController
   def create
     @sagyoukubun = Sagyoukubun.new(sagyoukubun_params)
     flash[:notice] = t 'app.flash.new_success' if @sagyoukubun.save
-    respond_with(@sagyoukubun)
+    render 'share/create', locals: { obj: @sagyoukubun, attr_list: Sagyoukubun::SHOW_ATTRS }
   end
 
   def update
     @sagyoukubun = Sagyoukubun.find_by(作業区分: sagyoukubun_params[:作業区分])
     flash[:notice] = t 'app.flash.update_success' if @sagyoukubun.update(sagyoukubun_params)
-    respond_with(@sagyoukubun)
+    render 'share/update', locals: { obj: @sagyoukubun, attr_list: Sagyoukubun::SHOW_ATTRS }
   end
 
   def destroy
@@ -29,7 +29,7 @@ class SagyoukubunsController < ApplicationController
     else
       @sagyoukubun = Sagyoukubun.find_by_id(params[:id])
       @sagyoukubun.destroy if @sagyoukubun
-      respond_with(@sagyoukubun)
+      render 'share/destroy', locals: { obj: @sagyoukubun }
     end
   end
 

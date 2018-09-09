@@ -5,9 +5,11 @@ RSpec.describe Bunrui, type: :model do
 
   subject { bunrui }
 
-  it { should respond_to(:分類コード) } # thay thế cho đoạn code trên ta có thể sử dụng dòng lệnh sau
-  it { should respond_to(:分類名) }
-  it { should respond_to(:jobmaster) } # has_one :jobmaster, foreign_key: :分類コード, dependent: :nullify
+  it do
+    should respond_to(:分類コード) # thay thế cho đoạn code trên ta có thể sử dụng dòng lệnh sau
+    should respond_to(:分類名)
+    should have_one(:jobmaster) # has_one :jobmaster, foreign_key: :分類コード, dependent: :nullify
+  end
 
   it { should be_valid } # kiểm tra xem biến có tồn tại hay không
 

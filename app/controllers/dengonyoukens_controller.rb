@@ -10,13 +10,13 @@ class DengonyoukensController < ApplicationController
   def create
     @dengonyouken = Dengonyouken.new(dengonyouken_params)
     @dengonyouken.save
-    respond_with(@dengonyouken, location: dengonyoukens_url)
+    render 'share/create', locals: { obj: @dengonyouken, attr_list: Dengonyouken::SHOW_ATTRS }
   end
 
   def update
     @dengonyouken = Dengonyouken.find_by(id: dengonyouken_params[:id])
     @dengonyouken.update(dengonyouken_params)
-    respond_with(@dengonyouken, location: dengonyoukens_url)
+    render 'share/update', locals: { obj: @dengonyouken, attr_list: Dengonyouken::SHOW_ATTRS }
   end
 
   def destroy
@@ -29,7 +29,7 @@ class DengonyoukensController < ApplicationController
     else
       @dengonyouken = Dengonyouken.find_by_id(params[:id])
       @dengonyouken.destroy if @dengonyouken
-      respond_with(@dengonyouken)
+      render 'share/destroy', locals: { obj: @dengonyouken }
     end
   end
 

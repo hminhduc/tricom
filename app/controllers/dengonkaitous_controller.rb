@@ -10,13 +10,13 @@ class DengonkaitousController < ApplicationController
   def create
     @dengonkaitou = Dengonkaitou.new(dengonkaitou_params)
     @dengonkaitou.save
-    render 'share/create', locals: { obj: @dengonkaitou, table_id: 'dengonkaitoumaster', attr_list: %w(id 種類名 備考) }
+    render 'share/create', locals: { obj: @dengonkaitou, table_id: 'dengonkaitoumaster', attr_list: Dengonkaitou::SHOW_ATTRS }
   end
 
   def update
     @dengonkaitou = Dengonkaitou.find_by(id: dengonkaitou_params[:id])
     @dengonkaitou.update(dengonkaitou_params)
-    render 'share/update', locals: { obj: @dengonkaitou, table_id: 'dengonkaitoumaster', attr_list: %w(id 種類名 備考) }
+    render 'share/update', locals: { obj: @dengonkaitou, table_id: 'dengonkaitoumaster', attr_list: Dengonkaitou::SHOW_ATTRS }
   end
 
   def destroy

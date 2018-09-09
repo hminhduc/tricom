@@ -26,23 +26,7 @@
   </thead>
 
   <tbody>
-  <% @mybashomasters.each do |mybasho| %>
-      <tr id="mybashomaster_<%= mybasho.id %>">
-        <td><%= mybasho.社員番号 %></td>
-        <td><%= mybasho.場所コード %></td>
-        <td><%= mybasho.場所名 %></td>
-        <td><%= mybasho.場所名カナ %></td>
-        <td><%= mybasho.SUB %></td>
-        <td><%= mybasho.bashokubunmst.場所区分名 unless mybasho.bashokubunmst.nil?%></td>
-        <td><%= mybasho.kaishamaster.会社名 unless mybasho.kaishamaster.nil?%></td>
-        <td><%= mybasho.updated_at.try(:strftime, '%Y/%m/%d %H:%M:%S') %></td>
-        <td><%= link_to '', edit_mybashomaster_path(mybasho), class: "glyphicon glyphicon-edit remove-underline" %></td>
-        <td><%= link_to '', mybasho, method: :delete, data: { confirm: '削除して宜しいですか？' } , class: "glyphicon glyphicon-remove text-danger remove-underline" %></td>
+    <%= render @mybashomasters %>
 
-      </tr>
-  <% end %>
   </tbody>
 </table>
-<% if can? :update, @mybashomasters %>
-  <%=render 'share/import_csv_modal',import_path: import_mybashomasters_path%>
-<% end %>

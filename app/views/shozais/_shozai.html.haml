@@ -1,0 +1,7 @@
+%tr{ id: "shozai_#{shozai.id}" }
+  %td= shozai.所在コード
+  %td= shozai.所在名
+  %td{ style: "background-color: #{shozai.try(:background_color).to_s}" }= shozai.background_color
+  %td{ style: "background-color: #{shozai.try(:background_color).to_s}; color: #{shozai.try(:text_color).to_s}" }= shozai.text_color
+  %td= link_to_edit(edit_shozai_path(shozai))
+  %td= link_to_delete(shozai)

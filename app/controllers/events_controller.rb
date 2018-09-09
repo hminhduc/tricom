@@ -1,7 +1,7 @@
 class EventsController < ApplicationController
   before_action :require_user!
-  before_action :set_event, only: [ :show, :edit, :update, :destroy]
-  before_action :set_param, only: [ :create, :new, :show, :edit, :update, :destroy, :shutchou_ikkatsu_new, :shutchou_create]
+  before_action :set_event, only: [:show, :edit, :update]
+  before_action :set_param, only: [:create, :new, :show, :edit, :update, :shutchou_ikkatsu_new, :shutchou_create]
   # load_and_authorize_resource
   respond_to :json
 

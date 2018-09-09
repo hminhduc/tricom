@@ -1,6 +1,6 @@
 jQuery ->
   create_datatable
-    table_id: '#user_table'
+    table_id: '#user'
     new_path: 'users/new'
     edit_path: 'users/id/edit'
     delete_path: '/users/id'

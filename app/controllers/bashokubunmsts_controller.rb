@@ -10,13 +10,13 @@ class BashokubunmstsController < ApplicationController
   def create
     @bashokubunmst = Bashokubunmst.new(bashokubunmst_params)
     flash[:notice] = t 'app.flash.new_success' if @bashokubunmst.save
-    respond_with(@bashokubunmst, location: bashokubunmsts_path)
+    render 'share/create', locals: { obj: @bashokubunmst, table_id: 'bashokubunmst_table', attr_list: Bashokubunmst::SHOW_ATTRS }
   end
 
   def update
     @bashokubunmst = Bashokubunmst.find_by(場所区分コード: bashokubunmst_params[:場所区分コード])
     flash[:notice] = t 'app.flash.update_success' if @bashokubunmst.update(bashokubunmst_params)
-    respond_with(@bashokubunmst, location: bashokubunmsts_path)
+    render 'share/update', locals: { obj: @bashokubunmst, table_id: 'bashokubunmst_table', attr_list: Bashokubunmst::SHOW_ATTRS }
   end
 
   def destroy
@@ -29,7 +29,7 @@ class BashokubunmstsController < ApplicationController
     else
       @bashokubunmst = Bashokubunmst.find_by(場所区分コード: params[:id])
       @bashokubunmst.destroy if @bashokubunmst
-      respond_with(@bashokubunmst)
+      render 'share/destroy', locals: { obj: @bashokubunmst, table_id: 'bashokubunmst_table' }
     end
   end
 

@@ -1,5 +1,5 @@
 jQuery ->
-  $('.rorumenba-table').DataTable
+  $('#rorumenba').DataTable
     pagingType: "full_numbers"
     dom: "<'row'<'col-md-6'l><'col-md-6'f>><'row'<'col-md-7'B><'col-md-5'p>><'row'<'col-md-12'tr>><'row'<'col-md-12'i>>"
     oLanguage:

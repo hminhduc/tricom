@@ -1,0 +1,15 @@
+%tr{ id: "myjobmaster_#{myjobmaster.id.try(:join, '-')}" }
+  %td= myjobmaster.社員番号
+  %td= myjobmaster.job番号
+  %td= myjobmaster.job名
+  %td= myjobmaster.開始日.try(:strftime, '%Y/%m/%d')
+  %td= myjobmaster.終了日.try(:strftime, '%Y/%m/%d')
+  %td= myjobmaster.ユーザ番号
+  %td= myjobmaster.ユーザ名
+  %td= myjobmaster.入力社員番号
+  %td= myjobmaster.分類コード
+  %td= myjobmaster.関連Job番号
+  %td= myjobmaster.備考
+  %td= myjobmaster.updated_at.try(:strftime, '%Y/%m/%d %H:%M:%S')
+  %td= link_to_edit(edit_myjobmaster_path(myjobmaster))
+  %td= link_to_delete(myjobmaster)

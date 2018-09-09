@@ -2,7 +2,7 @@ class Rorumaster < ApplicationRecord
 	self.table_name = :ロールマスタ
 	self.primary_key = :ロールコード
   CSV_HEADERS = %w(ロールコード ロール名 序列)
-
+  SHOW_ATTRS = %w(ロールコード ロール名 序列)
   include PgSearch
   multisearchable :against => %w{ロールコード ロール名 序列}
   validates :ロールコード,:ロール名, presence: true

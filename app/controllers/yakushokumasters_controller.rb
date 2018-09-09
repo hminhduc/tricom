@@ -10,13 +10,13 @@ class YakushokumastersController < ApplicationController
   def create
     @yakushokumaster = Yakushokumaster.new(yakushokumaster_params)
     flash[:notice] = t 'app.flash.new_success' if @yakushokumaster.save
-    respond_with @yakushokumaster, location: yakushokumasters_path
+    render 'share/create', locals: { obj: @yakushokumaster, attr_list: Yakushokumaster::SHOW_ATTRS }
   end
 
   def update
     @yakushokumaster = Yakushokumaster.find(yakushokumaster_params[:役職コード])    
     flash[:notice] = t 'app.flash.update_success' if @yakushokumaster.update(yakushokumaster_params)
-    respond_with @yakushokumaster, location: yakushokumasters_path
+    render 'share/update', locals: { obj: @yakushokumaster, attr_list: Yakushokumaster::SHOW_ATTRS }
   end
 
   def destroy
@@ -29,7 +29,7 @@ class YakushokumastersController < ApplicationController
     else
       @yakushokumaster = Yakushokumaster.find_by_id(params[:id])
       @yakushokumaster.destroy if @yakushokumaster
-      respond_with @yakushokumaster, location: yakushokumasters_url
+      render 'share/destroy', locals: { obj: @yakushokumaster }
     end
   end
 

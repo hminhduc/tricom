@@ -4,19 +4,14 @@
   %li= link_to (t 'title.menu'), main_path
   %li.active= (t 'title.ekimaster')
 
-%table#ekimaster.table.table-striped.table-bordered.table-hover{cellspacing:0, width: '100%'}
+%table#eki.table.table-striped.table-bordered.table-hover{cellspacing:0, width: '100%'}
   %thead
     %tr
       %th= (t 'title.ekicode')
       %th= (t 'title.ekimei')
       %th= (t 'title.ekimeikana')
+      %th
   %tbody
-    - @ekis.each do |eki|
-      %tr
-        %td= eki.id
-        %td= eki.name
-        %td= eki.駅名カナ
-- if can? :update, @ekis
-  = render 'share/import_csv_modal' ,import_path: import_ekis_path
+    = render @ekis
 = render 'new'
 = render 'edit'

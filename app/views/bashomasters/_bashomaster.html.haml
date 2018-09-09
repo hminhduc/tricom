@@ -1,9 +1,1 @@
-%tr{ id: "bashomaster_#{ bashomaster.id }" }
-  %td= bashomaster.場所コード
-  %td= bashomaster.場所名
-  %td= bashomaster.場所名カナ
-  %td= bashomaster.SUB
-  %td= bashomaster.bashokubunmst&.場所区分名
-  %td= bashomaster.kaishamaster&.会社名
-  %td= link_to '', edit_bashomaster_path(bashomaster), class: "glyphicon glyphicon-edit remove-underline"
-  %td= link_to '', bashomaster, method: :delete, remote: true, data: { confirm: (t 'title.delete_confirm') } , class: "glyphicon glyphicon-remove text-danger remove-underline"
+= render_object bashomaster, Bashomaster::SHOW_ATTRS, edit_bashomaster_path(bashomaster)

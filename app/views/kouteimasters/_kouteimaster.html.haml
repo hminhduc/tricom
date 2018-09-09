@@ -1,7 +1,1 @@
-%tr{ id: "kouteimaster_#{ kouteimaster.id.to_s.gsub(',', '-') }" }
-  %td= kouteimaster.id
-  %td= kouteimaster.所属コード
-  %td= kouteimaster.shozokumaster_name
-  %td= kouteimaster.code
-  %td= kouteimaster.name
-  %td= link_to_delete(kouteimaster)
+= render_object kouteimaster, Kouteimaster::SHOW_ATTRS, nil, kouteimaster.id.join('-')

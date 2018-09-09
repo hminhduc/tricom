@@ -29,9 +29,8 @@
           %td= setsubiyoyaku.id
           %td= setsubiyoyaku.開始
           %td= setsubiyoyaku.終了
-          %td= setsubiyoyaku.shainmaster.氏名
-          %td= setsubiyoyaku.kaishamaster.nil? ? setsubiyoyaku.相手先 : setsubiyoyaku.kaishamaster.会社名
+          %td= setsubiyoyaku.shainmaster&.氏名
+          %td= setsubiyoyaku.kaishamaster&.会社名 || setsubiyoyaku.相手先
           %td= setsubiyoyaku.用件
-          %td= link_to '', edit_setsubiyoyaku_path(setsubiyoyaku), class: "glyphicon glyphicon-edit remove-underline"
-          %td= link_to '', setsubiyoyaku, :method => :delete, :data => { :confirm => t('app.delete_confirm') } , class: "glyphicon glyphicon-remove text-danger remove-underline"
-  = render 'share/import_csv_modal',import_path: import_setsubiyoyakus_path
+          %td= link_to_edit(edit_setsubiyoyaku_path(setsubiyoyaku))
+          %td= link_to_delete(setsubiyoyaku)

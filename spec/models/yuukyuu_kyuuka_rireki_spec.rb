@@ -36,7 +36,6 @@ RSpec.describe YuukyuuKyuukaRireki, type: :model do
       FactoryBot.create :kintai, 日付: '2018-09-30'.to_date, 状態1: joutaimaster2.状態コード
       FactoryBot.create :kintai, 日付: '2018-09-10'.to_date, 状態1: joutaimaster3.状態コード
       @ykkk = FactoryBot.create :yuukyuu_kyuuka_rireki, 月初有給残: 11.0
-      puts @ykkk.社員番号, Kintai.pluck(:社員番号)
       @ykkk.calculate_getmatsuzan
     end
     it { expect(@ykkk.月末有給残).to eq 9.0 }

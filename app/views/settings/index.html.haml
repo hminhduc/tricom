@@ -4,7 +4,7 @@
   %li= link_to (t 'title.menu'), main_path
   %li.active Setting
 %br
-%table#settingmaster.table.table-striped.table-bordered.table-hover{cellspacing: '0', width: '100%'}
+%table#setting.table.table-striped.table-bordered.table-hover{cellspacing: '0', width: '100%'}
   %thead
     %tr
       %th 社員番号
@@ -12,12 +12,6 @@
       %th Local
       %th Vietnamese Holidays
       %th Turning data
+      %th
   %tbody
-    - @settings.each do |setting|
-      %tr
-        %td= setting.社員番号
-        %td= setting.scrolltime
-        %td= setting.local
-        %td= setting.select_holiday_vn
-        %td= setting.turning_data
-=render 'share/import_csv_modal',import_path: import_settings_path
+    = render @settings

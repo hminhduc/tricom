@@ -42,7 +42,7 @@ class KintaiteeburusController < ApplicationController
     else
       @kintaiteeburu = Kintaiteeburu.find_by_id(params[:id])
       @kintaiteeburu.destroy if @kintaiteeburu
-      respond_with(@kintaiteeburu)
+      render 'share/destroy', locals: { obj: @kintaiteeburu }
     end
   end
   def ajax

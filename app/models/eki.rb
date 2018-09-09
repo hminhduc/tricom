@@ -2,6 +2,7 @@ class Eki < ApplicationRecord
   CSV_HEADERS = %w(駅コード 駅名 駅名カナ 選択回数)
   HEADERS = %w(駅コード 駅名 駅名カナ)
   PRIMARY_KEYS = %w(駅コード)
+  SHOW_ATTRS = %w(id name 駅名カナ)
   include PgSearch
   multisearchable :against => [:駅コード, :駅名, :駅名カナ]
 
