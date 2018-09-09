@@ -10,13 +10,13 @@ class TsushinseigyousController < ApplicationController
   def create
     @tsushinseigyou = Tsushinseigyou.new(tsushinseigyou_params)
     @tsushinseigyou.save
-    respond_with(@tsushinseigyou, location: tsushinseigyous_url)
+    render 'share/create', locals: { obj: @tsushinseigyou, attr_list: Tsushinseigyou::SHOW_ATTRS }
   end
 
   def update
     @tsushinseigyou = Tsushinseigyou.find_by(社員番号: tsushinseigyou_params[:社員番号])
     @tsushinseigyou.update(tsushinseigyou_params)
-    respond_with(@tsushinseigyou, location: tsushinseigyous_url)
+    render 'share/update', locals: { obj: @tsushinseigyou, attr_list: Tsushinseigyou::SHOW_ATTRS }
   end
 
   def destroy
@@ -29,7 +29,7 @@ class TsushinseigyousController < ApplicationController
     else
       @tsushinseigyou = Tsushinseigyou.find_by_id(params[:id])
       @tsushinseigyou.destroy if @tsushinseigyou
-      respond_with(@tsushinseigyou)
+      render 'share/destroy', locals: { obj: @tsushinseigyou }
     end
   end
 

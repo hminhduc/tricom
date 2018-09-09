@@ -1,6 +1,7 @@
 class Kairanyokenmst < ApplicationRecord
   self.table_name = :回覧用件マスタ
   CSV_HEADERS = %w(id 名称 備考 優先さ)
+  SHOW_ATTRS = %w(id 名称 備考 優先さ)
   include PgSearch
   multisearchable :against => %w{名称 備考}
   validates :名称, presence: true

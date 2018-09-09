@@ -42,8 +42,8 @@ class RorumenbasController < ApplicationController
 
   def destroy
     @shains = Shainmaster.all
-    @rorumenba.destroy
-    respond_with(@rorumenba)
+    @rorumenba.destroy if @rorumenba
+    render 'share/destroy', locals: { obj: @rorumenba, obj_id: @rorumenba.id.try(:join, '-') }
   end
 
   def import

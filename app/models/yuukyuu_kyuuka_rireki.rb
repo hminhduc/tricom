@@ -1,10 +1,11 @@
 class YuukyuuKyuukaRireki < ApplicationRecord
   self.table_name = :有給休暇履歴
-  self.primary_key = :社員番号, :年月
   CSV_HEADERS = %w{社員番号 年月 月初有給残 月末有給残}
+  SHOW_ATTRS = %w(id 社員番号 年月 月初有給残 月末有給残)
   include PgSearch
   multisearchable :against => %w{社員番号 年月 }
-  validates :年月,:社員番号, presence: true
+  validates :年月, :社員番号, presence: true
+  validates :年月, uniqueness: { scope: :社員番号 }
   belongs_to :shainmaster, foreign_key: :社員番号
   after_save :update_getshozan_of_next_month
 

@@ -14,7 +14,8 @@ class Mybashomaster < ApplicationRecord
   belongs_to :shainmaster, foreign_key: :社員番号
   belongs_to :bashomaster, foreign_key: :場所コード
   delegate :name, to: :kaishamaster, prefix: :kaisha, allow_nil: true
-
+  delegate :場所区分名, to: :bashokubunmst, prefix: :basho, allow_nil: true
+  delegate :会社名, to: :kaishamaster, prefix: :kaisha, allow_nil: true
   # alias_attribute :id, :場所コード
   # alias_attribute :name, :場所名
 

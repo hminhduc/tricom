@@ -2,6 +2,7 @@ class Kouteimaster < ApplicationRecord
   self.table_name = :工程マスタ
   self.primary_keys = :工程コード, :所属コード
   CSV_HEADERS = %w(所属コード 工程コード 工程名)
+  SHOW_ATTRS = %w(id 所属コード shozokumaster_name code name)
   include PgSearch
   multisearchable :against => %w{shozokumaster_name 工程コード 工程名}
   validates :所属コード, :工程コード, :工程名, presence: true

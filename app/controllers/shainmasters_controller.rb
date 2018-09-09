@@ -52,8 +52,9 @@ class ShainmastersController < ApplicationController
         format.json { render json: data }
       end
     else
-      @shainmaster.destroy if current_user != @shainmaster.user
-      respond_with @shainmaster, location: shainmasters_url
+      @shainmaster = Shainmaster.find_by(id: params[:id])
+      @shainmaster.destroy if @shainmaster && current_user != @shainmaster.user
+      render 'share/destroy', locals: { obj: @shainmaster }
     end
   end
 

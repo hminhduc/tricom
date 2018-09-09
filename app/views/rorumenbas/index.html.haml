@@ -6,7 +6,7 @@
 
 %br
 
-%table.rorumenba-table.table.table-striped.table-bordered.table-hover{cellspacing: '0', width: '100%'}
+%table#rorumenba.table.table-striped.table-bordered.table-hover{cellspacing: '0', width: '100%'}
   %thead
     %tr
       %th ロールコード
@@ -17,14 +17,4 @@
       %th
       %th
   %tbody
-    - @rorumenbas.each do |rorumenba|
-      %tr
-        %td= rorumenba.ロールコード
-        %td= rorumenba.rorumaster.ロール名
-        %td= rorumenba.社員番号
-        %td= rorumenba.shainmaster.氏名
-        %td= rorumenba.ロール内序列
-        %td= link_to '', edit_rorumenba_path(rorumenba), class: "glyphicon glyphicon-edit remove-underline"
-        - msg = t 'app.delete_confirm'
-        %td= link_to '', rorumenba, :method => :delete, :data => { :confirm => msg } , class: "glyphicon glyphicon-remove text-danger remove-underline"
-=render 'share/import_csv_modal',import_path: import_rorumenbas_path
+    = render @rorumenbas

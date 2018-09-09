@@ -8,7 +8,7 @@ class YuukyuuKyuukaRirekisController < ApplicationController
   end
 
   def index
-    @yuukyuu_kyuuka_rireki = YuukyuuKyuukaRireki.all
+    @yuukyuu_kyuuka_rirekis = YuukyuuKyuukaRireki.all
   end
 
   def show
@@ -34,8 +34,7 @@ class YuukyuuKyuukaRirekisController < ApplicationController
     if params[:ids]
       begin
         params[:ids].each do |id|
-          id.try(:gsub!, '-', '/')
-          YuukyuuKyuukaRireki.find(id).try(:destroy)
+          YuukyuuKyuukaRireki.find_by_id(id).try(:destroy)
         end
       rescue
       end
@@ -44,12 +43,9 @@ class YuukyuuKyuukaRirekisController < ApplicationController
         format.json { render json: data }
       end
     else
-      params[:id].try(:gsub!, '-', '/')
-      @yuukyuu_kyuuka_rireki = YuukyuuKyuukaRireki.find(params[:id])
-      if @yuukyuu_kyuuka_rireki
-        @yuukyuu_kyuuka_rireki.destroy
-        respond_with(@yuukyuu_kyuuka_rireki)
-      end
+      @yuukyuu_kyuuka_rireki = YuukyuuKyuukaRireki.find_by_id(params[:id])
+      @yuukyuu_kyuuka_rireki.destroy if @yuukyuu_kyuuka_rireki
+      render 'share/destroy', locals: { obj: @yuukyuu_kyuuka_rireki }
     end
   rescue => error
     puts error
@@ -74,14 +70,12 @@ class YuukyuuKyuukaRirekisController < ApplicationController
   def export_csv
     @yuukyuu_kyuuka_rirekis = YuukyuuKyuukaRireki.all
     respond_to do |format|
-      format.html
       format.csv { send_data @yuukyuu_kyuuka_rirekis.to_csv, filename: '有給休暇履歴.csv' }
     end
   end
 
   private
     def set_yuukyuu_kyuuka_rireki
-      params[:id].try(:gsub!, '-', '/')
       @yuukyuu_kyuuka_rireki = YuukyuuKyuukaRireki.find_by(id: params[:id])
     end
 

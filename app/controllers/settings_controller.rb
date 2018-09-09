@@ -62,7 +62,7 @@ class SettingsController < ApplicationController
     else
       @setting = Setting.find_by(社員番号: params[:id])
       @setting.destroy if @setting
-      respond_with(@setting)
+      render 'share/destroy', locals: { obj: @setting }
     end
   end
 

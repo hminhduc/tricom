@@ -5,6 +5,7 @@ module ApplicationHelper
     # link to change to <%= link_to "name link", current_url(:format => :csv)%>
     url_for :params => params.merge(new_params)
   end
+
   def full_title(page_title = '')
     base_title = "TRICOM"
     if page_title.empty?
@@ -13,8 +14,22 @@ module ApplicationHelper
       page_title
     end
   end
+
+  def link_to_edit(edit_path)
+    link_to '', edit_path, class: "glyphicon glyphicon-edit remove-underline"
+  end
+
   def link_to_delete(object)
     link_to '', object, method: :delete, remote: true, data: { confirm: (t 'title.delete_confirm') } , class: 'glyphicon glyphicon-remove text-danger remove-underline'
+  end
+
+  def render_object(obj, attr_list, edit_path = nil, obj_id = nil)
+    s = ''
+    s << "<tr id='#{obj.class.name.underscore}_#{obj_id||obj.id}'>"
+    attr_list.each { |attr| s << "<td>#{obj.send(attr)}</td>" }
+    s << "<td>#{link_to_edit(edit_path)}</td>" if edit_path.present?
+    s << "<td>#{link_to_delete(obj)}</td></tr>"
+    s.html_safe
   end
 end
 

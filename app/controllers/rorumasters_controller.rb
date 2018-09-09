@@ -10,13 +10,13 @@ class RorumastersController < ApplicationController
   def create
     @rorumaster = Rorumaster.new(rorumaster_params)
     @rorumaster.save
-    respond_with(@rorumaster)
+    render 'share/create', locals: { obj: @rorumaster, attr_list: Rorumaster::SHOW_ATTRS }
   end
 
   def update
     @rorumaster = Rorumaster.find_by(ロールコード: rorumaster_params[:ロールコード])
     @rorumaster.update(rorumaster_params)
-    respond_with(@rorumaster)
+    render 'share/update', locals: { obj: @rorumaster, attr_list: Rorumaster::SHOW_ATTRS }
   end
 
   def destroy
@@ -29,7 +29,7 @@ class RorumastersController < ApplicationController
     else
       @rorumaster = Rorumaster.find_by(ロールコード: params[:id])
       @rorumaster.destroy if @rorumaster
-      respond_with(@rorumaster)
+      render 'share/destroy', locals: { obj: @rorumaster }
     end
   end
 

@@ -25,13 +25,13 @@ class MybashomastersController < ApplicationController
   def create
     @mybashomaster = Mybashomaster.new(mybashomaster_params)
     flash[:notice] = t 'app.flash.new_success' if @mybashomaster.save
-    respond_with @mybashomaster
+    respond_with @mybashomaster, location: mybashomasters_url
 
   end
 
   def update
     flash[:notice] = t 'app.flash.update_success' if @mybashomaster.update mybashomaster_params
-    respond_with @mybashomaster
+    respond_with @mybashomaster, location: mybashomasters_url
   end
 
   def destroy
@@ -48,7 +48,7 @@ class MybashomastersController < ApplicationController
       begin
         @mybashomaster = Mybashomaster.find(params[:id])
         @mybashomaster.destroy if @mybashomaster
-        respond_with @mybashomaster, location: mybashomasters_url
+        render 'share/destroy', locals: { obj: @mybashomaster, obj_id: @mybashomaster.id.try(:join, '-') }
       rescue
       end
     end

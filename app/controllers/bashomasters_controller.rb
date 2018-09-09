@@ -43,6 +43,7 @@ class BashomastersController < ApplicationController
     else
       @bashomaster = Bashomaster.find_by_id(params[:id])
       @bashomaster.destroy if @bashomaster
+      render 'share/destroy', locals: { obj: @bashomaster }
     end
   end
 

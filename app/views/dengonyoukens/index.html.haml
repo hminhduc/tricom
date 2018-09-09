@@ -4,22 +4,15 @@
   %li= link_to (t 'title.menu'), main_path
   %li.active= (t 'title.dengonyouken')
 
-%table#dengonyoukenmaster.table.table-striped.table-bordered.table-hover{cellspacing: 0, width: '100%' }
+%table#dengonyouken.table.table-striped.table-bordered.table-hover{cellspacing: 0, width: '100%' }
   %thead
     %tr
       %th ID
       %th= (t 'title.shuruimei')
       %th= (t 'title.bikou')
       %th= (t 'title.yuusensa')
+      %th
   %tbody
-    - @dengonyoukens.each do |dengonyouken|
-      %tr
-        %td= dengonyouken.id
-        %td= dengonyouken.種類名
-        %td= dengonyouken.備考
-        %td= dengonyouken.優先さ
-%br
-- if can? :update, @dengonyoukens
-  =render 'share/import_csv_modal',import_path: import_dengonyoukens_path
+    = render @dengonyoukens
 = render 'new'
 = render 'edit'

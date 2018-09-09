@@ -12,13 +12,13 @@ class KouteimastersController < ApplicationController
   def create
     @kouteimaster = Kouteimaster.new kouteimaster_params
     flash[:notice] = t 'app.flash.new_success' if @kouteimaster.save
-    respond_with @kouteimaster
+    render 'share/create', locals: { obj: @kouteimaster, attr_list: Kouteimaster::SHOW_ATTRS, obj_id: @kouteimaster.id.try(:join, '-') }
   end
 
   def update
     @kouteimaster = Kouteimaster.find_by(工程コード: kouteimaster_params[:工程コード], 所属コード: kouteimaster_params[:所属コード])
     flash[:notice] = t 'app.flash.update_success' if @kouteimaster.update(kouteimaster_params)
-    respond_with @kouteimaster
+    render 'share/update', locals: { obj: @kouteimaster, attr_list: Kouteimaster::SHOW_ATTRS, obj_id: @kouteimaster.id.try(:join, '-') }
   end
 
   def destroy
@@ -31,7 +31,7 @@ class KouteimastersController < ApplicationController
     else
       @kouteimaster = Kouteimaster.find(params[:id])
       @kouteimaster.destroy if @kouteimaster
-      respond_with @kouteimaster, location: kouteimasters_url
+      render 'share/destroy', locals: { obj: @kouteimaster, obj_id: @kouteimaster.id.try(:join, '-') }
     end
   rescue
   end

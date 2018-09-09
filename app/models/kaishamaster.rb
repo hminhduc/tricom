@@ -2,6 +2,7 @@ class Kaishamaster < ApplicationRecord
   self.table_name = :会社マスタ
   self.primary_key = :会社コード
   CSV_HEADERS = %w(会社コード 会社名 備考)
+  SHOW_ATTRS = %w(id name note)
   after_update :doUpdateMykaisha
   include PgSearch
   multisearchable :against => %w{会社コード 会社名 備考}

@@ -11,13 +11,13 @@ class KaishamastersController < ApplicationController
   def create
     @kaishamaster = Kaishamaster.new(kaishamaster_params)
     flash[:notice] = t 'app.flash.new_success' if @kaishamaster.save
-    respond_with(@kaishamaster)
+    render 'share/create', locals: { obj: @kaishamaster, attr_list: Kaishamaster::SHOW_ATTRS }
   end
 
   def update
     @kaishamaster = Kaishamaster.find_by(会社コード: kaishamaster_params[:会社コード])
     flash[:notice] = t 'app.flash.update_success' if @kaishamaster.update(kaishamaster_params)
-    respond_with(@kaishamaster)
+    render 'share/update', locals: { obj: @kaishamaster, attr_list: Kaishamaster::SHOW_ATTRS }
   end
 
   def destroy
@@ -30,7 +30,7 @@ class KaishamastersController < ApplicationController
     else
       @kaishamaster = Kaishamaster.find_by_id(params[:id])
       @kaishamaster.destroy if @kaishamaster
-      respond_with(@kaishamaster, location: kaishamasters_url)
+      render 'share/destroy', locals: { obj: @kaishamaster }
     end
   end
 

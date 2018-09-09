@@ -3,6 +3,7 @@ class Bashokubunmst < ApplicationRecord
   self.primary_key = :場所区分コード
   HEADERS = CSV_HEADERS = %w(場所区分コード 場所区分名)
   PRIMARY_KEYS = %w(場所区分コード)
+  SHOW_ATTRS = %w(場所区分コード 場所区分名)
   include PgSearch
   multisearchable :against => %w{場所区分コード 場所区分名}
 

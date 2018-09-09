@@ -10,13 +10,13 @@ class KairanyokenmstsController < ApplicationController
   def create
     @kairanyokenmst = Kairanyokenmst.new(kairanyokenmst_params)
     flash[:notice] = t 'app.flash.new_success' if @kairanyokenmst.save
-    respond_with(@kairanyokenmst, location: kairanyokenmsts_url)
+    render 'share/create', locals: { obj: @kairanyokenmst, attr_list: Kairanyokenmst::SHOW_ATTRS }
   end
 
   def update
     @kairanyokenmst = Kairanyokenmst.find_by(id: kairanyokenmst_params[:id])
     flash[:nitice] = t 'app.flash.update_success' if @kairanyokenmst.update(kairanyokenmst_params)
-    respond_with(@kairanyokenmst, location: kairanyokenmsts_url)
+    render 'share/update', locals: { obj: @kairanyokenmst, attr_list: Kairanyokenmst::SHOW_ATTRS }
   end
 
   def destroy
@@ -29,7 +29,7 @@ class KairanyokenmstsController < ApplicationController
     else
       @kairanyokenmst = Kairanyokenmst.find_by_id(params[:id])
       @kairanyokenmst.destroy if @kairanyokenmst
-      respond_with(@kairanyokenmst, location: kairanyokenmsts_url)
+      render 'share/destroy', locals: { obj: @kairanyokenmst }
     end
   end
 

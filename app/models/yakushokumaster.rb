@@ -1,7 +1,8 @@
 class Yakushokumaster < ApplicationRecord
   self.table_name = :役職マスタ
   self.primary_key = :役職コード
-  CSV_HEADERS = %w{役職コード 役職名}
+  CSV_HEADERS = %w(役職コード 役職名)
+  SHOW_ATTRS = %w(役職コード 役職名)
   include PgSearch
   multisearchable :against => %w{役職コード 役職名}
   validates :役職コード, :役職名, presence: true

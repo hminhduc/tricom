@@ -1,4 +1,5 @@
 class Kintaiteeburu < ApplicationRecord
+  SHOW_ATTRS = %w(id 勤務タイプ 出勤時刻 退社時刻 昼休憩時間 夜休憩時間 深夜休憩時間 早朝休憩時間 実労働時間 早朝残業時間 残業時間 深夜残業時間)
   validates :勤務タイプ,:出勤時刻,:退社時刻, presence: true  
   # a class method import, with file passed through as an argument
   def self.import(file)

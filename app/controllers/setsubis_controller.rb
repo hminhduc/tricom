@@ -10,13 +10,13 @@ class SetsubisController < ApplicationController
   def create
     @setsubi = Setsubi.new(setsubi_params)
     @setsubi.save
-    respond_with(@setsubi)
+    render 'share/create', locals: { obj: @setsubi, attr_list: Setsubi::SHOW_ATTRS }
   end
 
   def update
     @setsubi = Setsubi.find_by(設備コード: setsubi_params[:設備コード])
     @setsubi.update(setsubi_params)
-    respond_with(@setsubi)
+    render 'share/update', locals: { obj: @setsubi, attr_list: Setsubi::SHOW_ATTRS }
   end
 
   def destroy
@@ -29,7 +29,7 @@ class SetsubisController < ApplicationController
     else
       @setsubi = Setsubi.find_by(設備コード: params[:id])
       @setsubi.destroy if @setsubi
-      respond_with(@setsubi)
+      render 'share/destroy', locals: { obj: @setsubi }
     end
   end
 

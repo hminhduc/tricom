@@ -11,5 +11,5 @@
   %td= jobmaster.分類コード
   %td= jobmaster.関連Job番号
   %td= jobmaster.備考
-  %td= link_to '', edit_jobmaster_path(jobmaster), class: "glyphicon glyphicon-edit remove-underline"
-  %td= link_to '', jobmaster, method: :delete, remote: true, data: { confirm: '削除して宜しいですか？' } , class: "glyphicon glyphicon-remove text-danger remove-underline"
+  %td= link_to_edit(edit_jobmaster_path(jobmaster))
+  %td= link_to_delete(jobmaster)

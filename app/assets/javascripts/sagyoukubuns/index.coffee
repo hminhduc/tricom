@@ -1,6 +1,6 @@
 jQuery ->
   create_datatable
-    table_id: '#sagyoukubunmaster'
+    table_id: '#sagyoukubun'
     new_modal_id: '#sagyoukubun-new-modal'
     edit_modal_id: '#sagyoukubun-edit-modal'
     delete_path: '/sagyoukubuns/id'

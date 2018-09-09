@@ -26,12 +26,12 @@ class ShozaisController < ApplicationController
   def create
     @shozai = Shozai.new(shozai_params)
     flash[:notice] = t 'app.flash.new_success' if @shozai.save
-    respond_with(@shozai)
+    respond_with(@shozai, location: shozais_url)
   end
 
   def update
     flash[:notice] = t 'app.flash.update_success' if @shozai.update(shozai_params_for_update)
-    respond_with(@shozai)
+    respond_with(@shozai, location: shozais_url)
   end
 
   def destroy
@@ -44,7 +44,7 @@ class ShozaisController < ApplicationController
     else
       @shozai = Shozai.find_by_id(params[:id])
       @shozai.destroy if @shozai
-      respond_with @shozai, location: shozais_url
+      render 'share/destroy', locals: { obj: @shozai }
     end
   end
   def ajax

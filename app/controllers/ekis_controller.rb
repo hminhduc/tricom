@@ -11,13 +11,13 @@ class EkisController < ApplicationController
   def create
     @eki = Eki.new(eki_params)
     flash[:notice] = t 'app.flash.new_success' if @eki.save
-    respond_with(@eki)
+    render 'share/create', locals: { obj: @eki, attr_list: Eki::SHOW_ATTRS }
   end
 
   def update
     @eki = Eki.find_by(駅コード: eki_params[:駅コード])
     flash[:notice] = t 'app.flash.update_success' if @eki.update(eki_params)
-    respond_with(@eki)
+    render 'share/update', locals: { obj: @eki, attr_list: Eki::SHOW_ATTRS }
   end
 
   def destroy
@@ -30,7 +30,7 @@ class EkisController < ApplicationController
     else
       @eki = Eki.find_by_id(params[:id])
       @eki.destroy if @eki
-      respond_with(@eki)
+      render 'share/destroy', locals: { obj: @eki }
     end
   end
 

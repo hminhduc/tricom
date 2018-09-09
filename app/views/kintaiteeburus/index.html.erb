@@ -5,8 +5,7 @@
   <li class="active"><%=t 'title.kintaiteeburu'%></li>
 </ol>
 
-<table id="kintaiteeburumaster" class="kintaiteeburutable table table-striped table-bordered table-hover" cellspacing="0" width="100%">
-
+<table id="kintaiteeburu" class="kintaiteeburutable table table-striped table-bordered table-hover" cellspacing="0" width="100%">
   <thead>
     <tr>
       <th>id</th>
@@ -21,26 +20,11 @@
       <th>早朝残業時間<br>6:00~9:00</th>
       <th>残業時間<br>19:00~23:00</th>
       <th>深夜残業時間<br>24:00~04:00</th>
+      <th></th>
     </tr>
   </thead>
 
   <tbody>
-  <% @kintaiteeburus.each do |kintaiteeburu| %>
-      <tr id="kintaiteeburu_<%= kintaiteeburu.id %>">
-        <td><%= kintaiteeburu.id %></td>
-        <td><%= kintaiteeburu.勤務タイプ %></td>
-        <td><%= kintaiteeburu.出勤時刻 %></td>
-        <td><%= kintaiteeburu.退社時刻 %></td>
-        <td><%= kintaiteeburu.昼休憩時間 %></td>
-        <td><%= kintaiteeburu.夜休憩時間 %></td>
-        <td><%= kintaiteeburu.深夜休憩時間 %></td>
-        <td><%= kintaiteeburu.早朝休憩時間 %></td>
-        <td><%= kintaiteeburu.実労働時間 %></td>
-        <td><%= kintaiteeburu.早朝残業時間 %></td>
-        <td><%= kintaiteeburu.残業時間 %></td>
-        <td><%= kintaiteeburu.深夜残業時間 %></td>
-      </tr>
-  <% end %>
+    <%= render @kintaiteeburus %>
   </tbody>
 </table>
-<%=render 'share/import_csv_modal',import_path: import_kintaiteeburus_path %>

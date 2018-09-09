@@ -1,8 +1,8 @@
 jQuery ->
   create_datatable
     table_id: '#kouteimaster'
-    new_modal_id: '#koutei-new-modal'
-    edit_modal_id: '#koutei-edit-modal'
+    new_modal_id: '#kouteimaster-new-modal'
+    edit_modal_id: '#kouteimaster-edit-modal'
     delete_path: '/kouteimasters/id'
     page_length: parseInt($('#pageLength').text())
     invisible_columns: [0, 1]
@@ -12,7 +12,7 @@ jQuery ->
     get_id_from_row_data: (data)->
       return data[0]
 
-  $('#koutei-new-modal').on 'show', ()->
+  $('#kouteimaster-new-modal').on 'show', ()->
     $(this).modal('show')
     $('#kouteimaster_所属コード').val('')
     $('#kouteimaster_工程コード').val('')
@@ -21,7 +21,7 @@ jQuery ->
       $('.help-block', $(this)).html('')
       $(this).removeClass('has-error')
 
-  $('#koutei-edit-modal').on 'show', (e, selected_row_data)->
+  $('#kouteimaster-edit-modal').on 'show', (e, selected_row_data)->
     $(this).modal('show')
     $('#kouteimaster_所属コード').val(selected_row_data[1])
     $('#kouteimaster_工程コード').val(selected_row_data[3])
