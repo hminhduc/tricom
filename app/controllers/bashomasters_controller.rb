@@ -4,12 +4,11 @@ class BashomastersController < ApplicationController
   before_action :set_kaishamst, only: [:new, :create, :show, :edit, :update]
   before_action :set_bashomaster, only: [:show, :edit, :update]
   load_and_authorize_resource except: [:export_csv, :destroy]
-  respond_to :js
+  respond_to :js, :html
 
   def index
     @bashomasters = Bashomaster.includes(:bashokubunmst, :kaishamaster).order(:場所コード)
   end
-
 
   def show
   end
@@ -19,18 +18,25 @@ class BashomastersController < ApplicationController
   end
 
   def edit
-
   end
 
   def create
     @bashomaster = Bashomaster.new(bashomaster_params)
-    flash[:notice] = t 'app.flash.new_success' if @bashomaster.save
-    respond_with @bashomaster, location: bashomasters_path
+    if @bashomaster.save
+      flash[:notice] = t 'app.flash.new_success' 
+      redirect_to bashomasters_path
+    else
+      render 'new'
+    end
   end
 
   def update
-    flash[:notice] = t 'app.flash.update_success' if @bashomaster.update bashomaster_params
-    respond_with @bashomaster, location: bashomasters_path
+    if @bashomaster.update bashomaster_params
+      flash[:notice] = t 'app.flash.update_success' 
+      redirect_to bashomasters_path
+    else
+      render 'edit'
+    end
   end
 
   def destroy
@@ -74,9 +80,7 @@ class BashomastersController < ApplicationController
 
   def export_csv
     @bashomasters = Bashomaster.all
-
     respond_to do |format|
-      format.html
       format.csv { send_data @bashomasters.to_csv, filename: '場所マスタ.csv' }
     end
   end
@@ -88,7 +92,7 @@ class BashomastersController < ApplicationController
   end
 
   def set_bashomaster
-    @bashomaster = Bashomaster.find(params[:id])
+    @bashomaster = Bashomaster.find_by(id: params[:id])
   end
 
   def set_kaishamst

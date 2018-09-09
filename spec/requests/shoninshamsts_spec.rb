@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-RSpec.describe "Shoninshamsts", type: :request do
-  describe "GET /shoninshamsts" do
-    it "works! (now write some real specs)" do
+RSpec.describe 'Shoninshamsts', type: :request do
+  describe 'GET /shoninshamsts' do
+    it 'works! (now write some real specs)' do
       get shoninshamsts_path
       expect(response).to have_http_status(302)
     end
