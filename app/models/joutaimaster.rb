@@ -9,7 +9,7 @@ class Joutaimaster < ApplicationRecord
   validates :状態コード, :状態名, presence: true
   validates :状態コード, uniqueness: true
 
-  has_many :event, foreign_key: :状態コード, dependent: :destroy
+  has_many :events, foreign_key: :状態コード, dependent: :destroy
   has_many :kintais, foreign_key: :状態1, dependent: :nullify
 
   alias_attribute :id, :状態コード
@@ -18,8 +18,4 @@ class Joutaimaster < ApplicationRecord
   alias_attribute :text_color, :文字色
 
   scope :active, ->(kubunlist) { where(勤怠使用区分: '1', 状態区分:kubunlist) }
-
-  def events
-    super || build_events
-  end
 end

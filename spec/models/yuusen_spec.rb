@@ -1,5 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Yuusen, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe 'Associtations' do
+    it do
+      should have_many(:kairanyokenmsts)
+      should have_many(:dengonyoukens)
+    end
+  end
 end

@@ -7,5 +7,5 @@ class Yuusen < ApplicationRecord
   validates :優先さ, presence: true
   validates :優先さ, uniqueness: true
 	has_many :kairanyokenmsts, foreign_key: :優先さ, dependent: :nullify
-	has_many :dengonyokens, foreign_key: :優先さ
+	has_many :dengonyoukens, foreign_key: :優先さ
 end
