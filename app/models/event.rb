@@ -138,7 +138,6 @@ class Event < ApplicationRecord
     0
   end
 
-
   def check_date_input
     if 開始.present? && 終了.present?
       if 開始 >= 終了
@@ -186,5 +185,42 @@ class Event < ApplicationRecord
         myjob.save        
       end
     end
+  end
+
+  def sounyuutouroku
+    Event.where(社員番号: 社員番号).where.not(id: id).order(開始: :asc).each do |event|
+      if overtail(event)
+        event.update(開始: 終了)
+      elsif contain(event)
+        event.destroy
+      elsif overhead(event)
+        event.update(終了: 開始)
+      elsif belongto(event)
+        event2 = event.dup
+        event.終了 = 開始
+        event2.開始 = 終了
+        event.save
+        event2.save
+      end
+    end
+    save
+    rescue Exception => err
+      false
+  end
+
+  def overtail(event)
+    開始.to_datetime <= event.開始.to_datetime and event.開始.to_datetime < 終了.to_datetime and 終了.to_datetime < event.終了.to_datetime
+  end
+
+  def overhead(event)
+    event.開始.to_datetime < 開始.to_datetime and 開始.to_datetime < event.終了.to_datetime and event.終了.to_datetime <= 終了.to_datetime
+  end
+
+  def contain(event)
+    開始.to_datetime <= event.開始.to_datetime && event.終了.to_datetime <= 終了.to_datetime
+  end
+
+  def belongto(event)
+    event.開始.to_datetime < 開始.to_datetime && 終了.to_datetime < event.終了.to_datetime
   end
 end
