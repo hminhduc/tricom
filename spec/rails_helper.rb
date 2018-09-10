@@ -3,16 +3,16 @@ require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 # Prevent database truncation if the environment is production
-abort("The Rails environment is running in production mode!") if Rails.env.production?
+abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
-require "capybara/rails"
-require "capybara/rspec"
-require "capybara/poltergeist" # Add this line to require poltergeist
+require 'capybara/rails'
+require 'capybara/rspec'
+require 'capybara/poltergeist' # Add this line to require poltergeist
 
 # Specs flagged with `js: true` will use Capybara's JS driver. Set
 # that JS driver to :poltergeist
 Capybara.javascript_driver = :poltergeist
-options = {js_errors: false}
+options = { js_errors: false }
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app, options)
 end

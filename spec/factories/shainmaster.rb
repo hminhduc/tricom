@@ -5,7 +5,7 @@ FactoryBot.define do
     連携用社員番号 { '123456789' }
 
     trait :unstrip do
-      社員番号 { ' abc 123  	 ' }
+      社員番号 { ' abc 123     ' }
     end
 
     trait :second do

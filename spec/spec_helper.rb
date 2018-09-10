@@ -17,13 +17,13 @@ require 'capybara/rspec'
 #
 class SimpleCov::Formatter::MergedFormatter
   def format(result)
-     SimpleCov::Formatter::HTMLFormatter.new.format(result)
-     SimpleCov::Formatter::RcovFormatter.new.format(result)
+    SimpleCov::Formatter::HTMLFormatter.new.format(result)
+    SimpleCov::Formatter::RcovFormatter.new.format(result)
   end
 end
 SimpleCov.formatter = SimpleCov::Formatter::MergedFormatter
 SimpleCov.start 'rails' do
-    add_filter "/vendor/"
+  add_filter '/vendor/'
 end
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
@@ -38,9 +38,9 @@ RSpec.configure do |config|
     #     # => "be bigger than 2 and smaller than 4"
     # ...rather than:
     #     # => "be bigger than 2"
-    expectations.syntax = [:expect,:should]
+    expectations.syntax = [:expect, :should]
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
-  end  
+  end
   # rspec-mocks config goes here. You can use an alternate test double
   # library (such as bogus or mocha) by changing the `mock_with` option here.
   config.mock_with :rspec do |mocks|
