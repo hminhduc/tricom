@@ -20,9 +20,11 @@ class Setsubiyoyaku < ApplicationRecord
 
   def check_date_input
     return unless 開始.present? && 終了.present?
-    errors.add(:終了, (I18n.t 'app.model.check_data_input')) if 開始 >= 終了
-    Setsubiyoyaku.where(設備コード: 'AU1').where.not(id: id).each do |setsubiyoyaku|
-      errors.add(:設備コード, (I18n.t 'app.model.schedule')) if setsubiyoyaku.開始.between?(開始, 終了) || setsubiyoyaku.終了.between?(開始, 終了)
+    begin_t = 開始.to_datetime
+    end_t = 終了.to_datetime
+    errors.add(:終了, (I18n.t 'app.model.check_data_input')) if begin_t >= end_t
+    Setsubiyoyaku.where(設備コード: 設備コード).where.not(id: id).each do |setsubiyoyaku|
+      errors.add(:設備コード, (I18n.t 'app.model.schedule')) if setsubiyoyaku.開始.to_datetime.between?(begin_t, end_t) || setsubiyoyaku.終了.to_datetime.between?(begin_t, end_t)
     end
   end
 end
