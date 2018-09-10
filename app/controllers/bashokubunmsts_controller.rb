@@ -15,7 +15,7 @@ class BashokubunmstsController < ApplicationController
 
   def update
     @bashokubunmst = Bashokubunmst.find_by(場所区分コード: bashokubunmst_params[:場所区分コード])
-    flash[:notice] = t 'app.flash.update_success' if @bashokubunmst.update(bashokubunmst_params)
+    flash[:notice] = t 'app.flash.update_success' if @bashokubunmst&.update(bashokubunmst_params)
     render 'share/update', locals: { obj: @bashokubunmst, table_id: 'bashokubunmst_table', attr_list: Bashokubunmst::SHOW_ATTRS }
   end
 

@@ -8,7 +8,7 @@ FactoryBot.define do
     会社コード { Kaishamaster.first&.会社コード || association(:kaishamaster).会社コード }
 
     trait :second do
-    	場所コード { '23456' }
+      場所コード { '23456' }
     end
   end
 end
