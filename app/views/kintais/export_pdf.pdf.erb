@@ -81,7 +81,7 @@
                         <% previous_column_is_new = false %>
                     <% end %>
                 </td>
-                <td>
+                <td style='text-align: left'>
                     <% if previous_column_is_new || (previous_column_is_new = iterator[:件名] != event[:件名] ) %>
                         <% iterator[:件名] = event[:件名] %>
                         <%= iterator[:件名] %>
@@ -102,7 +102,7 @@
                 <td><%= event[:受付日].strftime('%Y/%m/%d') %></td>
                 <td><%= "#{event[:作業区分]} : #{event[:名称]}" %></td>
                 <td><%= event[:実労時間] %></td>
-                <td><%= event[:コメント] %></td>
+                <td style='text-align: left'><%= event[:コメント] %></td>
             </tr>
             <% if event == @events.last %>
                 <tr><td colspan="8"><hr></td></tr>
