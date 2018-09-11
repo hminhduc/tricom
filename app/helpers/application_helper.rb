@@ -16,7 +16,7 @@ module ApplicationHelper
   end
 
   def link_to_edit(edit_path)
-    link_to '', edit_path, class: "glyphicon glyphicon-edit remove-underline"
+    link_to '', edit_path, class: "edit glyphicon glyphicon-edit remove-underline"
   end
 
   def link_to_delete(object)

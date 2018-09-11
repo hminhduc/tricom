@@ -240,20 +240,33 @@ jQuery ->
       order: args.order_columns
     })
 
-    $(args.table_id).on 'click', 'tbody tr', ()->
-      $(this).toggleClass('selected')
-      selects = oTable.rows('tr.selected').data()
-      if selects.length == 0
-        $("#edit").addClass("disabled")
-        # $("#delete").addClass("disabled")
-        # $(".buttons-select-none").addClass('disabled')
-      else
-        # $("#delete").removeClass("disabled");
-        # $(".buttons-select-none").removeClass('disabled')
-        if selects.length == 1
-          $("#edit").removeClass("disabled")
+    $(args.table_id).on 'click', 'tbody tr', (e)->
+      # neu click vao nut edit
+      if $(e.target).hasClass('edit')
+        oTable.rows('tr.selected').deselect()
+        $(this).addClass('selected')
+        data_of_selected_row = oTable.row('tr.selected').data()
+        if args.edit_path != undefined
+          window.location = args.edit_path.replace('/id/', "/#{args.get_id_from_row_data(data_of_selected_row)}/")
         else
+          e.preventDefault()
+          $(args.edit_modal_id).trigger 'show', [data_of_selected_row]
+      # neu khong click vao nut delete
+      else if !$(e.target).hasClass('delete')
+        $(this).toggleClass('selected')
+        selects = oTable.rows('tr.selected').data()
+        if selects.length == 0
           $("#edit").addClass("disabled")
+          # $("#delete").addClass("disabled")
+          # $(".buttons-select-none").addClass('disabled')
+        else
+          # $("#delete").removeClass("disabled");
+          # $(".buttons-select-none").removeClass('disabled')
+          if selects.length == 1
+            $("#edit").removeClass("disabled")
+          else
+            $("#edit").addClass("disabled")
+
   # ham thuc hien chuc nang bam Tab thi se hien name tuong ung voi code 
   window.setup_tab_render_name = (args)->
     args.input.keydown (e)->
