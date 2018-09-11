@@ -7,7 +7,7 @@ jQuery ->
     page_length: parseInt($('#pageLength').text())
     invisible_columns: [0, 1]
     no_search_columns: [0, 1, 5]
-    no_sort_columns: [5]
+    no_sort_columns: [5, 6]
     search_params: queryParameters().search
     get_id_from_row_data: (data)->
       return data[0]

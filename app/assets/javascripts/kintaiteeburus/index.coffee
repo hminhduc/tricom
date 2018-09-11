@@ -7,7 +7,7 @@ jQuery ->
     invisible_columns: [0]
     no_search_columns: [0]
     csv_export_columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-    no_sort_columns: [12]
+    no_sort_columns: [12, 13]
     search_params: queryParameters().search
     get_id_from_row_data: (data)->
       return data[0]

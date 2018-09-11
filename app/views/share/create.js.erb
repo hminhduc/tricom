@@ -2,6 +2,7 @@
 <% table_id ||= obj.class.name.underscore %>
 <% obj_id ||= obj.id %>
 <% modal_id ||= "#{ model_name }-new-modal" %>
+<% edit_path ||= "/#{ model_name }s/#{obj_id}/edit" %>
 
 $('form#new_<%= model_name %>').clear_previous_errors()
 
@@ -13,6 +14,7 @@ $('form#new_<%= model_name %>').clear_previous_errors()
   <% attr_list.each do |attr| %>
     row.push('<%=obj.send(attr)%>')
   <% end %>
+  row.push('<%=escape_javascript link_to_edit(edit_path)%>')
   row.push('<%=escape_javascript link_to_delete(obj)%>')
   $('#<%=table_id%>').DataTable().row.add(row).node().id = '<%=model_name%>_<%=obj_id%>';
   $('#<%=table_id%>').DataTable().draw( false );

@@ -1,11 +1,11 @@
 %tr{ id: "mybashomaster_#{mybashomaster.id.try(:join, '-')}" }
-  %td= myjobmaster.社員番号
-  %td= myjobmaster.場所コード
-  %td= myjobmaster.場所名
-  %td= myjobmaster.場所名カナ
-  %td= myjobmaster.SUB
-  %td= myjobmaster.basho_場所区分名
-  %td= myjobmaster.kaisha_会社名
-  %td= myjobmaster.updated_at.try(:strftime, '%Y/%m/%d %H:%M:%S')
-  %td= link_to_edit(edit_myjobmaster_path(myjobmaster))
-  %td= link_to_delete(myjobmaster)
+  %td= mybashomaster.社員番号
+  %td= mybashomaster.場所コード
+  %td= mybashomaster.場所名
+  %td= mybashomaster.場所名カナ
+  %td= mybashomaster.SUB
+  %td= mybashomaster.basho_場所区分名
+  %td= mybashomaster.kaisha_会社名
+  %td= mybashomaster.updated_at.try(:strftime, '%Y/%m/%d %H:%M:%S')
+  %td= link_to_edit(edit_mybashomaster_path(mybashomaster))
+  %td= link_to_delete(mybashomaster)

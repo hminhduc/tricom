@@ -7,7 +7,7 @@ jQuery ->
     search_params: queryParameters().search
     invisible_columns: 0
     no_search_columns: [0, 6]
-    no_sort_columns: 6
+    no_sort_columns: [6, 7]
     order_columns: ['1', 'asc']
     get_id_from_row_data: (data)->
       return data[0]

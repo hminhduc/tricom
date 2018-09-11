@@ -2,4 +2,5 @@
   %td= yuusen.優先さ
   %td{:style => "background-color:" + yuusen.try(:色).to_s}= yuusen.色
   %td= yuusen.備考
+  %td= link_to_edit(edit_yuusen_path(yuusen))
   %td= link_to_delete(yuusen)

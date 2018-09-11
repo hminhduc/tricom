@@ -16,11 +16,11 @@ module ApplicationHelper
   end
 
   def link_to_edit(edit_path)
-    link_to '', edit_path, class: "glyphicon glyphicon-edit remove-underline"
+    link_to '', edit_path, class: "edit glyphicon glyphicon-edit remove-underline"
   end
 
   def link_to_delete(object)
-    link_to '', object, method: :delete, remote: true, data: { confirm: (t 'title.delete_confirm') } , class: 'glyphicon glyphicon-remove text-danger remove-underline'
+    link_to '', object, method: :delete, remote: true, data: { confirm: (t 'title.delete_confirm') } , class: 'delete glyphicon glyphicon-remove text-danger remove-underline'
   end
 
   def render_object(obj, attr_list, edit_path = nil, obj_id = nil)
