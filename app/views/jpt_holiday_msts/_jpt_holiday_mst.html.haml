@@ -3,4 +3,5 @@
   %td= jpt_holiday_mst.event_date.try(:strftime, '%Y/%m/%d')
   %td= jpt_holiday_mst.title
   %td= jpt_holiday_mst.description
+  %td= link_to_edit(edit_jpt_holiday_mst_path(jpt_holiday_mst))
   %td= link_to_delete(jpt_holiday_mst)

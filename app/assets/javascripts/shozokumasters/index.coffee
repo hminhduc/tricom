@@ -4,7 +4,7 @@ jQuery ->
     new_modal_id: '#shozokumaster-new-modal'
     edit_modal_id: '#shozokumaster-edit-modal'
     delete_path: '/shozokumasters/id'
-    no_sort_columns: [2]
+    no_sort_columns: [2, 3]
     search_params: queryParameters().search
     get_id_from_row_data: (data)->
       return data[0]

@@ -10,5 +10,9 @@ FactoryBot.define do
       担当者名称 { 'user2' }
       password { '999999999' }
     end
+
+    trait :admin do
+      admin { true }
+    end
   end
 end

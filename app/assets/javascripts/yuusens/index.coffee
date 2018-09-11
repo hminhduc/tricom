@@ -4,7 +4,7 @@ jQuery ->
     new_path: 'yuusens/new'
     edit_path: 'yuusens/id/edit'
     delete_path: '/yuusens/id'
-    no_sort_columns: [3]
+    no_sort_columns: [3, 4]
     search_params: queryParameters().search
     get_id_from_row_data: (data)->
       return data[0]

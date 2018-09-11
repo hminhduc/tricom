@@ -4,7 +4,7 @@ jQuery ->
     new_modal_id: '#bunrui-new-modal'
     edit_modal_id: '#bunrui-edit-modal'
     delete_path: '/bunruis/id'
-    no_sort_columns: [2]
+    no_sort_columns: [2, 3]
     search_params: queryParameters().search
     get_id_from_row_data: (data)->
       return data[0]
