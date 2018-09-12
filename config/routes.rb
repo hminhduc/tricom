@@ -80,7 +80,7 @@ Jpt::Application.routes.draw do
     collection {get :export_csv, :export_pdf}
   end
 
-  resources :events, only: [:index, :new, :create, :edit, :update] do
+  resources :events, except: [:show] do
 		collection {post :ajax, :custom, :create_mybasho,:create_basho,:update_basho, :create_kaisha,:update_kaisha, :create_job, :update_job, :time_line_view, :import, :shutchou_create}
     collection {get :time_line_view, :pdf_event_show, :pdf_job_show, :pdf_koutei_show, :shutchou_ikkatsu_new}
     collection {get :export_csv}
