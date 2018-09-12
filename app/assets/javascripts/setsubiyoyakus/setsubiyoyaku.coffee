@@ -14,7 +14,7 @@ $.fn.dataTableExt.afnFiltering.push (oSettings, aData, iDataIndex) ->
     false
 
 jQuery ->
-  oTable = $('#setsubiyoyaku_table').DataTable
+  oTable = $('#setsubiyoyaku').DataTable
     dom: "<'row'<'col-md-6'l><'col-md-6'f>><'row'<'col-md-8'B><'col-md-4'p>><'row'<'col-md-12'tr>><'row'<'col-md-12'i>>"
     pagingType: "full_numbers"
     oLanguage:
@@ -150,7 +150,7 @@ jQuery ->
           window.location = '/setsubiyoyakus/export_csv.csv?locale=ja'
       }
     ]
-  $('#setsubiyoyaku_table').on 'click', 'tbody tr', ()->
+  $('#setsubiyoyaku').on 'click', 'tbody tr', ()->
     $(this).toggleClass('selected')
     selects = oTable.rows('tr.selected').data()
     if selects.length == 0

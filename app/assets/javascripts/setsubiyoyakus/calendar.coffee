@@ -124,7 +124,7 @@ $ ->
         return
     )
     setsubiyoyaku_timeline.find('.fc-today-button,.fc-prev-button,.fc-next-button').click ->
-      $('#setsubiyoyaku_table').DataTable().draw()
+      $('#setsubiyoyaku').DataTable().draw()
       $.post '/settings/ajax',
         setting: 'setting_date'
         selected_date: $('#setsubiyoyaku-timeline').fullCalendar('getDate').format()

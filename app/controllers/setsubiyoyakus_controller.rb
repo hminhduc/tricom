@@ -87,10 +87,9 @@ class SetsubiyoyakusController < ApplicationController
   end
 
   def destroy
-    setsubicode = @setsubiyoyaku.設備コード
     @setsubiyoyaku.destroy
-    respond_with @setsubiyoyaku, location: setsubiyoyakus_url(:head => {setsubicode: setsubicode})
-    end
+    render 'share/destroy', locals: { obj: @setsubiyoyaku }
+  end
 
   def ajax
     case params[:focus_field]

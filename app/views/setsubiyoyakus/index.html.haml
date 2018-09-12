@@ -1,6 +1,6 @@
 = javascript_include_tag 'setsubiyoyakus/index'
 = javascript_include_tag 'setsubiyoyakus/calendar'
-= javascript_include_tag 'setsubiyoyakus/setsubiyoyaku_table'
+= javascript_include_tag 'setsubiyoyakus/setsubiyoyaku'
 = stylesheet_link_tag 'setsubiyoyakus'
 = provide(:title, (t 'title.setsubiyoyaku'))
 %ol.breadcrumb
@@ -12,7 +12,7 @@
 %button.spacer.btn.btn-primary#show_table_button{type: :button}=t 'app.label.shousai_event'
 #table-div
   %legend.spacer
-  %table#setsubiyoyaku_table.table.table-striped.table-bordered.table-hover{cellspacing: '0', width: '100%'}
+  %table#setsubiyoyaku.table.table-striped.table-bordered.table-hover{cellspacing: '0', width: '100%'}
     %thead
       %tr
         %th ID
@@ -24,13 +24,4 @@
         %th
         %th
     %tbody
-      - @setsubiyoyakus.each do |setsubiyoyaku|
-        %tr
-          %td= setsubiyoyaku.id
-          %td= setsubiyoyaku.開始
-          %td= setsubiyoyaku.終了
-          %td= setsubiyoyaku.shainmaster&.氏名
-          %td= setsubiyoyaku.kaishamaster&.会社名 || setsubiyoyaku.相手先
-          %td= setsubiyoyaku.用件
-          %td= link_to_edit(edit_setsubiyoyaku_path(setsubiyoyaku))
-          %td= link_to_delete(setsubiyoyaku)
+      = render @setsubiyoyakus
