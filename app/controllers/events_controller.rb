@@ -349,115 +349,75 @@ class EventsController < ApplicationController
   end
 
   def create
-    attributes = event_params.clone    
-    attributes[:終了] = "#{ Time.now.strftime('%Y/%m/%d') } 18:00" if attributes[:開始].present? && attributes[:終了].blank?
-    if attributes[:状態コード].present?
-      joutai_kubun = Joutaimaster.find_by(状態コード: attributes[:状態コード]).try(:状態区分)
-      unless joutai_kubun.in?(['1', '5'])
-        attributes[:場所コード] = ''
-        attributes[:JOB] = ''
-        attributes[:工程コード] = ''
-      end
-    end
-    @event = Event.new attributes
+    @event = Event.new event_params
     case params[:commit]
-    when (t 'helpers.submit.create')
-      respond_to do |format|
-        if @event.save            
+      when (t 'helpers.submit.create')
+        respond_to do |format|
+          if @event.save
+            flash[:notice] = t 'app.flash.new_success'
+            format.html { redirect }
+            format.xml { render xml: @event, status: :created, location: @event }
+          else
+            format.html { render action: 'new' }
+            format.xml { render xml: @event.errors, status: :unprocessable_entity }
+          end # if @event.save
+        end
+      when '挿入登録'
+        if @event.sounyuutouroku
           flash[:notice] = t 'app.flash.new_success'
-          format.html { redirect_to time_line_view_events_url }
-          format.xml { render xml: @event, status: :created, location: @event }
+          redirect
         else
-          format.html {render action: 'new', locals: { param: 'timeline'}}
-          format.xml { render xml: @event.errors, status: :unprocessable_entity }
-        end # if @event.save
-      end
-    when (t 'helpers.submit.create_other')
-      flash[:notice] = t 'app.flash.new_success' if @event.save        
-      respond_with @event, location: events_url
-    when '挿入登録'
-      if @event.sounyuutouroku
-        flash[:notice] = t 'app.flash.new_success'
-        redirect_to time_line_view_events_url
+          render action: 'new'
+        end
       else
-        render action: 'new', locals: { param: 'timeline'}
+        if @event.save
+          render json: { event: @event.as_json }, status: :ok
+        else
+          render json: { errors: @event.errors.full_messages.as_json }, status: 402
+        end
       end
-    else
-      if @event.save
-        render json: { event: @event.as_json }, status: :ok
-      else
-        render json: { errors: @event.errors.full_messages.as_json }, status: 402
-      end
-    end
   end
 
   def update
-    attributes = event_params.clone    
-    attributes[:終了] = "#{ Time.now.strftime('%Y/%m/%d') } 18:00" if attributes[:開始].present? && attributes[:終了].blank?
-    if attributes[:状態コード].present?
-      joutai_kubun = Joutaimaster.find_by(状態コード: attributes[:状態コード]).try(:状態区分)
-      unless joutai_kubun.in?(['1', '5'])
-        attributes[:場所コード] = ''
-        attributes[:JOB] = ''
-        attributes[:工程コード] = ''
-      end
-    end    
-
     case params[:commit]
-      when (t 'helpers.submit.destroy_other')
-        flash[:notice] = t 'app.flash.delete_success' if @event.destroy
-        respond_with @event, location: events_url
-      when (t 'helpers.submit.destroy')
-        flash[:notice] = t 'app.flash.delete_success' if @event.destroy
-        redirect_to time_line_view_events_url
-      when (t 'helpers.submit.create_other')        
-        flash[:notice] = t 'app.flash.update_success' if @event.update attributes
-        respond_with @event, location: events_url
-      when (t 'helpers.submit.create')
+      when (t 'helpers.submit.update')
         respond_to do |format|
-          if @event.update attributes
+          if @event.update event_params
             flash[:notice] = t 'app.flash.update_success'
-            format.html { redirect_to time_line_view_events_url }
+            format.html { redirect }
             format.xml { render xml: @event, status: :created, location: @event }
           else
-            format.html {render action: 'edit', locals: { param: 'timeline'}}
+            format.html { render 'edit' }
             format.xml { render xml: @event.errors, status: :unprocessable_entity }
           end
         end
       when (t 'helpers.submit.create_clone')
-        @event = User.find(session[:user]).shainmaster.events.new attributes
+        @event = Event.new event_params.merge(社員番号: session[:user])
         respond_to do |format|
           if @event.save
             flash[:notice] = t 'app.flash.new_success'
-            format.html { redirect_to time_line_view_events_url }
+            format.html { redirect }
             format.xml { render xml: @event, status: :created, location: @event }
           else
-            format.html {render action: 'new', locals: { param: 'timeline'}}
-            format.xml { render xml: @event.errors, status: :unprocessable_entity }
-          end
-        end
-      when (t 'helpers.submit.create_clone_other')
-        @event = User.find(session[:user]).shainmaster.events.new attributes
-        respond_to do |format|
-          if @event.save
-            flash[:notice] = t 'app.flash.new_success'
-            format.html { redirect_to events_url }
-            format.xml { render xml: @event, status: :created, location: @event }
-          else
-            format.html {render action: 'new', locals: { param: 'timeline'}}
+            format.html { render action: 'edit' }
             format.xml { render xml: @event.errors, status: :unprocessable_entity }
           end
         end
       when '挿入登録'
-        @event.attributes = attributes
+        @event.attributes = event_params
         if @event.sounyuutouroku
           flash[:notice] = t 'app.flash.update_success'
-          redirect_to time_line_view_events_url
+          redirect
         else
-          render action: 'edit', locals: { param: 'timeline'}
+          render action: 'edit'
         end
       else
-    end
+      end
+  end
+
+  def destroy
+    flash[:notice] = t 'app.flash.delete_success' if Event.find_by(id: params[:id]).try(:destroy)
+    redirect
   end
 
   def custom
@@ -786,9 +746,6 @@ private
       @mybashos = Mybashomaster.includes(:kaishamaster).where(社員番号: vars['shain_id']).order('updated_at desc')
       @myjobs = Myjobmaster.includes(:bunrui, :jobmaster).where(社員番号: vars['shain_id']).order('updated_at desc')
     end
-    max_job = Jobmaster.pluck(:job番号).map {|i| i.to_i}.max + 1
-    # max_job = Jobmaster.maximum(:job番号) + 1
-    max_job = 100001 if max_job < 100001
     @jobmaster = Jobmaster.new
     @shains = Shainmaster.all
     @bunruis = Bunrui.all
@@ -797,10 +754,17 @@ private
 
 # Never trust parameters from the scary internet, only allow the white list through.
   def event_params
-    params.require(:event).permit(:社員番号, :開始, :終了, :状態コード, :場所コード, :JOB, :所属コード, :工程コード, :工数,
+    attributes = params.require(:event).permit(:社員番号, :開始, :終了, :状態コード, :場所コード, :JOB, :所属コード, :工程コード, :工数,
                                   :計上, :所在コード, :comment, :有無, :帰社区分, :経費精算, :JOB内訳番, :作業区分)
                           .merge(:kintai_daikyu_date => params[:kintai_daikyu])
-
+    attributes[:終了] = "#{ Time.now.strftime('%Y/%m/%d') } 18:00" if attributes[:開始].present? && attributes[:終了].blank?
+    joutai_kubun = Joutaimaster.find_by(状態コード: attributes[:状態コード]).try(:状態区分)
+    unless joutai_kubun.in?(['1', '5'])
+      attributes[:場所コード] = ''
+      attributes[:JOB] = ''
+      attributes[:工程コード] = ''
+    end
+    attributes
   end
 
   def bashomaster_params
@@ -882,4 +846,7 @@ private
     end
   end
 
+  def redirect
+    if params[:param] == 'timeline' then redirect_to time_line_view_events_path else redirect_to events_path end
+  end
 end

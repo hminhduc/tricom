@@ -1,5 +1,8 @@
 = javascript_include_tag 'events/form'
 = stylesheet_link_tag 'events'
+- param = request['param'] || 'event'
+- shain_id = request['shain_id'] || @event.社員番号
+- date_param = request['start_at'] || @event.開始
 = simple_form_for @event do |f|
   .col-lg-5.col-sm-6.col-lg-offset-1
     .row
@@ -45,33 +48,17 @@
     = f.input :comment, label: (t 'title.comment')
 
     - if mode == 'new'
-      - if request["param"] == "timeline"|| param == 'timeline'
-        = f.button :submit, (t 'helpers.submit.create'), class: 'btn btn-primary submit-button', id: 'timeline'
-        = f.button :submit, '挿入登録', class: 'btn btn-primary'
-      - else
-        = f.button :submit, (t 'helpers.submit.create_other'), class: 'btn btn-primary submit-button', id: 'event'
-
-    - if @event.計上 != '済' && mode == 'edit'
-      - if request["param"] == "timeline"|| param == 'timeline'
-        = f.button :submit,  (t 'helpers.submit.create'), class: 'btn btn-primary submit-button', id: 'timeline'
-        = f.button :submit,  (t 'helpers.submit.create_clone'), class: 'btn btn-primary submit-button', id: 'clone_timeline_event'
-      - else
-        = f.button :submit, (t 'helpers.submit.create_other'), class: 'btn btn-primary submit-button', id: 'event'
-        = f.button :submit,  (t 'helpers.submit.create_clone_other'), class: 'btn btn-primary submit-button', id: 'clone_timeline_event'
+      = f.button :submit, t('helpers.submit.create'), class: 'btn btn-primary submit-button'
       = f.button :submit, '挿入登録', class: 'btn btn-primary'
-      - if request["param"] == "timeline"|| param == 'timeline'
-        = f.button :submit, (t 'helpers.submit.destroy'), class: 'btn btn-primary', id: 'timeline',data: {confirm: (t 'app.delete_confirm')}
-      - else
-        = f.button :submit, (t 'helpers.submit.destroy_other'), class: 'btn btn-primary', id: 'event', data: {confirm: (t 'app.delete_confirm')}
-    - if mode == 'new'
-      - param = request["param"].nil?? param: request["param"]
-      - param = 'event' if param.nil?
-      - shain_id = request["shain_id"].nil?? @event.社員番号: request["shain_id"]
-      - date_param = request["start_at"].nil?? @event.開始: request["start_at"]
-      = link_to (t 'title.shutchou_ikkatsu'), "/events/shutchou_ikkatsu_new?param="+param+"&shain_id="+shain_id+"&start_at="+date_param, class: 'btn btn-primary'
-      .spacer
+      = link_to (t 'title.shutchou_ikkatsu'), shutchou_ikkatsu_new_events_path(param: param, shain_id: shain_id, start_at: date_param), class: 'btn btn-primary'
+    - elsif mode == 'edit' && @event.計上 != '済'
+      = f.button :submit,  (t 'helpers.submit.update'), class: 'btn btn-primary submit-button'
+      = f.button :submit,  (t 'helpers.submit.create_clone'), class: 'btn btn-primary submit-button'
+      = f.button :submit, '挿入登録', class: 'btn btn-primary'
+      = link_to t('helpers.submit.destroy'), @event, method: :delete, data: { confirm: (t 'app.delete_confirm') }, class: 'btn btn-primary'
     = hidden_field_tag :kintai_daikyu
     = hidden_field_tag :old_joutai, @event.状態コード
+    = hidden_field_tag :param, param
 
 = render 'share/basho_modal'
 = render 'share/mybasho_modal'
