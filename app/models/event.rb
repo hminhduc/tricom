@@ -161,29 +161,19 @@ class Event < ApplicationRecord
 
   def updateMyBasho
     mybasho = Mybashomaster.find_by(社員番号: 社員番号, 場所コード: 場所コード)
-    if mybasho
-      mybasho.update(updated_at: Time.now)               
-    else
+    unless mybasho
       basho = Bashomaster.find_by(場所コード: 場所コード)
-      if basho
-        mybasho = Mybashomaster.new(basho.slice(:場所コード, :場所名, :場所名カナ, :SUB, :場所区分, :会社コード)
-                                           .merge(社員番号: 社員番号))
-        mybasho.save
-      end
+      Mybashomaster.create(basho.slice(:場所コード, :場所名, :場所名カナ, :SUB, :場所区分, :会社コード)
+                                .merge(社員番号: 社員番号)) if basho
     end
   end
 
   def updateMyJob
     myjob = Myjobmaster.find_by(社員番号: 社員番号, job番号: self.JOB)
-    if myjob
-      myjob.update(updated_at: Time.now)               
-    else
+    unless myjob
       job = Jobmaster.find_by(job番号: self.JOB)
-      if job
-        myjob = Myjobmaster.new(job.slice(:job番号, :job名, :開始日, :終了日, :ユーザ番号, :ユーザ名, :入力社員番号, :分類コード, :分類名, :関連Job番号, :備考)
-                                    .merge(社員番号: 社員番号))
-        myjob.save        
-      end
+      myjob = Myjobmaster.create(job.slice(:job番号, :job名, :開始日, :終了日, :ユーザ番号, :ユーザ名, :入力社員番号, :分類コード, :分類名, :関連Job番号, :備考)
+                                 .merge(社員番号: 社員番号)) if job
     end
   end
 
