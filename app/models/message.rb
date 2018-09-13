@@ -1,8 +1,8 @@
 class Message < ApplicationRecord
   belongs_to :conversation
-  belongs_to :sender, :foreign_key => 'user', class_name: 'User'
+  belongs_to :sender, foreign_key: 'user', class_name: 'User'
 
   validates_presence_of :body, :conversation_id, :user
-  scope :unread, ->{ where(read_at: nil) }
-  scope :recent, ->{ order(created_at: :desc).limit(5) }
+  scope :unread, -> { where(read_at: nil) }
+  scope :recent, -> { order(created_at: :desc).limit(5) }
 end

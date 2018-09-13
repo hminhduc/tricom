@@ -1,7 +1,7 @@
 class Kikanmst < ApplicationRecord
   CSV_HEADERS = %w(機関コード 機関名 備考)
   include PgSearch
-  multisearchable :against => [:機関コード, :機関名, :備考]
+  multisearchable against: [:機関コード, :機関名, :備考]
   self.table_name = :機関マスタ
   self.primary_key = :機関コード
 

@@ -3,7 +3,7 @@ class Jobuchiwake < ApplicationRecord
   self.primary_key = :ジョブ内訳番号
 
   belongs_to :jobmaster, foreign_key: :ジョブ番号
-  validates :ジョブ番号, inclusion: {in: proc{Jobmaster.pluck(:job番号)}}, allow_blank: true
+  validates :ジョブ番号, inclusion: { in: proc { Jobmaster.pluck(:job番号) } }, allow_blank: true
 
   UKETSUKESHUBETSU = {
     '1' => 'PG障害',

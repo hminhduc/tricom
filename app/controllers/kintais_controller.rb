@@ -5,8 +5,6 @@ class KintaisController < ApplicationController
 
     respond_to :json, :html
 
-    include UsersHelper
-
     def index
         begin
             @selected_month = (params[:search] || session[:selected_month]).to_date.strftime("%Y/%m")

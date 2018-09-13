@@ -18,20 +18,20 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
-set :output, "~/cron_log.log"
+set :output, '~/cron_log.log'
 set :chronic_options, hours24: true
 every '0 0 * * *' do
-  rake "backup:dump", output: "/dev/null"
+  rake 'backup:dump', output: '/dev/null'
 end
 every '1 0 * * *' do
-  rake "backup:gitadd"
+  rake 'backup:gitadd'
 end
 every '2 0 * * *' do
-  rake "backup:gitcommit"
+  rake 'backup:gitcommit'
 end
 every '3 0 * * *' do
-  rake "backup:gitpush"
+  rake 'backup:gitpush'
 end
 every 1.days do
-  rake "serverchat:start"
+  rake 'serverchat:start'
 end

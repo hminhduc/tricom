@@ -5,9 +5,9 @@ class Shainmaster < ApplicationRecord
   PRIMARY_KEYS = %w(社員番号)
   before_save :strip_shainmaster_code
   include PgSearch
-  multisearchable :against => %w{序列 社員番号 連携用社員番号 氏名 shozoku_name roru_ロール名 yakushoku_役職名 内線電話番号 有給残数 }
+  multisearchable against: %w{序列 社員番号 連携用社員番号 氏名 shozoku_name roru_ロール名 yakushoku_役職名 内線電話番号 有給残数 }
   default_scope { order(序列: :asc, 社員番号: :asc) }
-  validates :社員番号,:氏名, :連携用社員番号, presence: true
+  validates :社員番号, :氏名, :連携用社員番号, presence: true
   validates :社員番号, uniqueness: true
 
   has_many :events, dependent: :destroy, foreign_key: :社員番号
@@ -55,5 +55,5 @@ class Shainmaster < ApplicationRecord
 
   def strip_shainmaster_code
     社員番号.strip!
-  end  
+  end
 end

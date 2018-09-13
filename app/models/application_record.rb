@@ -8,7 +8,7 @@ class ApplicationRecord < ActiveRecord::Base
       csv << attributes
 
       all.each do |obj|
-        csv << attributes.map{ |attr| obj.send(attr) }
+        csv << attributes.map { |attr| obj.send(attr) }
       end
     end
   end

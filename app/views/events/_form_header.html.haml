@@ -1,0 +1,8 @@
+%li= link_to (t 'title.menu'), main_path
+-if params['param'] == 'timeline'
+  %li= link_to (t 'title.time_line_view'), time_line_view_events_path
+  -provide(:title, (t 'title.time_line_view'))
+-else
+  %li= link_to (t 'title.event'), events_path
+  -provide(:title, (t 'title.event'))
+%li{ class: 'active' }= (t 'title.ibento')

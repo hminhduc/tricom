@@ -62,4 +62,28 @@ RSpec.describe Event, type: :model do
       end
     end
   end
+
+  describe 'update mybasho after event save' do
+    let!(:event) { FactoryBot.create :event }
+    context 'create' do
+      it { expect(Mybashomaster.find_by(社員番号: event.社員番号, 場所コード: event.場所コード)).not_to eq nil }
+    end
+    context 'update' do
+      let(:bashomaster) { FactoryBot.create :bashomaster, :second }
+      before { event.update(場所コード: bashomaster.場所コード) }
+      it { expect(Mybashomaster.find_by(社員番号: event.社員番号, 場所コード: bashomaster.場所コード)).not_to eq nil }
+    end
+  end
+
+  describe 'update myjob after event save' do
+    let!(:event) { FactoryBot.create :event }
+    context 'create' do
+      it { expect(Myjobmaster.find_by(社員番号: event.社員番号, job番号: event.JOB)).not_to eq nil }
+    end
+    context 'update' do
+      let(:jobmaster) { FactoryBot.create :jobmaster, :second }
+      before { event.update(JOB: jobmaster.job番号) }
+      it { expect(Myjobmaster.find_by(社員番号: event.社員番号, job番号: jobmaster.job番号)).not_to eq nil }
+    end
+  end
 end

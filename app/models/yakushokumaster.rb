@@ -4,7 +4,7 @@ class Yakushokumaster < ApplicationRecord
   CSV_HEADERS = %w(役職コード 役職名)
   SHOW_ATTRS = %w(役職コード 役職名)
   include PgSearch
-  multisearchable :against => %w{役職コード 役職名}
+  multisearchable against: %w{役職コード 役職名}
   validates :役職コード, :役職名, presence: true
   validates :役職コード, uniqueness: true
 

@@ -3,7 +3,7 @@ class YuukyuuKyuukaRireki < ApplicationRecord
   CSV_HEADERS = %w{社員番号 年月 月初有給残 月末有給残}
   SHOW_ATTRS = %w(id 社員番号 年月 月初有給残 月末有給残)
   include PgSearch
-  multisearchable :against => %w{社員番号 年月 }
+  multisearchable against: %w{社員番号 年月 }
   validates :年月, :社員番号, presence: true
   validates :年月, uniqueness: { scope: :社員番号 }
   belongs_to :shainmaster, foreign_key: :社員番号
@@ -12,7 +12,7 @@ class YuukyuuKyuukaRireki < ApplicationRecord
   def update_getshozan_of_next_month
     date = 年月.to_date
     return if date.month == 12
-    next_month = (date + 1.month).strftime("%Y/%m")
+    next_month = (date + 1.month).strftime('%Y/%m')
     # tim ra ykkk cua cac thang sau:
     ykkk = YuukyuuKyuukaRireki.find_by(社員番号: 社員番号, 年月: next_month)
     if ykkk
@@ -28,13 +28,13 @@ class YuukyuuKyuukaRireki < ApplicationRecord
   def calculate_getshozan
     return if 月初有給残.present?
     date = 年月.to_date
-    first_month = date.beginning_of_year.strftime("%Y/%m")
-    prev_month = (date - 1.month).strftime("%Y/%m")
+    first_month = date.beginning_of_year.strftime('%Y/%m')
+    prev_month = (date - 1.month).strftime('%Y/%m')
     # tim ra nhung ykkk cua cac thang truoc:
     ykkks = YuukyuuKyuukaRireki.where(社員番号: 社員番号, 年月: first_month..prev_month)
     last_month_has_getmatsuzan = ykkks.map { |ykkk| { month: ykkk.年月.to_date.month, getmatsuzan: ykkk.月末有給残 } }
                     .sort_by { |i| - i[:month] }
-                    .find {|i| i[:getmatsuzan].present? && i[:getmatsuzan].to_f >= 0.0 }
+                    .find { |i| i[:getmatsuzan].present? && i[:getmatsuzan].to_f >= 0.0 }
     self.月初有給残 = last_month_has_getmatsuzan ? last_month_has_getmatsuzan[:getmatsuzan] : 12.0
   end
 
@@ -44,8 +44,8 @@ class YuukyuuKyuukaRireki < ApplicationRecord
     yuukyu = 0
     kintais.each do |kintai|
       case kintai.状態1
-      when "30" then yuukyu += 1
-      when "31", "32" then yuukyu += 0.5
+      when '30' then yuukyu += 1
+      when '31', '32' then yuukyu += 0.5
       end
     end
     calculate_getshozan if 月初有給残.blank?

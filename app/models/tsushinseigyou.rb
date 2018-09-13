@@ -4,11 +4,11 @@ class Tsushinseigyou < ApplicationRecord
   SHOW_ATTRS = %w(id 社員番号 メール kubun)
   validates :社員番号, presence: true
   validates :社員番号, uniqueness: true
-  validates_format_of :メール, :with => /(\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z)|(^$)/i, message: I18n.t('errors.messages.wrong_mail_form')
+  validates_format_of :メール, with: /(\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z)|(^$)/i, message: I18n.t('errors.messages.wrong_mail_form')
   belongs_to :shainmaster, foreign_key: :社員番号
   delegate :氏名, to: :shainmaster, prefix: :shain, allow_nil: true
   include PgSearch
-  multisearchable :against => %w{shain_氏名 メール}
+  multisearchable against: %w{shain_氏名 メール}
 
   def kubun
     送信許可区分 == '0' ? '不可' : '許可'
