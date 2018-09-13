@@ -2,7 +2,7 @@ class Dengon < ApplicationRecord
   self.table_name = :伝言
   CSV_HEADERS = %w(id from1 from2 日付 入力者 用件 回答 伝言内容 確認 送信 社員番号)
   include PgSearch
-  multisearchable :against => %w{from1 from2 input_user_氏名 to_user_氏名 youken_種類名 kaitou_種類名 伝言内容}
+  multisearchable against: %w{from1 from2 input_user_氏名 to_user_氏名 youken_種類名 kaitou_種類名 伝言内容}
 
   validates :入力者, :社員番号, presence: true
   belongs_to :input_user, foreign_key: :入力者, class_name: 'Shainmaster'

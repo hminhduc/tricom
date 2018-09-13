@@ -1,9 +1,8 @@
 module KintaisHelper
-
   def place_holder_list_1
     [
       "<i class='fa fa-sort-desc'></i>",
-      "&nbsp;","&nbsp;","&nbsp;","&nbsp;","&nbsp;","&nbsp;","&nbsp;","&nbsp;",
+      '&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;',
       "<i class='fa fa-sort-desc'></i>",
       "<i class='fa fa-sort-desc'></i>"
     ]
@@ -26,7 +25,6 @@ module KintaisHelper
   end
 
   def joutais
-    Joutaimaster.active(['1','2','5','6']).order('CAST(状態コード AS DECIMAL) asc').pluck(:状態コード, :状態名).insert(0, ['', ''])
+    Joutaimaster.active(['1', '2', '5', '6']).order('CAST(状態コード AS DECIMAL) asc').pluck(:状態コード, :状態名).insert(0, ['', ''])
   end
-
 end

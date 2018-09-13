@@ -12,7 +12,7 @@ class SearchHistoryInput < SimpleForm::Inputs::Base
   end
 
   def input_html_options
-    super.merge({class: 'form-control', readonly: false, size: 7})
+    super.merge(class: 'form-control', readonly: false, size: 7)
   end
 
   # def span_remove
@@ -43,5 +43,4 @@ class SearchHistoryInput < SimpleForm::Inputs::Base
   def icon_search_history
     "<i class='glyphicon glyphicon-time'></i>".html_safe
   end
-
 end

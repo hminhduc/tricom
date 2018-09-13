@@ -3,23 +3,23 @@ class Event < ApplicationRecord
   self.table_name = :events
   CSV_HEADERS = %w(社員番号 開始 終了 状態コード 場所コード JOB 所属コード 工程コード 工数 計上 comment)
   include PgSearch
-  multisearchable :against => %w{開始 終了 joutai_状態名 basho_name job_job名 koutei_工程名 計上}
-  
+  multisearchable against: %w{開始 終了 joutai_状態名 basho_name job_job名 koutei_工程名 計上}
+
   before_update :doCaculateKousu
   before_create :doCaculateKousu
   after_save :doUpdateKintai, :updateMyBasho, :updateMyJob
   after_destroy :doUpdateKintai
   validates :社員番号, :開始, :状態コード, presence: true
-  validates :工程コード, :場所コード, :JOB, presence: true, if: Proc.new{|event| (event.joutaimaster.try(:状態区分) == '1' || event.joutaimaster.try(:状態区分) == '5' ) && !(event.joutaimaster.try(:状態コード) == '60' && Time.parse(event.開始).hour >= 9)}
+  validates :工程コード, :場所コード, :JOB, presence: true, if: Proc.new { |event| (event.joutaimaster.try(:状態区分) == '1' || event.joutaimaster.try(:状態区分) == '5') && !(event.joutaimaster.try(:状態コード) == '60' && Time.parse(event.開始).hour >= 9) }
   validate :check_date_input
-  validates_numericality_of :工数, message: I18n.t('errors.messages.not_a_number'), :allow_blank => true
-  validates :状態コード, inclusion: {in: proc{Joutaimaster.pluck(:状態コード)}}, allow_blank: true
-  validates :場所コード, inclusion: {in: proc{Bashomaster.pluck(:場所コード)}}, allow_blank: true
-  validates :JOB, inclusion: {in: proc{Jobmaster.pluck(:job番号)}}, allow_blank: true
+  validates_numericality_of :工数, message: I18n.t('errors.messages.not_a_number'), allow_blank: true
+  validates :状態コード, inclusion: { in: proc { Joutaimaster.pluck(:状態コード) } }, allow_blank: true
+  validates :場所コード, inclusion: { in: proc { Bashomaster.pluck(:場所コード) } }, allow_blank: true
+  validates :JOB, inclusion: { in: proc { Jobmaster.pluck(:job番号) } }, allow_blank: true
   belongs_to :shainmaster, foreign_key: :社員番号
   belongs_to :joutaimaster, foreign_key: :状態コード
   belongs_to :bashomaster, foreign_key: :場所コード
-  belongs_to :kouteimaster, foreign_key: [:工程コード,:所属コード]
+  belongs_to :kouteimaster, foreign_key: [:工程コード, :所属コード]
   belongs_to :shozokumaster, foreign_key: :所属コード
   # belongs_to :shozai
   belongs_to :jobmaster, foreign_key: :JOB
@@ -49,29 +49,29 @@ class Event < ApplicationRecord
   def estimate_kinmu_type(start_time)
     time = start_time.try(:to_datetime).to_i % (1.day.to_i) / 60.0
     Kintai::KINMU_TYPE.each { |type, value| return type if value[:s] * 60 >= time }
-    return nil
+    nil
   end
 
   def doUpdateKintai
     ApplicationController.helpers.check_kintai_at_day_by_user(社員番号, 開始.to_date)
     shain = Shainmaster.find_by(社員番号: 社員番号)
-    kintai = Kintai.find_by("Date(日付) = Date(?) AND 社員番号 = ?", 開始, 社員番号)
+    kintai = Kintai.find_by('Date(日付) = Date(?) AND 社員番号 = ?', 開始, 社員番号)
     if kintai
       # tim nhung su kien trong ngay hom do (開始),ma co trang thai khong phai la nghi:
-      events = Event.joins(:joutaimaster).where("Date(開始) = Date(?)", 開始)
-                                         .where(社員番号: 社員番号, 状態マスタ: { 状態区分: ['1', '5'] } )
+      events = Event.joins(:joutaimaster).where('Date(開始) = Date(?)', 開始)
+                                         .where(社員番号: 社員番号, 状態マスタ: { 状態区分: ['1', '5'] })
                                          .where.not(開始: '', 終了: '')
       # tim ra joutai se thiet lap cho kintai , joutai chinh la cai dau tien trong cac event:
-      joutai_first =  Event.joins(:joutaimaster)
-                          .where("Date(開始) = Date(?)", 開始)
-                          .where(社員番号: 社員番号, 状態マスタ: { 勤怠使用区分: '1' } )
+      joutai_first = Event.joins(:joutaimaster)
+                          .where('Date(開始) = Date(?)', 開始)
+                          .where(社員番号: 社員番号, 状態マスタ: { 勤怠使用区分: '1' })
                           .where.not(開始: '', 終了: '')
                           .order(開始: :asc).first.try(:状態コード) || ''
 
       if events.any?
         time_start, time_end = events.minimum(:開始), events.maximum(:終了)
         kinmu_type = estimate_kinmu_type(time_start) || shain.try(:勤務タイプ)
-        times = ApplicationController.helpers.time_calculate(time_start, time_end, kinmu_type, events)        
+        times = ApplicationController.helpers.time_calculate(time_start, time_end, kinmu_type, events)
         real_hours = times[:real_hours].to_i / 30 * 0.5
         futsu_zangyou = times[:fustu_zangyo].to_i / 30 * 0.5
         shinya_zangyou = times[:shinya_zangyou].to_i / 30 * 0.5
@@ -118,10 +118,10 @@ class Event < ApplicationRecord
           }
           daikyu_aite_hidzuke = Kintai.find_by(日付: kintai_daikyu_date.to_date, 社員番号: 社員番号)
           if daikyu_aite_hidzuke
-            bikou1 = "#{ kintai_daikyu_date.to_date.to_s }#{ furikyuus[状態コード][0] }"
-            bikou2 = "#{ 開始.to_date.to_s}#{ furikyuus[状態コード][1] }"
-            kintai.update(代休相手日付: kintai_daikyu_date.to_date.strftime("%Y/%m/%d"), 代休取得区分: '', 備考: bikou1)
-            daikyu_aite_hidzuke.update(代休相手日付: 開始.to_date.strftime("%Y/%m/%d"), 代休取得区分: '1', 備考: bikou2)
+            bikou1 = "#{ kintai_daikyu_date.to_date }#{ furikyuus[状態コード][0] }"
+            bikou2 = "#{ 開始.to_date }#{ furikyuus[状態コード][1] }"
+            kintai.update(代休相手日付: kintai_daikyu_date.to_date.strftime('%Y/%m/%d'), 代休取得区分: '', 備考: bikou1)
+            daikyu_aite_hidzuke.update(代休相手日付: 開始.to_date.strftime('%Y/%m/%d'), 代休取得区分: '1', 備考: bikou2)
           end # of if daikyu_aite_hidzuke
         end # of if kintai_daikyu_date.present?
       elsif 状態コード.in?(['103', '107', '111'])
@@ -132,7 +132,7 @@ class Event < ApplicationRecord
     end # if kintai
   end
 
-  def get_time_diff(start_time, end_time)  
+  def get_time_diff(start_time, end_time)
     ((end_time.to_time - start_time.to_time).to_i / 900) * 0.25
   rescue
     0
@@ -145,10 +145,10 @@ class Event < ApplicationRecord
       else
         day = 開始.to_date
         if day.beginning_of_day < 開始.to_time && 終了.to_time < day.end_of_day && (day.saturday? || day.sunday?) && 状態コード == '30'
-          errors.add(:状態コード, '休日で全日休の指定はできない')        
+          errors.add(:状態コード, '休日で全日休の指定はできない')
         end
       end
-    end    
+    end
   end
   def basho_name
     basho = Bashomaster.find_by(場所コード: self.場所コード)
@@ -199,11 +199,11 @@ class Event < ApplicationRecord
   end
 
   def overtail(event)
-    開始.to_datetime <= event.開始.to_datetime and event.開始.to_datetime < 終了.to_datetime and 終了.to_datetime < event.終了.to_datetime
+    開始.to_datetime <= event.開始.to_datetime && event.開始.to_datetime < 終了.to_datetime && 終了.to_datetime < event.終了.to_datetime
   end
 
   def overhead(event)
-    event.開始.to_datetime < 開始.to_datetime and 開始.to_datetime < event.終了.to_datetime and event.終了.to_datetime <= 終了.to_datetime
+    event.開始.to_datetime < 開始.to_datetime && 開始.to_datetime < event.終了.to_datetime && event.終了.to_datetime <= 終了.to_datetime
   end
 
   def contain(event)

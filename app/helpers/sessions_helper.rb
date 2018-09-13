@@ -1,5 +1,5 @@
 module SessionsHelper
-  def log_in user
+  def log_in(user)
     session[:user] = user.id
     session[:current_user_id] = user.id
     session[:selected_shain] = user.shainmaster.try :id
@@ -91,11 +91,11 @@ module SessionsHelper
     @current_user = nil
   end
 
-  def current_user? user
+  def current_user?(user)
     user == current_user
   end
 
-  def redirect_back_or default
+  def redirect_back_or(default)
     redirect_to session[:forwarding_url] || default
     session.delete :forwarding_url
   end
@@ -126,12 +126,12 @@ module SessionsHelper
     http_token && auth_token && auth_token[:user_id].to_i
   end
 
-  def check_kintai_at_day_by_user user_id, at_day = Date.today
+  def check_kintai_at_day_by_user(user_id, at_day = Date.today)
     return if Kintai.find_by(日付: at_day, 社員番号: user_id)
     (at_day.beginning_of_month..at_day.end_of_month).each { |day| create_kintai(user_id, day) }
   end
 
-  def create_kintai user_id, day
+  def create_kintai(user_id, day)
     if JptHolidayMst.exists?(event_date: day)
       note = '会社休日'
       holiday = '1'
@@ -180,8 +180,8 @@ module SessionsHelper
 
   def get_unread_messages
     Message.eager_load(:conversation, :sender)
-            .where("read_at IS ? AND messages.user != ?", nil, current_user.id)
-            .where("conversations.sender_id = ? OR conversations.recipient_id = ?", current_user.id, current_user.id)
+            .where('read_at IS ? AND messages.user != ?', nil, current_user.id)
+            .where('conversations.sender_id = ? OR conversations.recipient_id = ?', current_user.id, current_user.id)
             .order(created_at: :desc)
   end
 
@@ -193,18 +193,18 @@ module SessionsHelper
     Dengon.where(社員番号: session[:user], 確認: false)
   end
 
-  def notify_to(conversation_id = nil, receiver_id = nil) 
+  def notify_to(conversation_id = nil, receiver_id = nil)
     receiver_id = session[:user] unless User.find_by(id: receiver_id)
-    if(conversation_id)
+    if conversation_id
       unread_messages = Message.eager_load(:conversation, :sender)
-                            .where("read_at IS ? AND messages.user != ?", nil, receiver_id)
+                            .where('read_at IS ? AND messages.user != ?', nil, receiver_id)
                             .where(conversation_id: conversation_id)
-                            .where("conversations.sender_id = ? OR conversations.recipient_id = ?", receiver_id, receiver_id)
+                            .where('conversations.sender_id = ? OR conversations.recipient_id = ?', receiver_id, receiver_id)
                             .order(created_at: :desc)
     else
       unread_messages = Message.eager_load(:conversation, :sender)
-                            .where("read_at IS ? AND messages.user != ?", nil, receiver_id)
-                            .where("conversations.sender_id = ? OR conversations.recipient_id = ?", receiver_id, receiver_id)
+                            .where('read_at IS ? AND messages.user != ?', nil, receiver_id)
+                            .where('conversations.sender_id = ? OR conversations.recipient_id = ?', receiver_id, receiver_id)
                             .order(created_at: :desc)
     end
 
@@ -216,23 +216,23 @@ module SessionsHelper
     items = ''
 
     unread_messages.each do |message|
-      naiyou = message.body.length > 12 ? (message.body[0...12]+ '...') : message.body
-      items += '<li><a class=\" fa fa-wechat icon-left start-conversation \" data-sid=\"'+message.conversation.sender_id+'\" data-rip = \"'+ message.conversation.recipient_id+'\" href=\"#\">&nbsp;&nbsp;&nbsp;'+ message.sender&.name.to_s+': '+naiyou+'</a></li>' if message.body
+      naiyou = message.body.length > 12 ? (message.body[0...12] + '...') : message.body
+      items += '<li><a class=\" fa fa-wechat icon-left start-conversation \" data-sid=\"' + message.conversation.sender_id + '\" data-rip = \"' + message.conversation.recipient_id + '\" href=\"#\">&nbsp;&nbsp;&nbsp;' + message.sender&.name.to_s + ': ' + naiyou + '</a></li>' if message.body
     end
     items += '<legend class=\"menu\"></legend>' if unread_messages.any?
 
     kairans.each do |kairan|
-      naiyou = kairan.内容.length > 12 ? (kairan.内容[0...12]+'...') : kairan.内容
-      items = items + '<li><a class=\"glyphicon glyphicon-envelope icon-left\" href=\"/kairans?locale=ja&search='+kairan.内容+' \"> '+ naiyou+'</a></li>' if kairan.内容
+      naiyou = kairan.内容.length > 12 ? (kairan.内容[0...12] + '...') : kairan.内容
+      items = items + '<li><a class=\"glyphicon glyphicon-envelope icon-left\" href=\"/kairans?locale=ja&search=' + kairan.内容 + ' \"> ' + naiyou + '</a></li>' if kairan.内容
     end
     items += '<legend class=\"menu\"></legend>' if unread_messages.any? && kairans.any?
 
     dengons.each do |dengon|
-      naiyou = dengon.伝言内容.length > 12 ? (dengon.伝言内容[0...12]+ '...') : dengon.伝言内容
-      items += '<li><a class=\"glyphicon glyphicon-comment icon-left\" href=\"/dengons?locale=ja&search='+dengon.伝言内容+' \"> '+ naiyou+'</a></li>' if dengon.伝言内容
+      naiyou = dengon.伝言内容.length > 12 ? (dengon.伝言内容[0...12] + '...') : dengon.伝言内容
+      items += '<li><a class=\"glyphicon glyphicon-comment icon-left\" href=\"/dengons?locale=ja&search=' + dengon.伝言内容 + ' \"> ' + naiyou + '</a></li>' if dengon.伝言内容
     end
 
-    PrivatePub.publish_to("/messages/" + receiver_id,
+    PrivatePub.publish_to('/messages/' + receiver_id,
                 "if(#{totalCount} > 0){
                   if($('.glyphicon-bell').hasClass('text-red') == false){
                       $('.glyphicon-bell').addClass('text-red');
@@ -240,7 +240,7 @@ module SessionsHelper
                   }
                   $('.message-count').text(#{totalCount})
                   $('.message-item').css('display','')
-                  $('.message-item').html(\'"+items+"\')
+                  $('.message-item').html(\'" + items + "\')
                 }else{
                   if($('.glyphicon-bell').hasClass('text-red')){
                     $('.glyphicon-bell').removeClass('text-red');

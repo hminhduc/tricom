@@ -5,7 +5,7 @@ class Bunrui < ApplicationRecord
   PRIMARY_KEYS = %w(分類コード)
   SHOW_ATTRS = %w(分類コード 分類名)
   include PgSearch
-  multisearchable :against => CSV_HEADERS
+  multisearchable against: CSV_HEADERS
   validates :分類コード, uniqueness: true
   validates :分類コード, :分類名, presence: true
 

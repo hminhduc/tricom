@@ -1,3 +1,0 @@
-module ShoninshamstsHelper
-	
-end

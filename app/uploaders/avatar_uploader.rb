@@ -1,5 +1,5 @@
 class AvatarUploader < CarrierWave::Uploader::Base
-  DEFAULT_URL = "/assets/thumb/missing.png"
+  DEFAULT_URL = '/assets/thumb/missing.png'
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
@@ -16,10 +16,10 @@ class AvatarUploader < CarrierWave::Uploader::Base
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
   def default_url(*args)
-  #   # For Rails 3.1+ asset pipeline compatibility:
-  #   # ActionController::Base.helpers.asset_path("fallback/" + [version_name, "default.png"].compact.join('_'))
-  #
-  #   "/images/fallback/" + [version_name, "default.png"].compact.join('_')
+    # # For Rails 3.1+ asset pipeline compatibility:
+    # # ActionController::Base.helpers.asset_path("fallback/" + [version_name, "default.png"].compact.join('_'))
+    #
+    # "/images/fallback/" + [version_name, "default.png"].compact.join('_')
     DEFAULT_URL
   end
 
@@ -46,5 +46,4 @@ class AvatarUploader < CarrierWave::Uploader::Base
   # def filename
   #   "something.jpg" if original_filename
   # end
-
 end

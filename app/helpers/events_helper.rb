@@ -1,5 +1,4 @@
 module EventsHelper
-
   def get_shozoku(user_id)
     User.find(user_id).shainmaster.shozokumaster
   end
@@ -43,9 +42,9 @@ module EventsHelper
 
   def check_user_status
     Shainmaster.all.each do |shain|
-      if shain.events.where("Date(開始) = ?", Date.current).count == 0
-        event_start_datetime = Date.current.to_s + " 09:00"
-        event_end_datetime = Date.current.to_s + " 18:00"
+      if shain.events.where('Date(開始) = ?', Date.current).count == 0
+        event_start_datetime = Date.current.to_s + ' 09:00'
+        event_end_datetime = Date.current.to_s + ' 18:00'
         event = Event.new(社員番号: shain.社員番号, 状態コード: '0', 開始: event_start_datetime, 終了: event_end_datetime)
         event.joutaimaster = Joutaimaster.find_by(状態コード: '0')
         event.shainmaster = shain
@@ -68,14 +67,9 @@ module EventsHelper
     event.save
   end
 
-  def test_fun(val1)
-    return val1.to_f +1
-
-  end  
-
   def caculate_koushuu(time_start, time_end)
     results = time_calculate(time_start, time_end)
-    return (results[:real_hours] + results[:fustu_zangyo] + results[:shinya_zangyou]) / 30 * 0.5
+    (results[:real_hours] + results[:fustu_zangyo] + results[:shinya_zangyou]) / 30 * 0.5
   end
   # Tao ra mot mang chua cac thoi diem (tinh theo phut) nam trong danh sach cac events:
   def create_event_times(begin_of_day, events)
@@ -86,7 +80,7 @@ module EventsHelper
       time_array |= (event_start_time...event_end_time).to_a
       no_zangyou_time_array |= (event_start_time...event_end_time).to_a if event.joutaimaster.try(:残業計算外区分) == '1'
     end
-    return [time_array, no_zangyou_time_array]
+    [time_array, no_zangyou_time_array]
   rescue
     nil
   end
@@ -104,7 +98,7 @@ module EventsHelper
       else real_hours += 1
       end
     end
-    return {
+    {
       hiru_kyukei: hiru_kyukei,
       yoru_kyukei: yoru_kyukei,
       shinya_kyukei: shinya_kyukei,
@@ -123,7 +117,7 @@ module EventsHelper
       when 0, 1, 2, 3 then shinya_zangyou += 1 unless no_zangyou_time_array.try(:include?, t)
       end
     end
-    return {
+    {
       fustu_zangyo: fustu_zangyo,
       shinya_zangyou: shinya_zangyou
     }
@@ -134,7 +128,7 @@ module EventsHelper
     chikoku = 0 if chikoku < 0
     soutai = kinmu_end - end_time
     soutai = 0 if soutai < 0
-    return {
+    {
       chikoku: chikoku,
       soutai: soutai
     }
@@ -188,6 +182,6 @@ module EventsHelper
       results.merge!(chikoku: 0, soutai: 0)
     end # case kinmu_type
     results[:real_hours] -= results[:fustu_zangyo] + results[:shinya_zangyou]
-    return results
+    results
   end
 end

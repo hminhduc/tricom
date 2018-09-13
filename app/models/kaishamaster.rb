@@ -5,7 +5,7 @@ class Kaishamaster < ApplicationRecord
   SHOW_ATTRS = %w(id name note)
   after_update :doUpdateMykaisha
   include PgSearch
-  multisearchable :against => %w{会社コード 会社名 備考}
+  multisearchable against: %w{会社コード 会社名 備考}
   validates :会社コード, :会社名, presence: true
   validates :会社コード, uniqueness: true
 
@@ -18,6 +18,6 @@ class Kaishamaster < ApplicationRecord
   alias_attribute :note, :備考
 
   def doUpdateMykaisha
-    mykaishas = Mykaishamaster.where(会社コード: self.会社コード).update_all(会社名: self.会社名,備考: self.備考)
+    mykaishas = Mykaishamaster.where(会社コード: self.会社コード).update_all(会社名: self.会社名, 備考: self.備考)
   end
 end

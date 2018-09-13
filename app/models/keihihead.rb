@@ -3,7 +3,7 @@ class Keihihead < ApplicationRecord
   self.primary_key = :申請番号
   CSV_HEADERS = %w(申請番号 日付 社員番号 申請者 交通費合計 日当合計 宿泊費合計 その他合計 旅費合計 仮払金 合計 支給品 過不足 承認kubun 承認者 清算予定日 清算日 承認済区分)
   include PgSearch
-  multisearchable :against => %w{申請番号 shain_name 承認済区分 keihibody_shain_code}
+  multisearchable against: %w{申請番号 shain_name 承認済区分 keihibody_shain_code}
   has_many :keihibodies, foreign_key: :申請番号, dependent: :destroy
   belongs_to :shainmaster, foreign_key: :社員番号
 
@@ -13,11 +13,9 @@ class Keihihead < ApplicationRecord
 
   alias_attribute :id, :申請番号
 
-  after_destroy {|record|
-    Keihibody.destroy(record.keihibodies.pluck(:id))
-  }
+  after_destroy { |record| Keihibody.destroy(record.keihibodies.pluck(:id)) }
 
-  scope :current_member, ->(member) { where( 社員番号: member )}
+  scope :current_member, ->(member) { where(社員番号: member) }
 
   delegate :氏名, to: :shainmaster, prefix: :shainmaster, allow_nil: true
   # validates :清算予定日, presence: true, length: {minimum: 1}
@@ -26,26 +24,26 @@ class Keihihead < ApplicationRecord
 
   private
 
-  def check_kubun
-    if 承認kubun != "0"
-      if self.承認者.empty? && self.清算予定日.nil?
-        errors.add(:承認者, (I18n.t 'app.model.check_kubun.shoninsha'))
-        errors.add(:清算予定日, (I18n.t 'app.model.check_kubun.seisanyoteibi'))
-      elsif self.承認者.empty?
-         errors.add(:承認者, (I18n.t 'app.model.check_kubun.shoninsha'))
-      elsif self.清算予定日.nil?
-        errors.add(:清算予定日, (I18n.t 'app.model.check_kubun.seisanyoteibi'))
+    def check_kubun
+      if 承認kubun != '0'
+        if self.承認者.empty? && self.清算予定日.nil?
+          errors.add(:承認者, (I18n.t 'app.model.check_kubun.shoninsha'))
+          errors.add(:清算予定日, (I18n.t 'app.model.check_kubun.seisanyoteibi'))
+        elsif self.承認者.empty?
+          errors.add(:承認者, (I18n.t 'app.model.check_kubun.shoninsha'))
+        elsif self.清算予定日.nil?
+          errors.add(:清算予定日, (I18n.t 'app.model.check_kubun.seisanyoteibi'))
+        end
       end
     end
-  end
 
-  def shain_name
-    if !self.承認者.empty?
-      Shainmaster.find(self.承認者).try(:氏名)
+    def shain_name
+      if !self.承認者.empty?
+        Shainmaster.find(self.承認者).try(:氏名)
+      end
     end
-  end
 
-  def keihibody_shain_code
-    Keihibody.find_by(申請番号: self.申請番号).try(:社員番号)
-  end
+    def keihibody_shain_code
+      Keihibody.find_by(申請番号: self.申請番号).try(:社員番号)
+    end
 end

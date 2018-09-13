@@ -5,7 +5,7 @@ class Bashokubunmst < ApplicationRecord
   PRIMARY_KEYS = %w(場所区分コード)
   SHOW_ATTRS = %w(場所区分コード 場所区分名)
   include PgSearch
-  multisearchable :against => %w{場所区分コード 場所区分名}
+  multisearchable against: %w(場所区分コード 場所区分名)
 
   validates :場所区分コード, :場所区分名, presence: true
   validates :場所区分コード, uniqueness: true

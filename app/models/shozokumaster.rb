@@ -4,7 +4,7 @@ class Shozokumaster < ApplicationRecord
   CSV_HEADERS = %w{所属コード 所属名}
   SHOW_ATTRS = %w(所属コード 所属名)
   include PgSearch
-  multisearchable :against => %w{所属コード 所属名}
+  multisearchable against: %w{所属コード 所属名}
   validates :所属コード, :所属名, presence: true
   validates :所属コード, uniqueness: true
 

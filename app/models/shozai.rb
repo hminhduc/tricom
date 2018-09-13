@@ -3,7 +3,7 @@ class Shozai < ApplicationRecord
   self.primary_key = :所在コード
   CSV_HEADERS = %w{所在コード 所在名 背景色 文字色}
   include PgSearch
-  multisearchable :against => %w{所在コード 所在名 背景色 文字色}
+  multisearchable against: %w{所在コード 所在名 背景色 文字色}
   validates :所在コード, :所在名, presence: true
   validates :所在コード, uniqueness: true
 

@@ -16,20 +16,20 @@ Mail.defaults do
   # delivery_method :smtp, {
   #     :address => 'mail.jpt.co.jp',
   #     :port => '465',
+
   #     #:domain => 'heroku.com',
   #     :user_name => 'skybord@jpt.co.jp',
   #     :password => 'LD-RJ45T10A',
   #     :authentication => :login,
   #     :enable_starttls_auto => true
   # }
-  delivery_method :smtp, {
-      :address => 'smtp.gmail.com',
-      :port => '587',
-      #:domain => 'heroku.com',
-      :user_name => 'skybordtricom@gmail.com',
-      :password => 'tricomjpt',
-      # :authentication => :login,
-      :authentication => :plain,
-      :enable_starttls_auto => true
-  }
+  delivery_method :smtp,
+    address: 'smtp.gmail.com',
+    port: '587',
+    #:domain => 'heroku.com',
+    user_name: 'skybordtricom@gmail.com',
+    password: 'tricomjpt',
+    # :authentication => :login,
+    authentication: :plain,
+    enable_starttls_auto: true
 end
