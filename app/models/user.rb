@@ -2,7 +2,7 @@ class User < ApplicationRecord
   mount_uploader :avatar, AvatarUploader
   self.table_name = :担当者マスタ
   self.primary_key = :担当者コード
-  CSV_HEADERS = %w{担当者コード 担当者名称 admin email supervisor}
+  CSV_HEADERS = %w(担当者コード 担当者名称 admin email supervisor)
   include PgSearch
   multisearchable against: %w{担当者コード 担当者名称}
   attr_accessor :current_password
@@ -23,12 +23,6 @@ class User < ApplicationRecord
   validates_format_of :email, with: /(\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z)|(^$)/i, message: I18n.t('errors.messages.wrong_mail_form')
   validate :current_password_is_correct, on: :update
   has_secure_password
-
-  def User.digest(string)
-    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
-    BCrypt::Engine.cost
-    BCrypt::Password.create string, cost: cost
-  end
 
   def check_taken
     if 担当者コード.present? && 担当者コード.in?(User.pluck(:担当者コード))
@@ -53,7 +47,7 @@ class User < ApplicationRecord
   # Check if the inputted current password is correct when the user tries to update his/her password
   def current_password_is_correct
     # Check if the user tried changing his/her password
-    if !password.blank?
+    if password.present?
       # Get a reference to the user since the "authenticate" method always returns false when calling on itself (for some reason)
       user = User.find_by_id(id)
 
