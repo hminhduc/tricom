@@ -55,7 +55,7 @@
       = f.button :submit,  (t 'helpers.submit.update'), class: 'btn btn-primary submit-button'
       = f.button :submit,  (t 'helpers.submit.create_clone'), class: 'btn btn-primary submit-button'
       = f.button :submit, '挿入登録', class: 'btn btn-primary'
-      = link_to t('helpers.submit.destroy'), @event, method: :delete, data: { confirm: (t 'app.delete_confirm') }, class: 'btn btn-primary'
+      = link_to t('helpers.submit.destroy'), event_path(id: @event.id, param: param), method: :delete, data: { confirm: (t 'app.delete_confirm') }, class: 'btn btn-primary'
     = hidden_field_tag :kintai_daikyu
     = hidden_field_tag :old_joutai, @event.状態コード
     = hidden_field_tag :param, param
