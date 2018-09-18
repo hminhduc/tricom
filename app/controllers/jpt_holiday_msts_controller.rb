@@ -1,7 +1,7 @@
 class JptHolidayMstsController < ApplicationController
   before_action :require_user!
   load_and_authorize_resource except: [:export_csv, :update, :destroy]
-  respond_to :js,:html
+  respond_to :js, :html
 
   def index
     @jpt_holiday_msts = JptHolidayMst.all
@@ -48,12 +48,11 @@ class JptHolidayMstsController < ApplicationController
 
   private
 
-  def set_jpt_holiday_mst
-    @jpt_holiday_mst = JptHolidayMst.find_by id: params[:id]
-  end
+    def set_jpt_holiday_mst
+      @jpt_holiday_mst = JptHolidayMst.find_by id: params[:id]
+    end
 
-  def jpt_holiday_mst_params
-    params.require(:jpt_holiday_mst).permit(:id, :event_date, :title, :description)
-  end
-
+    def jpt_holiday_mst_params
+      params.require(:jpt_holiday_mst).permit(:id, :event_date, :title, :description)
+    end
 end

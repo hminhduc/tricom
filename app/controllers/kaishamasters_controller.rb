@@ -47,8 +47,7 @@ class KaishamastersController < ApplicationController
 
   private
 
-  def kaishamaster_params
-    params.require(:kaishamaster).permit(:会社コード, :会社名, :備考)
-  end
-
+    def kaishamaster_params
+      params.require(:kaishamaster).permit(:会社コード, :会社名, :備考)
+    end
 end

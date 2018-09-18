@@ -29,7 +29,7 @@ class UsersController < ApplicationController
       flash[:notice] = t 'app.flash.new_success'
       redirect_to users_path
     else
-      flash[:danger] =  @user.errors.full_messages.join(",")
+      flash[:danger] = @user.errors.full_messages.join(',')
       @shainmasters = Shainmaster.all.has_not_tantousha
       render :new
     end
@@ -66,13 +66,13 @@ class UsersController < ApplicationController
   def ajax
     case params[:focus_field]
     when 'user_削除する'
-      params[:users].each {|user_code|
-        user=User.find(user_code)
+      params[:users].each { |user_code|
+        user = User.find(user_code)
         user.destroy if user
       }
-      data = {destroy_success: 'success'}
+      data = { destroy_success: 'success' }
       respond_to do |format|
-        format.json { render json: data}
+        format.json { render json: data }
       end
     else
     end
@@ -120,14 +120,14 @@ class UsersController < ApplicationController
   end
 
   private
-  # Never trust parameters from the scary internet, only allow the white list through.
-  def user_params
-    params.require(:user).permit :担当者コード, :担当者名称, :password,
-      :password_confirmation, :avatar, :admin, :有給残数, :email
-  end
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def user_params
+      params.require(:user).permit :担当者コード, :担当者名称, :password,
+        :password_confirmation, :avatar, :admin, :有給残数, :email
+    end
 
-  def user_params_for_update
-    params.require(:user).permit :担当者名称, :password, :password_confirmation,
-      :avatar, :admin, :有給残数, :email, :current_password
-  end
+    def user_params_for_update
+      params.require(:user).permit :担当者名称, :password, :password_confirmation,
+        :avatar, :admin, :有給残数, :email, :current_password
+    end
 end

@@ -63,36 +63,31 @@ class ApplicationController < ActionController::Base
 
   private
 
-  # Finds the User with the ID stored in the session with the key
-  # :current_user_id This is a common way to handle user login in
-  # a Rails application; logging in sets the session value and
-  # logging out removes it.
+    def set_locale_for(current_user)
+      I18n.locale = params[:locale] || I18n.default_locale
+      local = current_user&.shainmaster&.setting&.local
+      I18n.locale = current_user.shainmaster.setting.local if local.present?
+    end
 
-  def set_locale_for(current_user)
-    I18n.locale = params[:locale] || I18n.default_locale
-    local = current_user&.shainmaster&.setting&.local
-    I18n.locale = current_user.shainmaster.setting.local if local.present?
-  end
+    def set_page_len
+      @page_length = session[:page_length] || 10
+    end
 
-  def set_page_len
-    @page_length = session[:page_length] || 10
-  end
+    def default_url_options
+      { locale: I18n.locale }
+    end
 
-  def default_url_options
-    {locale: I18n.locale}
-  end
+    def page_title
+      @pageTitle = 'TRICOM'
+    end
 
-	def page_title
-    @pageTitle = 'TRICOM'
-  end
+    def record_not_found
+      # render plain: '404 Not Found', status: 404
+      render file: '../../public/404.html', status: :not_found, layout: false
+    end
 
-  def record_not_found
-    # render plain: '404 Not Found', status: 404
-    render :file => '../../public/404.html', :status => :not_found, :layout => false
-  end
-
-  def user_not_authorized
-    flash[:error] = "You don't have access to this section."
-    redirect_to :back
-  end
+    def user_not_authorized
+      flash[:error] = "You don't have access to this section."
+      redirect_to :back
+    end
 end

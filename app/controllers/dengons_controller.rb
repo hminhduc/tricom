@@ -7,7 +7,7 @@ class DengonsController < ApplicationController
 
   def index
     vars = request.query_parameters
-    @dengons = Dengon.includes(:input_user, :to_user, {dengonyouken: :yuusen}, :dengonkaitou)
+    @dengons = Dengon.includes(:input_user, :to_user, { dengonyouken: :yuusen }, :dengonkaitou)
     @shain_param = params[:head].present? ? params[:head][:shainbango] : session[:user]
     @nyuuryokusha = params[:head][:nyuuryokusha] if params[:head].present?
     @yoken = params[:head][:youken] if params[:head].present?
@@ -39,7 +39,7 @@ class DengonsController < ApplicationController
   def create
     @dengon = Dengon.new(dengon_params)
     if @dengon.save
-      send_notify_mail(@dengon)    
+      send_notify_mail(@dengon)
       update_dengon_counter @dengon.社員番号
       notify_to(nil, @dengon.社員番号)
     end
@@ -94,29 +94,28 @@ class DengonsController < ApplicationController
 
     def send_notify_mail(dengon)
       if dengon.送信
-          begin
-            mail_to = dengon.to_user.tsushinseigyou.メール
-          rescue
-            mail_to = ""
-          end
-
-          begin
-            mail_body = "#{dengon.try(:日付).strftime('%F %H:%M')} \r\n"
-          rescue
-            mail_body = ""
-          end
-          mail_body << "\r\n"
-          mail_body << "#{dengon.try(:from1)} #{dengon.try(:from2)} \r\n"
-          mail_body << "\r\n"
-          mail_body << "#{dengon.dengonyouken.try(:種類名)} #{dengon.dengonkaitou.try(:種類名)} \r\n"
-          mail_body << "\r\n"
-          mail_body << "#{dengon.try(:伝言内容)} \r\n"
-          mail_body << "\r\n"
-          mail_body << "\r\n"
-          mail_body << "[#{dengon.input_user.try(:氏名)}]"
-          mail_body.gsub('\r\n','<br />')
-          
-          SendMailJob.perform_later(mail_to.to_s, 'SkyBordTricom@gmail.com', 'From Web_TRICOM', mail_body.to_s )
+        begin
+          mail_to = dengon.to_user.tsushinseigyou.メール
+        rescue
+          mail_to = ''
         end
+
+        begin
+          mail_body = "#{dengon.try(:日付).strftime('%F %H:%M')} \r\n"
+        rescue
+          mail_body = ''
+        end
+        mail_body << "\r\n"
+        mail_body << "#{dengon.try(:from1)} #{dengon.try(:from2)} \r\n"
+        mail_body << "\r\n"
+        mail_body << "#{dengon.dengonyouken.try(:種類名)} #{dengon.dengonkaitou.try(:種類名)} \r\n"
+        mail_body << "\r\n"
+        mail_body << "#{dengon.try(:伝言内容)} \r\n"
+        mail_body << "\r\n"
+        mail_body << "\r\n"
+        mail_body << "[#{dengon.input_user.try(:氏名)}]"
+        mail_body.gsub('\r\n', '<br />')
+        SendMailJob.perform_later(mail_to.to_s, 'SkyBordTricom@gmail.com', 'From Web_TRICOM', mail_body.to_s)
+      end
     end
 end

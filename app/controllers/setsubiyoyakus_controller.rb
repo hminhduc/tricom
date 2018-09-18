@@ -5,7 +5,6 @@ class SetsubiyoyakusController < ApplicationController
   respond_to :html, :json
 
   def index
-
     @hizukes = all_day_in_month_list
     @selected_date = session[:selected_date] || Date.current
     @setsubi_param = params[:head][:setsubicode] if params[:head].present?
@@ -27,22 +26,22 @@ class SetsubiyoyakusController < ApplicationController
     param_date = vars['start_at']
     param_setsubi = vars['setsubi_code']
     param_allday = vars['all_day']
-    if(param_date.nil?)
+    if param_date.nil?
       date = Date.today.to_s(:db)
     else
       date = param_date
     end
 
-    if(param_setsubi.nil?)
+    if param_setsubi.nil?
       setsubi = Setsubi.all.first.設備コード
     else
       setsubi = param_setsubi
     end
 
     if param_allday == 'true'
-      @setsubiyoyaku = Setsubiyoyaku.new(予約者: session[:user],設備コード: setsubi,開始: "#{date} 00:00", 終了: "#{date} 24:00")
+      @setsubiyoyaku = Setsubiyoyaku.new(予約者: session[:user], 設備コード: setsubi, 開始: "#{date} 00:00", 終了: "#{date} 24:00")
     else
-      @setsubiyoyaku = Setsubiyoyaku.new(予約者: session[:user],設備コード: setsubi,開始: "#{date} 09:00", 終了: "#{date} 18:00")
+      @setsubiyoyaku = Setsubiyoyaku.new(予約者: session[:user], 設備コード: setsubi, 開始: "#{date} 09:00", 終了: "#{date} 18:00")
     end
 
 
@@ -62,9 +61,9 @@ class SetsubiyoyakusController < ApplicationController
   def create
     @kaishamasters = Kaishamaster.all
     @setsubiyoyaku = Setsubiyoyaku.new setsubiyoyaku_params
-    session[:selected_date]=@setsubiyoyaku.開始#lưu lại cái ngày vào session để sau reload chuyển đến
+    session[:selected_date] = @setsubiyoyaku.開始 # lưu lại cái ngày vào session để sau reload chuyển đến
     if @setsubiyoyaku.save
-      respond_with @setsubiyoyaku, location: setsubiyoyakus_url(:head => {setsubicode: @setsubiyoyaku.設備コード})
+      respond_with @setsubiyoyaku, location: setsubiyoyakus_url(head: { setsubicode: @setsubiyoyaku.設備コード })
     else
       render :new
     end
@@ -75,7 +74,7 @@ class SetsubiyoyakusController < ApplicationController
     when (t 'helpers.submit.update')
       if @setsubiyoyaku.update_attributes(setsubiyoyaku_params)
         flash[:notice] = t 'app.flash.update_success'
-        redirect_to setsubiyoyakus_url(:head => {setsubicode: @setsubiyoyaku.設備コード})
+        redirect_to setsubiyoyakus_url(head: { setsubicode: @setsubiyoyaku.設備コード })
       else
         @kaishamasters = Kaishamaster.all
         render :edit
@@ -93,28 +92,28 @@ class SetsubiyoyakusController < ApplicationController
 
   def ajax
     case params[:focus_field]
-      when 'setsubiyoyaku_相手先'
-        kaisha_name = Kaishamaster.find_by(code: params[:kaisha_code]).try :name
-        data = {kaisha_name: kaisha_name}
-        respond_to do |format|
-          format.json { render json: data}
-        end
-      when 'setsubiyoyaku_update'
-        setsubiyoyaku = Setsubiyoyaku.find(params[:eventId])
-        setsubiyoyaku.update(開始: params[:event_start], 終了: params[:event_end])
-        data = {setsubiyoyaku: setsubiyoyaku.id}
-        respond_to do |format|
-          format.json { render json: data}
-        end
-      when 'setsubiyoyaku_削除する'
-        setsubiyoyakuIds = params[:setsubiyoyakus]
-        setsubiyoyakuIds.each{ |setsubiyoyakuId|
-          Setsubiyoyaku.find_by(id: setsubiyoyakuId).destroy
-        }
-        data = {destroy_success: 'success'}
-        respond_to do |format|
-        format.json { render json: data}
+    when 'setsubiyoyaku_相手先'
+      kaisha_name = Kaishamaster.find_by(code: params[:kaisha_code]).try :name
+      data = { kaisha_name: kaisha_name }
+      respond_to do |format|
+        format.json { render json: data }
       end
+    when 'setsubiyoyaku_update'
+      setsubiyoyaku = Setsubiyoyaku.find(params[:eventId])
+      setsubiyoyaku.update(開始: params[:event_start], 終了: params[:event_end])
+      data = { setsubiyoyaku: setsubiyoyaku.id }
+      respond_to do |format|
+        format.json { render json: data }
+      end
+    when 'setsubiyoyaku_削除する'
+      setsubiyoyakuIds = params[:setsubiyoyakus]
+      setsubiyoyakuIds.each { |setsubiyoyakuId|
+        Setsubiyoyaku.find_by(id: setsubiyoyakuId).destroy
+      }
+      data = { destroy_success: 'success' }
+      respond_to do |format|
+      format.json { render json: data }
+    end
     end
   end
   def import
@@ -128,17 +127,16 @@ class SetsubiyoyakusController < ApplicationController
     end
   end
   private
-  def set_setsubiyoyaku
-    @setsubiyoyaku = Setsubiyoyaku.find(params[:id])
-  end
+    def set_setsubiyoyaku
+      @setsubiyoyaku = Setsubiyoyaku.find(params[:id])
+    end
 
-  def setsubiyoyaku_params
-    params.require(:setsubiyoyaku).permit(:設備コード, :予約者, :相手先, :開始, :終了, :用件)
-  end
+    def setsubiyoyaku_params
+      params.require(:setsubiyoyaku).permit(:設備コード, :予約者, :相手先, :開始, :終了, :用件)
+    end
 
-  def all_day_in_month_list
-    d = Date.today
-    (d.at_beginning_of_month.to_date..d.at_end_of_month.to_date)
-  end
-
+    def all_day_in_month_list
+      d = Date.today
+      (d.at_beginning_of_month.to_date..d.at_end_of_month.to_date)
+    end
 end

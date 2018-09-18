@@ -46,8 +46,7 @@ class SetsubisController < ApplicationController
 
   private
 
-  def setsubi_params
-    params.require(:setsubi).permit(:設備コード, :設備名, :備考)
-  end
-
+    def setsubi_params
+      params.require(:setsubi).permit(:設備コード, :設備名, :備考)
+    end
 end

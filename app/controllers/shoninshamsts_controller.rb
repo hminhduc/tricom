@@ -26,7 +26,7 @@ class ShoninshamstsController < ApplicationController
     @shoninshamst = Shoninshamst.new(shoninshamst_params)
     if @shoninshamst.save
       flash[:notice] = t 'app.flash.update_success'
-    respond_with(@shoninshamst, location: shoninshamsts_url)
+      respond_with(@shoninshamst, location: shoninshamsts_url)
     else
       render :new
     end
@@ -66,15 +66,15 @@ class ShoninshamstsController < ApplicationController
 
   def ajax
     case params[:focus_field]
-      when 'shonin_削除する'
-        shoninIds = params[:shonins]
-        shoninIds.each{ |shoninId|
-          Shoninshamst.find_by(id: shoninId).destroy
-        }
-        data = {destroy_success: 'success'}
-        respond_to do |format|
-        format.json { render json: data}
-      end
+    when 'shonin_削除する'
+      shoninIds = params[:shonins]
+      shoninIds.each { |shoninId|
+        Shoninshamst.find_by(id: shoninId).destroy
+      }
+      data = { destroy_success: 'success' }
+      respond_to do |format|
+      format.json { render json: data }
+    end
     end
   end
 
@@ -82,14 +82,13 @@ class ShoninshamstsController < ApplicationController
     @shoninshamst = Shoninshamst.new(shoninshamst_params)
     respond_to do |format|
       if  @shoninshamst.save
-        format.js { render 'create_shoninsha'}
+        format.js { render 'create_shoninsha' }
       else
-        format.js { render json: @shoninshamst.errors, status: :unprocessable_entity}
+        format.js { render json: @shoninshamst.errors, status: :unprocessable_entity }
       end
     end
     end
 
-  
   private
     def set_shoninshamst
       @shoninshamst = Shoninshamst.find(params[:id])

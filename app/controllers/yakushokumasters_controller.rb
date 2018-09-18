@@ -14,7 +14,7 @@ class YakushokumastersController < ApplicationController
   end
 
   def update
-    @yakushokumaster = Yakushokumaster.find(yakushokumaster_params[:役職コード])    
+    @yakushokumaster = Yakushokumaster.find(yakushokumaster_params[:役職コード])
     flash[:notice] = t 'app.flash.update_success' if @yakushokumaster.update(yakushokumaster_params)
     render 'share/update', locals: { obj: @yakushokumaster, attr_list: Yakushokumaster::SHOW_ATTRS }
   end
@@ -38,9 +38,8 @@ class YakushokumastersController < ApplicationController
   end
 
   private
-  # Never trust parameters from the scary internet, only allow the white list through.
-  def yakushokumaster_params
-    params.require(:yakushokumaster).permit(:役職コード, :役職名)
-  end
-
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def yakushokumaster_params
+      params.require(:yakushokumaster).permit(:役職コード, :役職名)
+    end
 end

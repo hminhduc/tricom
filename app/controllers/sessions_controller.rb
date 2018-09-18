@@ -11,26 +11,14 @@ class SessionsController < ApplicationController
     user = User.find_by(担当者コード: params[:session][:担当者コード], email: params[:session][:email])
 
     if user
-    #   options = { :address              => 'smtp.gmail.com',
-    #               :port                 => 587,
-    #               :domain               => 'heroku.com',
-    #               :user_name            => 'anhmt212@gmail.com',
-    #               :password             => 'password_of_mail',
-    #               :authentication       => 'plain',
-    #               :enable_starttls_auto => true  }
-
-    #   Mail.defaults do
-    #     delivery_method :smtp, options
-    #   end
       session[:code] = random_string
       session[:user_code] = user.try(:担当者コード)
-      ses = session[:code]
-      if user.update(password: ses,flag_reset_password: true)
+      if user.update(password:  session[:code], flag_reset_password: true)
         Mail.deliver do
           to "#{user.try(:email)}"
           from 'skybord@jpt.co.jp'
           subject '【勤務システム】'
-          body "担当者コード : 【#{user.try(:担当者コード)}】。新しいパスワード: 【"+ses+"】。"
+          body "担当者コード : 【#{user.try(:担当者コード)}】。新しいパスワード: 【#{ session[:code]}】。"
         end
         flash[:notice] = t 'app.login.send_mail'
         redirect_to login_path
@@ -52,7 +40,7 @@ class SessionsController < ApplicationController
   def login_code
   end
   def login_code_confirm
-    user = User.find_by 担当者コード:params[:session][:担当者コード]
+    user = User.find_by(担当者コード: params[:session][:担当者コード])
     if user && !session[:code].nil? && params[:session][:code] == session[:code] && !session[:user_code].nil? && params[:session][:担当者コード] == session[:user_code]
       flash[:notice] = t 'app.flash.wellcome_to'
       log_in user
@@ -100,29 +88,27 @@ class SessionsController < ApplicationController
   end
 
   private
-  def check_login
-    if logged_in?
-      flash[:notice] = t 'app.login.logged_in'
-      redirect_to main_path
+    def check_login
+      if logged_in?
+        flash[:notice] = t 'app.login.logged_in'
+        redirect_to main_path
+      end
     end
-  end
 
-  def authenticate_user
-    user = User.find_by(担当者コード: params[:担当者コード])
-    if user&.authenticate(params[:password])
-      render json: payload(user)
-    else
-      render json: { errors: ['Invalid Username/Password'] }, status: :unauthorized
+    def authenticate_user
+      user = User.find_by(担当者コード: params[:担当者コード])
+      if user&.authenticate(params[:password])
+        render json: payload(user)
+      else
+        render json: { errors: ['Invalid Username/Password'] }, status: :unauthorized
+      end
     end
-  end
 
-  private
-
-  def payload(user)
-    return nil unless user&.id
-    {
-      auth_token: JsonWebToken.encode(user_id: user.id),
-      user: { id: user.id, 担当者コード: user.担当者コード }
-    }
-  end
+    def payload(user)
+      return nil unless user&.id
+      {
+        auth_token: JsonWebToken.encode(user_id: user.id),
+        user: { id: user.id, 担当者コード: user.担当者コード }
+      }
+    end
 end

@@ -4,7 +4,7 @@ class RorumastersController < ApplicationController
   respond_to :json, :js
 
   def index
-    @rorumasters = Rorumaster.all    
+    @rorumasters = Rorumaster.all
   end
 
   def create
@@ -46,8 +46,7 @@ class RorumastersController < ApplicationController
 
   private
 
-  def rorumaster_params
-    params.require(:rorumaster).permit :ロールコード, :ロール名, :序列
-  end
-
+    def rorumaster_params
+      params.require(:rorumaster).permit :ロールコード, :ロール名, :序列
+    end
 end

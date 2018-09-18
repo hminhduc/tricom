@@ -19,23 +19,23 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'carrierwave'
 # gem 'active_decorator'
 # gem 'cells'
-#for create seed file
+# for create seed file
 gem 'seed_dump'
-#for print pdf
+# for print pdf
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
-#for chat
+# for chat
 gem 'private_pub'
 gem 'thin'
 #
 gem 'sprockets'
 gem 'sprockets-rails', '2.3.3'
-#PostgreSQL's full text search.
+# PostgreSQL's full text search.
 gem 'pg_search'
 # gem 'bootstrap-sass', '~> 3.3.5', path: 'vendor/bootstrap-sass-3.3.5.1'
 gem 'bootstrap-sass', '~> 3.3.6'
 gem 'sass-rails', '>= 3.2'
-#gem 'autoprefixer-rails', '>= 5.0'
+# gem 'autoprefixer-rails', '>= 5.0'
 
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails'
@@ -52,7 +52,7 @@ gem 'underscore-string-rails'
 gem 'numeraljs-rails'
 gem 'bootstrap3-datetimepicker-rails'
 gem 'responders'
-#gem 'figaro', '~> 1.0'
+# gem 'figaro', '~> 1.0'
 gem 'cancancan', '~> 1.10'
 gem 'haml-rails'
 gem 'holidays', '~> 2.2.0'
@@ -71,17 +71,17 @@ gem 'ransack'
 gem 'kaminari'
 gem 'kaminari-bootstrap', '~> 3.0.1'
 # gem 'enum_help'
-#gem 'debugger'
+# gem 'debugger'
 
-#gem 'ruby-oci8'
-#gem 'activerecord-oracle_enhanced-adapter'
+# gem 'ruby-oci8'
+# gem 'activerecord-oracle_enhanced-adapter'
 
 # group :assets do
- # gem 'bootstrap-colorpicker-rails'
-    # gem 'bootswatch-rails'
-    # gem 'therubyracer'
-    # gem 'less-rails'
-    # gem 'twitter-bootstrap-rails'
+#   gem 'bootstrap-colorpicker-rails'
+#   gem 'bootswatch-rails'
+#   gem 'therubyracer'
+#   gem 'less-rails'
+#   gem 'twitter-bootstrap-rails'
 # end
 gem 'axlsx', '~> 2.0'
 gem 'axlsx_rails'
@@ -89,26 +89,25 @@ gem 'whenever', require: false
 gem 'draper'
 gem 'jwt'
 group :development, :test do
- 	gem 'better_errors'
- 	gem 'binding_of_caller', :platforms=>[:mri_19, :mri_20, :rbx]
- 	gem 'hub', :require=>nil
- 	#gem 'quiet_assets'
- 	gem 'rails_layout'
+  gem 'better_errors'
+  gem 'binding_of_caller', platforms: [:mri_19, :mri_20, :rbx]
+  gem 'hub', require: nil
+  # gem 'quiet_assets'
+  gem 'rails_layout'
 
- 	gem 'rspec-rails'
- 	gem 'capybara'
- 	gem 'poltergeist'
- 	gem 'rails-controller-testing'
- 	gem 'factory_bot_rails'
- 	gem 'rubocop'
+  gem 'rspec-rails'
+  gem 'capybara'
+  gem 'poltergeist'
+  gem 'rails-controller-testing'
+  gem 'factory_bot_rails'
+  gem 'rubocop'
   gem 'byebug'
- 	#gem 'web-console', '~> 2.0'
- 	gem 'spring'
+  gem 'spring'
 end
 gem 'web-console', group: :development
 group :test do
   gem 'shoulda', '~> 3.5'
   gem 'shoulda-matchers', '~> 2.0'
-  gem 'simplecov', :require => false
-	gem 'simplecov-rcov', :require => false
+  gem 'simplecov', require: false
+  gem 'simplecov-rcov', require: false
 end

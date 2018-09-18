@@ -4,23 +4,23 @@ class ConversationsController < ApplicationController
   layout false
 
   def create
-    if Conversation.between(params[:sender_id],params[:recipient_id]).present?
-      @conversation = Conversation.between(params[:sender_id],params[:recipient_id]).first
+    if Conversation.between(params[:sender_id], params[:recipient_id]).present?
+      @conversation = Conversation.between(params[:sender_id], params[:recipient_id]).first
     else
       @conversation = Conversation.create!(conversation_params)
     end
-    Message.where("conversation_id = ? AND read_at IS ? AND messages.user != ?", @conversation.id, nil, current_user.id)
+    Message.where('conversation_id = ? AND read_at IS ? AND messages.user != ?', @conversation.id, nil, current_user.id)
             .update_all(read_at: Time.zone.now)
     notify_to(@conversation.id)
-    render json: { conversation_id: @conversation.id } 
+    render json: { conversation_id: @conversation.id }
   end
   def update_message
     conversation_id = params[:conversation_id]
-    Message.where("conversation_id = ? AND read_at IS ? AND messages.user != ?", conversation_id, nil, session[:user])
+    Message.where('conversation_id = ? AND read_at IS ? AND messages.user != ?', conversation_id, nil, session[:user])
             .update_all(read_at: Time.zone.now)
     notify_to(conversation_id)
     respond_to do |format|
-      format.json { render json: "OK"}
+      format.json { render json: 'OK' }
     end
   end
   def show
@@ -30,11 +30,11 @@ class ConversationsController < ApplicationController
   end
 
   private
-  def conversation_params
-    params.permit(:sender_id, :recipient_id)
-  end
+    def conversation_params
+      params.permit(:sender_id, :recipient_id)
+    end
 
-  def interlocutor(conversation)
-    current_user == conversation.recipient ? conversation.sender : conversation.recipient
-  end  
+    def interlocutor(conversation)
+      current_user == conversation.recipient ? conversation.sender : conversation.recipient
+    end
 end

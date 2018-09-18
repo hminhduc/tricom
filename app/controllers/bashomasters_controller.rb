@@ -23,7 +23,7 @@ class BashomastersController < ApplicationController
   def create
     @bashomaster = Bashomaster.new(bashomaster_params)
     if @bashomaster.save
-      flash[:notice] = t 'app.flash.new_success' 
+      flash[:notice] = t 'app.flash.new_success'
       redirect_to bashomasters_path
     else
       render 'new'
@@ -32,7 +32,7 @@ class BashomastersController < ApplicationController
 
   def update
     if @bashomaster.update bashomaster_params
-      flash[:notice] = t 'app.flash.update_success' 
+      flash[:notice] = t 'app.flash.update_success'
       redirect_to bashomasters_path
     else
       render 'edit'
@@ -55,22 +55,22 @@ class BashomastersController < ApplicationController
 
   def ajax
     case params[:focus_field]
-      when 'bashomaster_会社コード'
-        kaisha_name = Kaishamaster.find_by(code: params[:kaisha_code]).try :name
-        data = {kaisha_name: kaisha_name}
-        respond_to do |format|
-          format.json { render json: data}
-        end
-      when 'basho_削除する'
-        params[:bashos].each {|basho_code|
-          basho=Bashomaster.find(basho_code)
-          basho.destroy if basho
-        }
-        data = {destroy_success: 'success'}
-        respond_to do |format|
-          format.json { render json: data}
-        end
-      else
+    when 'bashomaster_会社コード'
+      kaisha_name = Kaishamaster.find_by(code: params[:kaisha_code]).try :name
+      data = { kaisha_name: kaisha_name }
+      respond_to do |format|
+        format.json { render json: data }
+      end
+    when 'basho_削除する'
+      params[:bashos].each { |basho_code|
+        basho = Bashomaster.find(basho_code)
+        basho.destroy if basho
+      }
+      data = { destroy_success: 'success' }
+      respond_to do |format|
+        format.json { render json: data }
+      end
+    else
     end
   end
 
@@ -87,16 +87,15 @@ class BashomastersController < ApplicationController
 
   private
 
-  def bashomaster_params
-    params.require(:bashomaster).permit(:場所コード, :場所名, :場所名カナ, :SUB, :場所区分,:会社コード)
-  end
+    def bashomaster_params
+      params.require(:bashomaster).permit(:場所コード, :場所名, :場所名カナ, :SUB, :場所区分, :会社コード)
+    end
 
-  def set_bashomaster
-    @bashomaster = Bashomaster.find_by(id: params[:id])
-  end
+    def set_bashomaster
+      @bashomaster = Bashomaster.find_by(id: params[:id])
+    end
 
-  def set_kaishamst
-    @kaishamasters = Kaishamaster.all
-  end
-
+    def set_kaishamst
+      @kaishamasters = Kaishamaster.all
+    end
 end

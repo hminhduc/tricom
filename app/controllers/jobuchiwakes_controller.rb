@@ -34,8 +34,7 @@ class JobuchiwakesController < ApplicationController
 
   private
 
-  def jobuchiwake_params
-    params.require(:jobuchiwake).permit(:ジョブ番号, :ジョブ内訳番号, :受付日時, :件名, :受付種別, :完了区分)
-  end
-
+    def jobuchiwake_params
+      params.require(:jobuchiwake).permit(:ジョブ番号, :ジョブ内訳番号, :受付日時, :件名, :受付種別, :完了区分)
+    end
 end

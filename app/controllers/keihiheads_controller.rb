@@ -24,7 +24,7 @@ class KeihiheadsController < ApplicationController
         @keihiheads = Keihihead.where(社員番号: shain).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
       elsif date != '' && shain == ''
         @keihiheads = Keihihead.where(清算予定日: date).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
-      elsif date == '' && shain ==''
+      elsif date == '' && shain == ''
         @keihiheads = Keihihead.all.order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
       elsif date != '' && shain != ''
         @keihiheads = Keihihead.where(社員番号: shain, 清算予定日: date).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
@@ -36,16 +36,15 @@ class KeihiheadsController < ApplicationController
         shonin = 1
       end
       if date == '' && shain != ''
-        @keihiheads = Keihihead.where(社員番号: shain,承認済区分: shonin).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
+        @keihiheads = Keihihead.where(社員番号: shain, 承認済区分: shonin).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
       elsif date != '' && shain == ''
-        @keihiheads = Keihihead.where(清算予定日: date,承認済区分: shonin).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
-      elsif date == '' && shain ==''
+        @keihiheads = Keihihead.where(清算予定日: date, 承認済区分: shonin).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
+      elsif date == '' && shain == ''
         @keihiheads = Keihihead.where(承認済区分: shonin).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
       elsif date != '' && shain != ''
-        @keihiheads = Keihihead.where(社員番号: shain, 清算予定日: date,承認済区分: shonin).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
+        @keihiheads = Keihihead.where(社員番号: shain, 清算予定日: date, 承認済区分: shonin).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
       end
     end
-
   end
 
   def show
@@ -122,7 +121,7 @@ class KeihiheadsController < ApplicationController
         @keihiheads = Keihihead.where(社員番号: shain).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
       elsif date != '' && shain == ''
         @keihiheads = Keihihead.where(清算予定日: date).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
-      elsif date == '' && shain ==''
+      elsif date == '' && shain == ''
         @keihiheads = Keihihead.all.order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
       elsif date != '' && shain != ''
         @keihiheads = Keihihead.where(社員番号: shain, 清算予定日: date).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
@@ -134,13 +133,13 @@ class KeihiheadsController < ApplicationController
         shonin = 1
       end
       if date == '' && shain != ''
-        @keihiheads = Keihihead.where(社員番号: shain,承認済区分: shonin).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
+        @keihiheads = Keihihead.where(社員番号: shain, 承認済区分: shonin).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
       elsif date != '' && shain == ''
-        @keihiheads = Keihihead.where(清算予定日: date,承認済区分: shonin).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
-      elsif date == '' && shain ==''
+        @keihiheads = Keihihead.where(清算予定日: date, 承認済区分: shonin).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
+      elsif date == '' && shain == ''
         @keihiheads = Keihihead.where(承認済区分: shonin).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
       elsif date != '' && shain != ''
-        @keihiheads = Keihihead.where(社員番号: shain, 清算予定日: date,承認済区分: shonin).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
+        @keihiheads = Keihihead.where(社員番号: shain, 清算予定日: date, 承認済区分: shonin).order(清算予定日: :desc, 社員番号: :asc, 日付: :asc)
       end
     end
     respond_to do |format|
@@ -160,15 +159,15 @@ class KeihiheadsController < ApplicationController
     vars = request.query_parameters
     shain = vars['shain']
     if shain == ''
-      @keihi = Keihihead.new(日付: Date.today,清算予定日: seisan_yoteibi,社員番号: session[:user])
+      @keihi = Keihihead.new(日付: Date.today, 清算予定日: seisan_yoteibi, 社員番号: session[:user])
     else
-      @keihi = Keihihead.new(日付: Date.today,清算予定日: seisan_yoteibi,社員番号: shain)
+      @keihi = Keihihead.new(日付: Date.today, 清算予定日: seisan_yoteibi, 社員番号: shain)
     end
 
     # @keihi = Keihihead.new(日付: Date.today,清算予定日: seisan_yoteibi)
     shinsheino = 1
     # shinsheino = Keihihead.maximum(:id) + 1 if Keihihead.exists?
-    shinsheino = Keihihead.pluck(:id).map {|i| i.to_i}.max + 1 if Keihihead.exists?
+    shinsheino = Keihihead.pluck(:id).map { |i| i.to_i }.max + 1 if Keihihead.exists?
 
     # shinsheino = Keihihead.order(id: :desc).first.id.to_i + 1 if Keihihead.exists?
     @keihi.id = shinsheino.to_s
@@ -208,7 +207,7 @@ class KeihiheadsController < ApplicationController
     params[:keihihead][:日付] = Date.today if keihi_params[:日付].blank?
     @keihi = Keihihead.new(keihi_params)
     @keihi.id = 1
-    @keihi.id = Keihihead.pluck(:id).map {|i| i.to_i}.max + 1 if Keihihead.exists?
+    @keihi.id = Keihihead.pluck(:id).map { |i| i.to_i }.max + 1 if Keihihead.exists?
     # @keihi.社員番号 = session[:user]
     @keihi.社員番号 = keihi_params[:keihibodies_attributes]['0'][:社員番号]
     if @keihi.save
@@ -222,33 +221,29 @@ class KeihiheadsController < ApplicationController
 
   def update
     case params[:commit]
-      when (t 'helpers.submit.create')
-        params[:keihihead][:日付] = Date.today if keihi_params[:日付].nil?
-        if @keihi.update(keihi_params)
-          flash[:notice] = t 'app.flash.update_success'
-          redirect_to keihiheads_url
-
-        else
-          # flash[:danger] = t 'app.flash.unsucess'
-          render :edit
-
-        end
-      when (t 'app.label.export_pdf')
-        params[:keihihead][:日付] = Date.today if keihi_params[:日付].nil?
-        if @keihi.update(keihi_params)
-          flash[:notice] = t 'app.flash.update_success'
-          redirect_to edit_keihihead_url(@keihi,keihiheadId: @keihi.申請番号)
-          # redirect_to :controller => 'keihiheads', :action => 'pdf_show', :keihiheadId => '18'
-          # render :js => 'window.location = '/keihiheads/pdf_show.pdf?locale=ja&keihiheadId='+@keihi.申請番号+'''
-          # render 'open_pdf', format: :js
-        else
-          # flash[:danger] = t 'app.flash.unsucess'
-          render :edit
-        end
-
-      when (t 'helpers.submit.destroy')
-        flash[:notice] = t 'app.flash.delete_success' if @keihi.destroy
-        respond_with @keihi, location: keihiheads_url
+    when (t 'helpers.submit.create')
+      params[:keihihead][:日付] = Date.today if keihi_params[:日付].nil?
+      if @keihi.update(keihi_params)
+        flash[:notice] = t 'app.flash.update_success'
+        redirect_to keihiheads_url
+      else
+        render :edit
+      end
+    when (t 'app.label.export_pdf')
+      params[:keihihead][:日付] = Date.today if keihi_params[:日付].nil?
+      if @keihi.update(keihi_params)
+        flash[:notice] = t 'app.flash.update_success'
+        redirect_to edit_keihihead_url(@keihi, keihiheadId: @keihi.申請番号)
+        # redirect_to :controller => 'keihiheads', :action => 'pdf_show', :keihiheadId => '18'
+        # render :js => 'window.location = '/keihiheads/pdf_show.pdf?locale=ja&keihiheadId='+@keihi.申請番号+'''
+        # render 'open_pdf', format: :js
+      else
+        # flash[:danger] = t 'app.flash.unsucess'
+        render :edit
+      end
+    when (t 'helpers.submit.destroy')
+      flash[:notice] = t 'app.flash.delete_success' if @keihi.destroy
+      respond_with @keihi, location: keihiheads_url
     end
   end
 
@@ -270,8 +265,8 @@ class KeihiheadsController < ApplicationController
       @keihibodies = Keihibody.all.where(申請番号: (@keihiheads.map(&:申請番号)))
         .where.not(JOB: '')
         .joins(:keihihead)
-        .select('JOB',"keihi_heads.社員番号 AS keihi_社員番号","SUM(CASE WHEN (交通費 IS NULL OR 交通費 = '') THEN 0 ELSE CAST(交通費 AS DECIMAL) END) AS 交通費","SUM(CASE WHEN (日当 IS NULL OR 日当 = '') THEN 0 ELSE CAST(日当 AS DECIMAL) END) AS 日当","SUM(CASE WHEN (宿泊費 IS NULL OR 宿泊費 = '') THEN 0 ELSE CAST(宿泊費 AS DECIMAL) END) AS 宿泊費","SUM(CASE WHEN (その他 IS NULL OR その他 = '') THEN 0 ELSE CAST(その他 AS DECIMAL) END) AS その他")
-        .group(:JOB,'keihi_社員番号')
+        .select('JOB', 'keihi_heads.社員番号 AS keihi_社員番号', "SUM(CASE WHEN (交通費 IS NULL OR 交通費 = '') THEN 0 ELSE CAST(交通費 AS DECIMAL) END) AS 交通費", "SUM(CASE WHEN (日当 IS NULL OR 日当 = '') THEN 0 ELSE CAST(日当 AS DECIMAL) END) AS 日当", "SUM(CASE WHEN (宿泊費 IS NULL OR 宿泊費 = '') THEN 0 ELSE CAST(宿泊費 AS DECIMAL) END) AS 宿泊費", "SUM(CASE WHEN (その他 IS NULL OR その他 = '') THEN 0 ELSE CAST(その他 AS DECIMAL) END) AS その他")
+        .group(:JOB, 'keihi_社員番号')
       @keihi_body = Keihibody.all.where(申請番号: (@keihiheads.map(&:申請番号)))
         .where.not(JOB: '')
         .joins(:keihihead)
@@ -287,13 +282,13 @@ class KeihiheadsController < ApplicationController
         @keihibodies = @keihibodies.order('keihi_heads.社員番号 asc').order(JOB: :asc)
       else
         @keihibodies = @keihibodies.order(JOB: :asc).order('keihi_heads.社員番号 asc')
-        end
+      end
     end
     respond_to do |format|
       format.pdf do
         render  pdf: 'keihihead_pdf',
                 template: 'keihiheads/pdf_show_keihi_shuppi.pdf.erb',
-                :margin => {:top => 20, :bottom =>20 },
+                margin: { top: 20, bottom: 20 },
                 encoding: 'utf8',
                 orientation: 'Landscape',
                 title: (t 'title.keihi_pdf'),
@@ -316,8 +311,8 @@ class KeihiheadsController < ApplicationController
       @keihibodies = Keihibody.all.where(申請番号: (@keihiheads.map(&:申請番号)))
         .where.not(JOB: '')
         .joins(:keihihead)
-        .select('JOB','keihi_heads.社員番号 AS keihi_社員番号',"SUM(CASE WHEN (交通費 IS NULL OR 交通費 = '') THEN 0 ELSE CAST(交通費 AS DECIMAL) END) AS 交通費","SUM(CASE WHEN (日当 IS NULL OR 日当 = '') THEN 0 ELSE CAST(日当 AS DECIMAL) END) AS 日当","SUM(CASE WHEN (宿泊費 IS NULL OR 宿泊費 = '') THEN 0 ELSE CAST(宿泊費 AS DECIMAL) END) AS 宿泊費","SUM(CASE WHEN (その他 IS NULL OR その他 = '') THEN 0 ELSE CAST(その他 AS DECIMAL) END) AS その他")
-        .group(:JOB,'keihi_社員番号')
+        .select('JOB', 'keihi_heads.社員番号 AS keihi_社員番号', "SUM(CASE WHEN (交通費 IS NULL OR 交通費 = '') THEN 0 ELSE CAST(交通費 AS DECIMAL) END) AS 交通費", "SUM(CASE WHEN (日当 IS NULL OR 日当 = '') THEN 0 ELSE CAST(日当 AS DECIMAL) END) AS 日当", "SUM(CASE WHEN (宿泊費 IS NULL OR 宿泊費 = '') THEN 0 ELSE CAST(宿泊費 AS DECIMAL) END) AS 宿泊費", "SUM(CASE WHEN (その他 IS NULL OR その他 = '') THEN 0 ELSE CAST(その他 AS DECIMAL) END) AS その他")
+        .group(:JOB, 'keihi_社員番号')
       @keihi_body = Keihibody.all.where(申請番号: (@keihiheads.map(&:申請番号)))
         .where.not(JOB: '')
         .joins(:keihihead)
@@ -338,120 +333,116 @@ class KeihiheadsController < ApplicationController
         # ,'SUM(CAST(COALESCE(日当,'0') AS DECIMAL)) AS 日当','SUM(CAST(COALESCE(宿泊費,'0') AS DECIMAL)) AS 宿泊費','SUM(CAST(COALESCE(その他,'0') AS DECIMAL)) AS その他'
       end
     end
-
   end
+
   def ajax
     case params[:id]
-      when 'getshinshei'
-        date = params[:date]
-        listshinshei = Keihihead.current_member(session[:user]).order(updated_at: :desc).pluck(:申請番号)
-        listshinshei = Keihihead.current_member(session[:user]).where(日付: date).pluck(:申請番号) if !date.blank?
-        data = {listshinshei: listshinshei}
-        respond_to do |format|
-          format.json { render json: data}
-        end
+    when 'getshinshei'
+      date = params[:date]
+      listshinshei = Keihihead.current_member(session[:user]).order(updated_at: :desc).pluck(:申請番号)
+      listshinshei = Keihihead.current_member(session[:user]).where(日付: date).pluck(:申請番号) if !date.blank?
+      data = { listshinshei: listshinshei }
+      respond_to do |format|
+        format.json { render json: data }
+      end
 
-      when 'keihihead_削除する'
-        keihiheadIds = params[:keihiheads]
-        keihiheadIds.each{ |keihiheadId|
-          Keihihead.find_by(申請番号: keihiheadId).destroy
-        }
-        # eki = Eki.find_by(駅コード: params[:eki_id]).destroy
-        data = {destroy_success: 'success'}
-        respond_to do |format|
-          format.json { render json: data}
-        end
-      when 'myjob_destroy'
-        myjob = Myjobmaster.where(社員番号: params[:shain],job番号: params[:myjob_id]).first
-        if !myjob.nil?
-         myjob.destroy
-        end
+    when 'keihihead_削除する'
+      keihiheadIds = params[:keihiheads]
+      keihiheadIds.each { |keihiheadId|
+        Keihihead.find_by(申請番号: keihiheadId).destroy
+      }
+      # eki = Eki.find_by(駅コード: params[:eki_id]).destroy
+      data = { destroy_success: 'success' }
+      respond_to do |format|
+        format.json { render json: data }
+      end
+    when 'myjob_destroy'
+      Myjobmaster.find_by(社員番号: params[:shain], job番号: params[:myjob_id]).try(:destroy)
+      data = { destroy_success: 'success' }
+      respond_to do |format|
+        format.json { render json: data }
+        # format.js { render 'delete'}
+      end
+    when 'job_selected'
+      myjob = Myjobmaster.where(社員番号: params[:shain], job番号: params[:myjob_id]).first
+      if myjob.nil?
+        job = Jobmaster.find(params[:myjob_id])
+        myjob = Myjobmaster.new(社員番号: params[:shain], job番号: params[:myjob_id],
+          job名: job.try(:job名), 開始日: job.try(:開始日), 終了日: job.try(:終了日),
+          ユーザ番号: job.try(:ユーザ番号), ユーザ名: job.try(:ユーザ名), 入力社員番号: job.try(:入力社員番号),
+          分類コード: job.try(:分類コード), 分類名: job.try(:分類名),
+          関連Job番号: job.try(:関連Job番号), 備考: job.try(:備考))
+        myjob.save
+      else
+        myjob.update(updated_at: Time.now)
+      end
 
-        data = {destroy_success: 'success'}
-        respond_to do |format|
-         format.json { render json: data}
-         # format.js { render 'delete'}
-        end
-      when 'job_selected'
-        myjob = Myjobmaster.where(社員番号: params[:shain],job番号: params[:myjob_id]).first
-        if myjob.nil?
-          job = Jobmaster.find(params[:myjob_id])
-          myjob = Myjobmaster.new(社員番号: params[:shain],job番号: params[:myjob_id],
-            job名: job.try(:job名),開始日: job.try(:開始日), 終了日: job.try(:終了日),
-            ユーザ番号: job.try(:ユーザ番号),ユーザ名: job.try(:ユーザ名),入力社員番号: job.try(:入力社員番号),
-            分類コード: job.try(:分類コード),分類名: job.try(:分類名),
-            関連Job番号: job.try(:関連Job番号),備考: job.try(:備考))
-          myjob.save
-        else
-          myjob.update(updated_at: Time.now)
-        end
+      data = { time_update: myjob.updated_at }
+      respond_to do |format|
+        format.json { render json: data }
+        # format.js { render 'delete'}
+      end
+    when 'mykaisha_destroy'
+      mykaisha = Mykaishamaster.find_by(社員番号: params[:shain], 会社コード: params[:mykaisha_id])
+      if mykaisha
+        mykaisha.destroy
+      end
 
-        data = {time_update: myjob.updated_at}
-        respond_to do |format|
-          format.json { render json: data}
-          # format.js { render 'delete'}
-        end
-      when 'mykaisha_destroy'
-        mykaisha = Mykaishamaster.where(社員番号: params[:shain],会社コード: params[:mykaisha_id]).first
-        if !mykaisha.nil?
-         mykaisha.destroy
-        end
+      data = { destroy_success: 'success' }
+      respond_to do |format|
+        format.json { render json: data }
+        # format.js { render 'delete'}
+      end
+    when 'kaisha_selected'
+      mykaisha = Mykaishamaster.find_by(社員番号: params[:shain], 会社コード: params[:mykaisha_id])
+      unless mykaisha
+        kaisha = Kaishamaster.find(params[:mykaisha_id])
+        mykaisha = Mykaishamaster.new(社員番号: params[:shain], 会社コード: params[:mykaisha_id],
+          会社名: kaisha.try(:会社名), 備考: kaisha.try(:備考))
+        mykaisha.save
+      else
+        mykaisha.update(updated_at: Time.now)
+      end
 
-        data = {destroy_success: 'success'}
-        respond_to do |format|
-         format.json { render json: data}
-         # format.js { render 'delete'}
-        end
-      when 'kaisha_selected'
-        mykaisha = Mykaishamaster.where(社員番号: params[:shain],会社コード: params[:mykaisha_id]).first
-        if mykaisha.nil?
-          kaisha = Kaishamaster.find(params[:mykaisha_id])
-          mykaisha = Mykaishamaster.new(社員番号: params[:shain],会社コード: params[:mykaisha_id],
-            会社名: kaisha.try(:会社名),備考: kaisha.try(:備考))
-          mykaisha.save
-        else
-          mykaisha.update(updated_at: Time.now)
-        end
-
-        data = {time_update: mykaisha.updated_at}
-        respond_to do |format|
-          format.json { render json: data}
-          # format.js { render 'delete'}
-        end
-      when 'get_events'
-        @events =  Shainmaster.find(params[:shain]).events.joins(:joutaimaster)
-        .where('Date(開始) >= ?',params[:date_input])
-        .where('状態マスタ.状態区分 = \'1\'')
-        .where('状態マスタ.状態コード = \'10\' or 状態マスタ.状態コード = \'11\' or 状態マスタ.状態コード = \'12\'').order(開始: :desc)
-        respond_to do |format|
-          # format.json { render json: 'data'}
-          format.js { render 'reset_event_modal'}
-        end
-      when 'event_selected'
-        event = Event.find_by(id: params[:event_id])
-        job = ''
-        job = Jobmaster.find_by(job番号: event.try(:JOB)) if event.JOB
-        data = {job: event.try(:JOB), aitesaki: job.try(:ユーザ名)}
-        respond_to do |format|
-          # format.json { render json: 'data'}
-          format.json { render json: data}
-        end
-      when 'get_keihis'
-        @keihis = Keihihead.where(社員番号: params[:shain]).joins(:keihibodies)
-        .where('Date(keihi_bodies.日付) >= ?',params[:date_input])
-        @keihibodys = Keihibody.where(申請番号: @keihis.map(&:申請番号)).order('日付 asc')
-        respond_to do |format|
-          # format.json { render json: 'data'}
-          format.js { render 'reset_keihi_modal'}
-        end
+      data = { time_update: mykaisha.updated_at }
+      respond_to do |format|
+        format.json { render json: data }
+        # format.js { render 'delete'}
+      end
+    when 'get_events'
+      @events = Shainmaster.find(params[:shain]).events.joins(:joutaimaster)
+                            .where('Date(開始) >= ?', params[:date_input])
+                            .where('状態マスタ.状態区分 = \'1\'')
+                            .where('状態マスタ.状態コード = \'10\' or 状態マスタ.状態コード = \'11\' or 状態マスタ.状態コード = \'12\'').order(開始: :desc)
+      respond_to do |format|
+        # format.json { render json: 'data'}
+        format.js { render 'reset_event_modal' }
+      end
+    when 'event_selected'
+      event = Event.find_by(id: params[:event_id])
+      job = ''
+      job = Jobmaster.find_by(job番号: event.try(:JOB)) if event.JOB
+      data = { job: event.try(:JOB), aitesaki: job.try(:ユーザ名) }
+      respond_to do |format|
+        # format.json { render json: 'data'}
+        format.json { render json: data }
+      end
+    when 'get_keihis'
+      @keihis = Keihihead.where(社員番号: params[:shain]).joins(:keihibodies)
+      .where('Date(keihi_bodies.日付) >= ?', params[:date_input])
+      @keihibodys = Keihibody.where(申請番号: @keihis.map(&:申請番号)).order('日付 asc')
+      respond_to do |format|
+        # format.json { render json: 'data'}
+        format.js { render 'reset_keihi_modal' }
+      end
     end
   end
 
   def shonin_search
     @keihi_shonins = Keihihead.where(承認者: session[:user]).where('承認済区分 != ? or 承認済区分 is null', '1')
-    @keihi_shonins = @keihi_shonins.where('Date(清算予定日) <= ?', params[:search]) if params[:search] && params[:search]!=''
+    @keihi_shonins = @keihi_shonins.where('Date(清算予定日) <= ?', params[:search]) if params[:search].present?
 
-    if params[:commit] == '更新する' && !params[:shonin].nil?
+    if params[:commit] == '更新する' && params[:shonin]
       flash[:notice] = t 'app.flash.update_success' if Keihihead.where(id: params[:shonin]).update_all(承認済区分: '1')
     end
   end
@@ -489,30 +480,30 @@ class KeihiheadsController < ApplicationController
   end
 
   private
-  def set_keihi
-    @keihi = Keihihead.find(params[:id])
-  end
+    def set_keihi
+      @keihi = Keihihead.find(params[:id])
+    end
 
-  def set_modal
-    @kaishamasters = Kaishamaster.all
-    @kikans = Kikanmst.all
-    @ekis = Eki.all
-    # @shonins = Shoninshamst.current_user(session[:user])
-    # @shonins = Shoninshamst.all
-    @shonins = Shoninshamst.where(申請者: session[:user])
-    @jobs = Jobmaster.all
-    @myjobs = Myjobmaster.where(社員番号: session[:user]).all.order('updated_at desc')
-    @mykaishamasters = Mykaishamaster.where(社員番号: session[:user]).all.order('updated_at desc')
-    @keihis = Keihihead.where(社員番号: params[:shain]).joins(:keihibodies)
-        .where('Date(keihi_bodies.日付) >= ?',(Date.today).to_s(:db))
-    @keihibodys = Keihibody.where(申請番号: @keihis.map(&:申請番号)).order('日付 asc')
-  end
+    def set_modal
+      @kaishamasters = Kaishamaster.all
+      @kikans = Kikanmst.all
+      @ekis = Eki.all
+      # @shonins = Shoninshamst.current_user(session[:user])
+      # @shonins = Shoninshamst.all
+      @shonins = Shoninshamst.where(申請者: session[:user])
+      @jobs = Jobmaster.all
+      @myjobs = Myjobmaster.where(社員番号: session[:user]).all.order('updated_at desc')
+      @mykaishamasters = Mykaishamaster.where(社員番号: session[:user]).all.order('updated_at desc')
+      @keihis = Keihihead.where(社員番号: params[:shain]).joins(:keihibodies)
+          .where('Date(keihi_bodies.日付) >= ?', (Date.today).to_s(:db))
+      @keihibodys = Keihibody.where(申請番号: @keihis.map(&:申請番号)).order('日付 asc')
+    end
 
-  def keihi_params
-    params.require(:keihihead).permit(:申請番号, :日付, :社員番号, :申請者, :交通費合計, :日当合計, :宿泊費合計, :その他合計,
-      :旅費合計, :仮払金, :合計, :支給品, :過不足, :承認kubun, :承認者, :清算予定日, :清算日, :承認済区分,
-      keihibodies_attributes: [:id, :申請番号, :日付, :社員番号, :相手先, :機関名,
-        :発, :着, :発着kubun, :交通費, :日当, :宿泊費, :その他, :JOB,
-        :備考, :領収書kubun, :_destroy])
-  end
+    def keihi_params
+      params.require(:keihihead).permit(:申請番号, :日付, :社員番号, :申請者, :交通費合計, :日当合計, :宿泊費合計, :その他合計,
+        :旅費合計, :仮払金, :合計, :支給品, :過不足, :承認kubun, :承認者, :清算予定日, :清算日, :承認済区分,
+        keihibodies_attributes: [:id, :申請番号, :日付, :社員番号, :相手先, :機関名,
+          :発, :着, :発着kubun, :交通費, :日当, :宿泊費, :その他, :JOB,
+          :備考, :領収書kubun, :_destroy])
+    end
 end

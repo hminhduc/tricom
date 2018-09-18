@@ -46,8 +46,7 @@ class DengonyoukensController < ApplicationController
 
   private
 
-  def dengonyouken_params
-    params.require(:dengonyouken).permit(:種類名, :備考, :優先さ, :id)
-  end
-
+    def dengonyouken_params
+      params.require(:dengonyouken).permit(:種類名, :備考, :優先さ, :id)
+    end
 end

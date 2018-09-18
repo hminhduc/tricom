@@ -18,5 +18,4 @@ end
 json.hizukes @hizukes do |hizuke|
   json.id hizuke
   json.hizuke hizuke
-
 end

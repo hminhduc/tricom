@@ -45,8 +45,7 @@ class BunruisController < ApplicationController
 
   private
 
-  def bunrui_params
-    params.require(:bunrui).permit(:分類コード, :分類名)
-  end
-
+    def bunrui_params
+      params.require(:bunrui).permit(:分類コード, :分類名)
+    end
 end
