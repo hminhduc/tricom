@@ -46,8 +46,7 @@ class DengonkaitousController < ApplicationController
 
   private
 
-  def dengonkaitou_params
-    params.require(:dengonkaitou).permit(:種類名, :備考, :id)
-  end
-
+    def dengonkaitou_params
+      params.require(:dengonkaitou).permit(:種類名, :備考, :id)
+    end
 end

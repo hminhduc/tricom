@@ -11,8 +11,9 @@ AllCops:
     - 'db/**/*'
     - 'config.ru'
     - 'private_pub.ru'
-    - 'app/controllers/**/*'
     - 'app/views/**/*'
+    - 'app/controllers/keihiheads_controller.rb'
+    - 'app/controllers/kanris/*'
 
 Performance:
   Exclude:

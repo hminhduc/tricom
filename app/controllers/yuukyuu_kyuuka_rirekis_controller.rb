@@ -51,16 +51,16 @@ class YuukyuuKyuukaRirekisController < ApplicationController
     puts error
   end
   def ajax
-    case params[:focus_field]     
-      when 'ykkkre_削除する'
-        ykkkreIds = params[:ykkkres]
-        ykkkreIds.each{ |ykkkreId|
-          YuukyuuKyuukaRireki.find(ykkkreId).destroy          
-        }        
-        data = {destroy_success: 'success'}
-        respond_to do |format|
-          format.json { render json: data}
-        end
+    case params[:focus_field]
+    when 'ykkkre_削除する'
+      ykkkreIds = params[:ykkkres]
+      ykkkreIds.each { |ykkkreId|
+        YuukyuuKyuukaRireki.find(ykkkreId).destroy
+      }
+      data = { destroy_success: 'success' }
+      respond_to do |format|
+        format.json { render json: data }
+      end
     end
   end
   def import

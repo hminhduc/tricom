@@ -20,7 +20,7 @@ class JobmastersController < ApplicationController
 
   # GET /jobmasters/new
   def new
-    max_job = Jobmaster.pluck(:job番号).map {|i| i.to_i}.max.to_i + 1
+    max_job = Jobmaster.pluck(:job番号).map { |i| i.to_i }.max.to_i + 1
     # max_job = Jobmaster.maximum(:job番号) + 1
     max_job = 100001 if max_job < 100001
     @jobmaster = Jobmaster.new(job番号: max_job)
@@ -65,22 +65,22 @@ class JobmastersController < ApplicationController
 
   def ajax
     case params[:focus_field]
-      when 'jobmaster_ユーザ番号'
-        kaisha_name = Kaishamaster.find(params[:kaisha_code]).try :name
-        data = {kaisha_name: kaisha_name}
-        respond_to do |format|
-          format.json { render json: data}
-        end
-      when 'jobmaster_削除する'
-        jobIds = params[:jobs]
-        jobIds.each{ |jobId|
-          Jobmaster.find_by(job番号: jobId).destroy
-        }
-        # eki = Eki.find_by(駅コード: params[:eki_id]).destroy
-        data = {destroy_success: 'success'}
-        respond_to do |format|
-          format.json { render json: data}
-        end
+    when 'jobmaster_ユーザ番号'
+      kaisha_name = Kaishamaster.find(params[:kaisha_code]).try :name
+      data = { kaisha_name: kaisha_name }
+      respond_to do |format|
+        format.json { render json: data }
+      end
+    when 'jobmaster_削除する'
+      jobIds = params[:jobs]
+      jobIds.each { |jobId|
+        Jobmaster.find_by(job番号: jobId).destroy
+      }
+      # eki = Eki.find_by(駅コード: params[:eki_id]).destroy
+      data = { destroy_success: 'success' }
+      respond_to do |format|
+        format.json { render json: data }
+      end
     end
   end
 
@@ -108,10 +108,10 @@ class JobmastersController < ApplicationController
       params.require(:jobmaster).permit(:job番号, :job名, :開始日, :終了日, :受注金額, :納期, :ユーザ番号, :ユーザ名, :入力社員番号, :分類コード, :分類名, :関連Job番号, :備考, :JOB内訳区分)
     end
 
-  def set_refer
-    @kaishamasters = Kaishamaster.all
-    @jobs = Jobmaster.includes(:bunrui)
-    @shains = Shainmaster.all
-    @bunruis = Bunrui.all
-  end
+    def set_refer
+      @kaishamasters = Kaishamaster.all
+      @jobs = Jobmaster.includes(:bunrui)
+      @shains = Shainmaster.all
+      @bunruis = Bunrui.all
+    end
 end

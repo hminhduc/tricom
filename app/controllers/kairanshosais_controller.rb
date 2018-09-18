@@ -21,9 +21,4 @@ class KairanshosaisController < ApplicationController
     def kairanshosai_params
       params.require(:kairanshosai).permit(:回覧コード, :対象者, :created_at, :updated_at, :状態)
     end
-
-
-
-
-
 end

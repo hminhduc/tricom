@@ -23,9 +23,9 @@ class ShozokumastersController < ApplicationController
     if params[:ids]
       Shozokumaster.where(id: params[:ids]).destroy_all
       data = { destroy_success: 'success' }
-        respond_to do |format|
-          format.json { render json: data }
-        end
+      respond_to do |format|
+        format.json { render json: data }
+      end
     else
       @shozokumaster = Shozokumaster.find_by_id(params[:id])
       @shozokumaster.destroy if @shozokumaster
@@ -46,8 +46,7 @@ class ShozokumastersController < ApplicationController
 
   private
 
-  def shozokumaster_params
-    params.require(:shozokumaster).permit(:所属コード, :所属名)
-  end
-
+    def shozokumaster_params
+      params.require(:shozokumaster).permit(:所属コード, :所属名)
+    end
 end

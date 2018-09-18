@@ -47,8 +47,7 @@ class EkisController < ApplicationController
 
   private
 
-  def eki_params
-    params.require(:eki).permit(:駅コード, :駅名, :駅名カナ)
-  end
-
+    def eki_params
+      params.require(:eki).permit(:駅コード, :駅名, :駅名カナ)
+    end
 end

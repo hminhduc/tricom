@@ -1,6 +1,6 @@
 class KairansController < ApplicationController
   before_action :require_user!
-  before_action :set_kairan, only: [:update, :destroy,:show]
+  before_action :set_kairan, only: [:update, :destroy, :show]
 
   respond_to :json
 
@@ -8,10 +8,10 @@ class KairansController < ApplicationController
 
   def kaitou
     kairan = Kairan.find(params[:id])
-    @kairan = Kairan.new(発行者: session[:user], 要件: kairan.要件, 開始: kairan.開始, 終了:kairan.終了, 件名: 'Re:'<< kairan.件名, 内容: 'Re:' << kairan.内容)
+    @kairan = Kairan.new(発行者: session[:user], 要件: kairan.要件, 開始: kairan.開始, 終了: kairan.終了, 件名: 'Re:' << kairan.件名, 内容: 'Re:' << kairan.内容)
     @kaitoid = params[:id]
     @kaitoto = kairan.発行者
-    @jushinsha= Shainmaster.find(kairan.発行者).氏名
+    @jushinsha = Shainmaster.find(kairan.発行者).氏名
     @hakkosha = Shainmaster.find(session[:user]).氏名
     @hakkoshaid = session[:user]
     @yoken = Kairanyokenmst.find(kairan.要件).名称
@@ -21,7 +21,7 @@ class KairansController < ApplicationController
     taiShoSha = params[:kaitoto]
     kairan = Kairan.create(kairan_params)
     kairan.update(発行者: session[:user])
-    Kairanshosai.create!(回覧コード:kairan.id, 対象者: taiShoSha, 状態: 0)
+    Kairanshosai.create!(回覧コード: kairan.id, 対象者: taiShoSha, 状態: 0)
     kairanShoshai = Kairanshosai.where(回覧コード: params[:kaitoid], 対象者: session[:user]).first!
     kairanShoshai.update(状態: 2)
     update_kairanshosai_counter taiShoSha
@@ -46,28 +46,26 @@ class KairansController < ApplicationController
 
   def index
     case params[:button]
-      when (t 'helpers.button.search')
-      when (t 'helpers.button.confirm')
-        strSelecteds = params[:checked]
-        arrSelecteds = strSelecteds.split(',') if strSelecteds
-        arrSelecteds.each do |kairanShoshaiId|
-          kairanshosai = Kairanshosai.find(kairanShoshaiId)
-          if kairanshosai.状態 == '未確認'
-            kairanshosai.update 状態: 1
-            # shain = Shainmaster.find kairanshosai.対象者
-            # shain = Shainmaster.find session[:user]
-            # kairankensu = shain.回覧件数.to_i - 1
-            # kairankensu = '' if kairankensu == 0
-            # shain.update 回覧件数: kairankensu
-          end
+    when (t 'helpers.button.search')
+    when (t 'helpers.button.confirm')
+      strSelecteds = params[:checked]
+      arrSelecteds = strSelecteds.split(',') if strSelecteds
+      arrSelecteds.each do |kairanShoshaiId|
+        kairanshosai = Kairanshosai.find(kairanShoshaiId)
+        if kairanshosai.状態 == '未確認'
+          kairanshosai.update 状態: 1
+          # shain = Shainmaster.find kairanshosai.対象者
+          # shain = Shainmaster.find session[:user]
+          # kairankensu = shain.回覧件数.to_i - 1
+          # kairankensu = '' if kairankensu == 0
+          # shain.update 回覧件数: kairankensu
         end
-        shain = Shainmaster.find session[:user]
-        update_kairanshosai_counter shain
-        flash[:notice] = t 'app.flash.kairan_confirm'
+      end
+      shain = Shainmaster.find session[:user]
+      update_kairanshosai_counter shain
+      flash[:notice] = t 'app.flash.kairan_confirm'
       # redirect_to kairans_url
-
     end
-
     @kairanShoshais = Kairanshosai.all
     # if params[:head].present?
     #   @shain_param = params[:head][:shainbango]
@@ -83,10 +81,8 @@ class KairansController < ApplicationController
     #   @shain_param = ''
     # end
     @kairanShoshais = @kairanShoshais.where(回覧コード: arrKairanId) if @yoken.present?
-
     old_kairan_process()
     respond_with(@kairanShoshais)
-
   end
 
   def show
@@ -137,12 +133,12 @@ class KairansController < ApplicationController
   end
 
   private
-  def set_kairan
-    @kairan = Kairan.find_by(id: params[:id])
-    @kairanShoshai = Kairanshosai.find_by(id: params[:id])
-  end
+    def set_kairan
+      @kairan = Kairan.find_by(id: params[:id])
+      @kairanShoshai = Kairanshosai.find_by(id: params[:id])
+    end
 
-  def kairan_params
-    params.require(:kairan).permit(:発行者, :要件, :開始, :終了, :件名, :内容, :確認, :確認要, :確認済)
-  end
+    def kairan_params
+      params.require(:kairan).permit(:発行者, :要件, :開始, :終了, :件名, :内容, :確認, :確認要, :確認済)
+    end
 end

@@ -23,9 +23,9 @@ class TasksController < ApplicationController
     @task = Task.new(task_params)
     respond_to do |format|
       if  @task.save
-        format.js { render 'create_task'}
+        format.js { render 'create_task' }
       else
-        format.js { render json: @task.errors, status: :unprocessable_entity}
+        format.js { render json: @task.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -41,52 +41,52 @@ class TasksController < ApplicationController
   end
 
   def sort
-    params[:order].each do |key,value|
-      Task.find(value[:id]).update_attribute(:priority,value[:position])
+    params[:order].each do |key, value|
+      Task.find(value[:id]).update_attribute(:priority, value[:position])
     end
-    render :nothing => true
+    render nothing: true
   end
 
   def change_status
     @task = Task.find(params[:id])
-    if (params[:decision] == 'true')
+    if params[:decision] == 'true'
       @task.update(done: 1)
       respond_with(@task, location: tasks_url)
-    elsif (params[:decision] == 'false')
+    elsif params[:decision] == 'false'
       @task.update(done: 0)
       respond_with(@task, location: tasks_url)
     end
   end
   def ajax
     case params[:focus_field]
-      when 'task_削除する'
-        task = Task.find(params[:task_id])
-        task.destroy if task
+    when 'task_削除する'
+      task = Task.find(params[:task_id])
+      task.destroy if task
 
-        data = {destroy_success: 'success'}
-        respond_to do |format|
-          format.json { render json: data}
-        end
-      when 'change_status'
-        @task = Task.find(params[:task_id])
-        if (@task.done == 0)
-          @task.update(done: 1)
-        elsif (@task.done == 1)
-          @task.update(done: 0)
-        end
+      data = { destroy_success: 'success' }
+      respond_to do |format|
+        format.json { render json: data }
+      end
+    when 'change_status'
+      @task = Task.find(params[:task_id])
+      if @task.done == 0
+        @task.update(done: 1)
+      elsif @task.done == 1
+        @task.update(done: 0)
+      end
 
-        respond_to do |format|
-          format.js { render 'change_status'}
+      respond_to do |format|
+        format.js { render 'change_status' }
+      end
+    when 'task_create'
+      @task = Task.new(title: 'タイトル')
+      respond_to do |format|
+        if  @task.save
+          format.js { render 'create_task' }
+        else
+          format.js { render json: @task.errors, status: :unprocessable_entity }
         end
-      when 'task_create'
-        @task = Task.new(title: 'タイトル')
-        respond_to do |format|
-          if  @task.save
-            format.js { render 'create_task'}
-          else
-            format.js { render json: @task.errors, status: :unprocessable_entity}
-          end
-        end
+      end
     end
   end
   private
@@ -95,6 +95,6 @@ class TasksController < ApplicationController
     end
 
     def task_params
-      params.require(:task).permit(:title, :description,:done)
+      params.require(:task).permit(:title, :description, :done)
     end
 end

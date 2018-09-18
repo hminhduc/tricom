@@ -21,13 +21,13 @@ class MessagesController < ApplicationController
       @message = @conversation.messages.find_by(id: params[:id])
       if @message && @message.sender == current_user
         @message.destroy
-      end  
+      end
     end
   end
 
   private
 
-  def message_params
-    params.require(:message).permit(:body)
-  end
+    def message_params
+      params.require(:message).permit(:body)
+    end
 end

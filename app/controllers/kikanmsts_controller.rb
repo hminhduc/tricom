@@ -66,8 +66,7 @@ class KikanmstsController < ApplicationController
 
   private
 
-  def kikanmst_params
-    params.require(:kikanmst).permit(:機関コード, :機関名, :備考 )
-  end
-
+    def kikanmst_params
+      params.require(:kikanmst).permit(:機関コード, :機関名, :備考)
+    end
 end

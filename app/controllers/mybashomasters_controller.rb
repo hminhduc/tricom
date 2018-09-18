@@ -19,14 +19,12 @@ class MybashomastersController < ApplicationController
   end
 
   def edit
-
   end
 
   def create
     @mybashomaster = Mybashomaster.new(mybashomaster_params)
     flash[:notice] = t 'app.flash.new_success' if @mybashomaster.save
     respond_with @mybashomaster, location: mybashomasters_url
-
   end
 
   def update
@@ -42,7 +40,7 @@ class MybashomastersController < ApplicationController
       end
       data = { destroy_success: 'success' }
       respond_to do |format|
-        format.json { render json: data}
+        format.json { render json: data }
       end
     else
       begin
@@ -56,22 +54,22 @@ class MybashomastersController < ApplicationController
 
   def ajax
     case params[:focus_field]
-      when 'mybashomaster_会社コード'
-        kaisha_name = Kaishamaster.find_by(code: params[:kaisha_code]).try :name
-        data = {kaisha_name: kaisha_name}
-        respond_to do |format|
-          format.json { render json: data}
-        end
-      when 'mybasho_削除する'
-        mybashoIds = params[:mybashos]
-        mybashoIds.each{ |mybashoId|
-          Mybashomaster.find(mybashoId).destroy          
-        }        
-        data = {destroy_success: 'success'}
-        respond_to do |format|
-          format.json { render json: data}
-        end
-      else      
+    when 'mybashomaster_会社コード'
+      kaisha_name = Kaishamaster.find_by(code: params[:kaisha_code]).try :name
+      data = { kaisha_name: kaisha_name }
+      respond_to do |format|
+        format.json { render json: data }
+      end
+    when 'mybasho_削除する'
+      mybashoIds = params[:mybashos]
+      mybashoIds.each { |mybashoId|
+        Mybashomaster.find(mybashoId).destroy
+      }
+      data = { destroy_success: 'success' }
+      respond_to do |format|
+        format.json { render json: data }
+      end
+    else
     end
   end
 
@@ -90,16 +88,15 @@ class MybashomastersController < ApplicationController
 
   private
 
-  def mybashomaster_params
-    params.require(:mybashomaster).permit(:社員番号, :場所コード, :場所名, :場所名カナ, :SUB, :場所区分,:会社コード, :更新日)
-  end
+    def mybashomaster_params
+      params.require(:mybashomaster).permit(:社員番号, :場所コード, :場所名, :場所名カナ, :SUB, :場所区分, :会社コード, :更新日)
+    end
 
-  def set_mybashomaster
-    @mybashomaster = Mybashomaster.find(params[:id])
-  end
+    def set_mybashomaster
+      @mybashomaster = Mybashomaster.find(params[:id])
+    end
 
-  def set_kaishamst
-    @kaishamasters = Kaishamaster.all
-  end
-
+    def set_kaishamst
+      @kaishamasters = Kaishamaster.all
+    end
 end

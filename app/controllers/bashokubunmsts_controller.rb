@@ -46,8 +46,7 @@ class BashokubunmstsController < ApplicationController
 
   private
 
-  def bashokubunmst_params
-    params.require(:bashokubunmst).permit(:場所区分コード, :場所区分名)
-  end
-
+    def bashokubunmst_params
+      params.require(:bashokubunmst).permit(:場所区分コード, :場所区分名)
+    end
 end

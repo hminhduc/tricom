@@ -35,8 +35,7 @@ class SagyoukubunsController < ApplicationController
 
   private
 
-  def sagyoukubun_params
-    params.require(:sagyoukubun).permit(:作業区分, :作業区分名称)
-  end
-
+    def sagyoukubun_params
+      params.require(:sagyoukubun).permit(:作業区分, :作業区分名称)
+    end
 end

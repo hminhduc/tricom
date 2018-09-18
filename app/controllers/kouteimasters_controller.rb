@@ -49,8 +49,7 @@ class KouteimastersController < ApplicationController
 
   private
 
-  def kouteimaster_params
-    params.require(:kouteimaster).permit(:所属コード, :工程コード, :工程名)
-  end
-
+    def kouteimaster_params
+      params.require(:kouteimaster).permit(:所属コード, :工程コード, :工程名)
+    end
 end

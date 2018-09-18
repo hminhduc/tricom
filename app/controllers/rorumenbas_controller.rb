@@ -4,13 +4,13 @@ class RorumenbasController < ApplicationController
 
   def new
     @shains = Shainmaster.all
-  	@rorumenba = Rorumenba.new
+    @rorumenba = Rorumenba.new
     respond_with(@rorumenba)
   end
 
   def index
     @shains = Shainmaster.all
-  	@rorumenbas = Rorumenba.includes(:shainmaster, :rorumaster)
+    @rorumenbas = Rorumenba.includes(:shainmaster, :rorumaster)
   end
 
   def show
@@ -26,10 +26,10 @@ class RorumenbasController < ApplicationController
   def create
     arrShain = params[:shain].split(',')
     arrShain.each do |shainNo|
-      @rorumenba = Rorumenba.find_by({社員番号: shainNo, ロールコード: rorumenba_params[:ロールコード]})
+      @rorumenba = Rorumenba.find_by(社員番号: shainNo, ロールコード: rorumenba_params[:ロールコード])
       next if !@rorumenba.nil?
       @shainna = Shainmaster.find_by(社員番号: shainNo)
-      @rorumenba = Rorumenba.new(rorumenba_params.merge({社員番号: shainNo,氏名:  @shainna.氏名}))
+      @rorumenba = Rorumenba.new(rorumenba_params.merge(社員番号: shainNo, 氏名:  @shainna.氏名))
       @rorumenba.save
     end
     respond_with(@rorumenba, location: rorumenbas_url)
@@ -53,7 +53,7 @@ class RorumenbasController < ApplicationController
   def export_csv
     @rorumenbas = Rorumenba.all
     respond_to do |format|
-       format.csv { send_data @rorumenbas.to_csv, filename: 'ロールメンバ.csv' }
+      format.csv { send_data @rorumenbas.to_csv, filename: 'ロールメンバ.csv' }
     end
   end
 

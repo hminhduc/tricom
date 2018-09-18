@@ -1,6 +1,6 @@
 class KairanyokenmstsController < ApplicationController
   before_action :require_user!
-  respond_to :html,:js
+  respond_to :html, :js
 
   def index
     @kairanyokenmsts = Kairanyokenmst.all
@@ -46,8 +46,7 @@ class KairanyokenmstsController < ApplicationController
 
   private
 
-  def kairanyokenmst_params
-    params.require(:kairanyokenmst).permit(:名称, :備考, :優先さ, :id)
-  end
-
+    def kairanyokenmst_params
+      params.require(:kairanyokenmst).permit(:名称, :備考, :優先さ, :id)
+    end
 end

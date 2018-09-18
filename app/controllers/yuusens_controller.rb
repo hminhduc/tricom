@@ -25,7 +25,6 @@ class YuusensController < ApplicationController
     @yuusen = Yuusen.new(yuusen_params)
     flash[:notice] = t 'app.flash.new_success' if @yuusen.save
     respond_with(@yuusen, location: yuusens_path)
-
   end
 
   def update
@@ -53,15 +52,15 @@ class YuusensController < ApplicationController
 
   def ajax
     case params[:focus_field]
-      when 'yuusen_削除する'
-        yuusenIds = params[:yuusens]
-        yuusenIds.each{ |yuusenId|
-          Yuusen.find_by(優先さ: yuusenId).destroy
-        }
-        data = {destroy_success: 'success'}
-        respond_to do |format|
-        format.json { render json: data}
-      end
+    when 'yuusen_削除する'
+      yuusenIds = params[:yuusens]
+      yuusenIds.each { |yuusenId|
+        Yuusen.find_by(優先さ: yuusenId).destroy
+      }
+      data = { destroy_success: 'success' }
+      respond_to do |format|
+      format.json { render json: data }
+    end
     end
   end
 

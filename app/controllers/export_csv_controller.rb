@@ -5,7 +5,7 @@ class ExportCsvController < ApplicationController
   end
 
   private
-  def check_user
-    redirect_to root_path if !current_user.admin? && !current_user.supervisor?
-  end
+    def check_user
+      redirect_to root_path if !current_user.admin? && !current_user.supervisor?
+    end
 end

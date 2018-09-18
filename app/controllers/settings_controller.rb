@@ -41,14 +41,13 @@ class SettingsController < ApplicationController
 
   def update
     case params[:commit]
-
-      when (t 'helpers.submit.setting')
-        notice = t 'app.flash.update_success' if @setting.update(setting_params)
-        #redirect_to :back, notice: notice
-        redirect_to(session[:return_to])
-      when (t 'helpers.submit.update')
-        flash[:notice] = t 'app.flash.update_success' if @setting.update(setting_params)
-        respond_with(@setting, location: settings_url)
+    when (t 'helpers.submit.setting')
+      notice = t 'app.flash.update_success' if @setting.update(setting_params)
+      # redirect_to :back, notice: notice
+      redirect_to(session[:return_to])
+    when (t 'helpers.submit.update')
+      flash[:notice] = t 'app.flash.update_success' if @setting.update(setting_params)
+      respond_with(@setting, location: settings_url)
     end
   end
 
@@ -80,15 +79,15 @@ class SettingsController < ApplicationController
 
   def ajax
     case params[:focus_field]
-      when 'setting_削除する'
-        settingIds = params[:settings]
-        settingIds.each{ |settingId|
-          Setting.find_by(社員番号: settingId).destroy
-        }
-        data = {destroy_success: 'success'}
-        respond_to do |format|
-        format.json { render json: data}
-      end
+    when 'setting_削除する'
+      settingIds = params[:settings]
+      settingIds.each { |settingId|
+        Setting.find_by(社員番号: settingId).destroy
+      }
+      data = { destroy_success: 'success' }
+      respond_to do |format|
+      format.json { render json: data }
+    end
     end
     case params[:setting]
     when 'setting_scrolltime'
@@ -96,14 +95,14 @@ class SettingsController < ApplicationController
       @setting.scrolltime = params[:scrolltime]
       @setting.save()
       respond_to do |format|
-        format.json {render json: @setting}
+        format.json { render json: @setting }
       end
     when 'setting_local'
       @setting = Setting.where(社員番号: session[:user]).first
       @setting.local = params[:local]
       @setting.save()
       respond_to do |format|
-        format.json {render json: @setting}
+        format.json { render json: @setting }
       end
     when 'select_holiday_vn'
       @setting = Setting.where(社員番号: session[:user]).first
@@ -114,24 +113,24 @@ class SettingsController < ApplicationController
       end
       @setting.save()
       respond_to do |format|
-        format.json {render json: @setting}
+        format.json { render json: @setting }
       end
     when 'setting_date'
       session[:selected_date] = params[:selected_date]
       respond_to do |format|
-        format.json {render json: session[:selected_date]}
+        format.json { render json: session[:selected_date] }
       end
     when 'turning_data'
       @setting = Setting.where(社員番号: session[:user]).first
       @setting.turning_data = params[:turning_data]
       @setting.save()
       respond_to do |format|
-        format.json {render json: @setting}
+        format.json { render json: @setting }
       end
     when 'setting_page_len'
-      session[:page_length]=params[:page_len]
+      session[:page_length] = params[:page_len]
       respond_to do |format|
-        format.json {render json: session[:page_length]}
+        format.json { render json: session[:page_length] }
       end
     end
   end

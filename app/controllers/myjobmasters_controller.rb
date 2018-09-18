@@ -20,7 +20,6 @@ class MyjobmastersController < ApplicationController
 
   # GET /jobmasters/new
   def new
-
     @myjobmaster = Myjobmaster.new
   end
 
@@ -56,7 +55,7 @@ class MyjobmastersController < ApplicationController
       end
       data = { destroy_success: 'success' }
       respond_to do |format|
-        format.json { render json: data}
+        format.json { render json: data }
       end
     else
       begin
@@ -70,22 +69,22 @@ class MyjobmastersController < ApplicationController
 
   def ajax
     case params[:focus_field]
-      when 'myjobmaster_ユーザ番号'
-        kaisha_name = Kaishamaster.find(params[:kaisha_code]).try :name
-        data = {kaisha_name: kaisha_name}
-        respond_to do |format|
-          format.json { render json: data}
-        end
-      when 'myjob_削除する'
-        myjobIds = params[:myjobs]
-        myjobIds.each{ |myjobId|
-          Myjobmaster.find(myjobId).destroy          
-        }        
-        data = {destroy_success: 'success'}
-        respond_to do |format|
-          format.json { render json: data}
-        end
-      else
+    when 'myjobmaster_ユーザ番号'
+      kaisha_name = Kaishamaster.find(params[:kaisha_code]).try :name
+      data = { kaisha_name: kaisha_name }
+      respond_to do |format|
+        format.json { render json: data }
+      end
+    when 'myjob_削除する'
+      myjobIds = params[:myjobs]
+      myjobIds.each { |myjobId|
+        Myjobmaster.find(myjobId).destroy
+      }
+      data = { destroy_success: 'success' }
+      respond_to do |format|
+        format.json { render json: data }
+      end
+    else
     end
   end
 
@@ -110,13 +109,13 @@ class MyjobmastersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def myjobmaster_params
-      params.require(:myjobmaster).permit(:社員番号,:job番号, :job名, :開始日, :終了日, :ユーザ番号, :ユーザ名, :入力社員番号, :分類コード, :分類名, :関連Job番号, :備考)
+      params.require(:myjobmaster).permit(:社員番号, :job番号, :job名, :開始日, :終了日, :ユーザ番号, :ユーザ名, :入力社員番号, :分類コード, :分類名, :関連Job番号, :備考)
     end
 
-  def set_refer
-    @kaishamasters = Kaishamaster.all
-    @jobs = Jobmaster.includes(:bunrui)
-    @shains = Shainmaster.all
-    @bunruis = Bunrui.all
-  end
+    def set_refer
+      @kaishamasters = Kaishamaster.all
+      @jobs = Jobmaster.includes(:bunrui)
+      @shains = Shainmaster.all
+      @bunruis = Bunrui.all
+    end
 end
