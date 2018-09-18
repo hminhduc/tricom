@@ -9,8 +9,6 @@ AllCops:
     - 'actionpack/lib/action_dispatch/journey/parser.rb'
     - 'railties/test/fixtures/tmp/**/*'
     - 'db/**/*'
-    - 'make_yml.rb'
-    - 'Gemfile'
     - 'config.ru'
     - 'private_pub.ru'
     - 'app/controllers/**/*'
