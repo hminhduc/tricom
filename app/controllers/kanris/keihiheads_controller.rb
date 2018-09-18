@@ -6,7 +6,7 @@ class Kanris::KeihiheadsController < ApplicationController
     else
       @date = Date.today.to_date
     end
-    @keihiheads = Keihihead.all.where(日付: @date.beginning_of_month..@date.end_of_month )
+    @keihiheads = Keihihead.all.where(日付: @date.beginning_of_month..@date.end_of_month)
     if params[:user_name].nil?
       @user_name = current_user.担当者コード
       @keihiheads = @keihiheads.where(社員番号: @user_name)

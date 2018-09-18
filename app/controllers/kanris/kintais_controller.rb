@@ -42,11 +42,11 @@ class Kanris::KintaisController < ApplicationController
       @shainmasters = Shainmaster.all.where(社員番号: params[:shainmaster])
       @kintais = Kintai.selected_month(@shainmasters, @date)
     else
-      @shainmasters = Shainmaster.get_kubun.sort_by{|shain| shain.id.to_i}
+      @shainmasters = Shainmaster.get_kubun.sort_by { |shain| shain.id.to_i }
     end
     respond_to do |format|
       format.html
-      format.xlsx {render xlsx: 'export_excel', filename: '管理G_勤怠_#{@date}.xlsx'}
+      format.xlsx { render xlsx: 'export_excel', filename: '管理G_勤怠_#{@date}.xlsx' }
     end
   end
 end

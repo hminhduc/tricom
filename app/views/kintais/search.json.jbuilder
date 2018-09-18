@@ -8,5 +8,4 @@ json.summary do
   json.sum7 @kintais.sum('保守携帯回数')
   json.sum8 @yukyu
   json.sum9 @gesshozan
-
 end
