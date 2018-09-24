@@ -103,7 +103,7 @@ RSpec.describe 'Events management', type: :request do
 
       it 'use JS' do
         post '/events', params: { event: invalid_attributes }
-        expect(response).to have_http_status(402)
+        expect(response).to have_http_status(422)
         expect(response.header['Content-Type']).to match /application\/json/
       end
     end
