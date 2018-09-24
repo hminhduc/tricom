@@ -380,7 +380,7 @@ class EventsController < ApplicationController
       if @event.save
         render json: { event: @event.as_json }, status: :ok
       else
-        render json: { errors: @event.errors.full_messages.as_json }, status: 402
+        render json: { errors: @event.errors.full_messages.as_json }, status: 422
       end
     end
   end
