@@ -389,7 +389,7 @@ class EventsController < ApplicationController
     case params[:commit]
     when (t 'helpers.submit.update')
       respond_to do |format|
-        if @event.update event_params
+        if @event.update event_params.except(:社員番号)
           flash[:notice] = t 'app.flash.update_success'
           format.html { redirect }
           format.xml { render xml: @event, status: :created, location: @event }
@@ -411,7 +411,7 @@ class EventsController < ApplicationController
         end
       end
     when '挿入登録'
-      @event.attributes = event_params
+      @event.attributes = event_params.except(:社員番号)
       if @event.sounyuutouroku
         flash[:notice] = t 'app.flash.update_success'
         redirect
