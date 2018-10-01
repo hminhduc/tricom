@@ -65,20 +65,22 @@ create_calendar = (data) ->
   myEventSourses = ''
   if data.setting.select_holiday_vn == '1'
     myEventSourses = [
-      {
-        googleCalendarId: 'en.japanese#holiday@group.v.calendar.google.com'
-        color: 'green'
-      }
+      # {
+      #   googleCalendarId: 'en.japanese#holiday@group.v.calendar.google.com'
+      #   color: 'green'
+      # }
       {
         googleCalendarId: 'en.vietnamese#holiday@group.v.calendar.google.com'
         color: 'blue'
       }
     ]
   else
-    myEventSourses = [ {
-      googleCalendarId: 'en.japanese#holiday@group.v.calendar.google.com'
-      color: 'green'
-    } ]
+    myEventSourses = [
+      # {
+      #   googleCalendarId: 'en.japanese#holiday@group.v.calendar.google.com'
+      #   color: 'green'
+      # }
+    ]
   $('#calendar-month-view').fullCalendar
     schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives'
     firstDay: 1
