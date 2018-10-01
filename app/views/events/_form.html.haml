@@ -8,9 +8,9 @@
     .row
       .col-lg-12.col-sm-12
         - if !request["shain_id"].nil?
-          = f.input :社員番号, label: (t 'title.shainbangou'), input_html: {style: 'width:100px', value: request["shain_id"]}, hint:"#{Shainmaster.find(request["shain_id"]).try :氏名}", hint_html: {class: 'hint-shain-refer'}
+          = f.input :社員番号, label: (t 'title.shainbangou'), input_html: {style: 'width:100px', value: request["shain_id"]}, hint:"#{Shainmaster.find(request["shain_id"]).try :氏名}", hint_html: {class: 'hint-shain-refer'}, readonly: true
         - else
-          = f.input :社員番号, label: (t 'title.shainbangou'), input_html: {style: 'width:100px'}, hint:"#{@event.shainmaster.try :氏名}", hint_html: {class: 'hint-shain-refer'}
+          = f.input :社員番号, label: (t 'title.shainbangou'), input_html: {style: 'width:100px'}, hint:"#{@event.shainmaster.try :氏名}", hint_html: {class: 'hint-shain-refer'}, readonly: true
     .row
       .col-lg-4.col-sm-12
         = f.input :状態コード, label: (t 'title.joutai'), as: :search_field, hint:"#{@event.joutaimaster.try :状態名}", hint_html: {class: 'hint-joutai-refer'}
