@@ -7,7 +7,7 @@
 $('form#new_<%= model_name %>').clear_previous_errors()
 
 <% if obj.errors.any? %>
-  $('form#new_<%= model_name %>').render_form_errors(model_name, '<%=obj.errors.messages.to_json.html_safe%>')
+  $('form#new_<%= model_name %>').render_form_errors('<%=model_name%>', '<%=obj.errors.messages.to_json.html_safe%>')
 <% else %>
   $('#<%=modal_id%>').modal('hide');
   row = []
