@@ -14,7 +14,7 @@ class EventsController < ApplicationController
     @events = Event.includes(:jobmaster, :joutaimaster, :kouteimaster, bashomaster: :kaishamaster)
                   .where(社員番号: session[:selected_shain])
                   .order(開始: :desc)
-    @shain = Shainmaster.find(session[:selected_shain])
+    @shain = Shainmaster.find_by_id(session[:selected_shain])
     @kintai = Kintai.first
     @selected_date = session[:selected_date] || Date.current
 
@@ -23,18 +23,6 @@ class EventsController < ApplicationController
       setting: { select_holiday_vn: Setting.find_by(社員番号: session[:selected_shain]).try(:select_holiday_vn) || '0' },
       holidays: build_calendar_holiday_json(JptHolidayMst.all)
     }.to_json
-  rescue
-    @events = Shainmaster.take.events
-    # 不在状態の社員
-    # check_user_status()
-    # @shain_names = @shains.select :id, :title
-    # respond_with(@shain_names) do |format|
-    #   format.json {
-    #     render json: {
-    #                :shains => @shain_names,
-    #                :events => @events
-    #            }}
-    # end
   end
 
   def pdf_event_show
