@@ -27,7 +27,7 @@ class User < ApplicationRecord
   def check_taken
     if 担当者コード.present? && 担当者コード.in?(User.pluck(:担当者コード))
       errors.add(:担当者コード, (I18n.t 'errors.messages.taken'))
-    elsif 担当者コード.present? && !担当者コード.in?(Shainmaster.pluck(:連携用社員番号))
+    elsif 担当者コード.present? && !担当者コード.in?(Shainmaster.pluck(:社員番号))
       errors.add(:担当者コード, (I18n.t 'errors.messages.invalid'))
     elsif !担当者コード.present?
       errors.add(:担当者コード, '')
