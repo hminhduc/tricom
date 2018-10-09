@@ -1,5 +1,5 @@
 jQuery ->
-	$('.dengon').DataTable
+  $('#dengon').DataTable
     pagingType: "simple_numbers"
     oLanguage:
       sUrl: "/assets/resource/dataTable_"+$('#language').text()+".txt"
