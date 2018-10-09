@@ -1,6 +1,6 @@
 class DengonsController < ApplicationController
   before_action :require_user!
-  before_action :set_dengon, only: [:show, :edit, :update, :destroy]
+  before_action :set_dengon, only: [:show, :edit, :update]
 
   respond_to :html
   include DengonsHelper
@@ -69,10 +69,13 @@ class DengonsController < ApplicationController
   end
 
   def destroy
-    shainbango = Dengon.find(params[:id]).社員番号
-    @dengon.destroy()
-    update_dengon_counter_with_id shainbango
-    respond_with(@dengon)
+    @dengon = Dengon.find_by_id(params[:id])
+    if @dengon
+      shainbango = @dengon.try(:社員番号)
+      @dengon.destroy
+      update_dengon_counter_with_id shainbango if shainbango
+      render 'share/destroy', locals: { obj: @dengon }
+    end
   end
 
   def export_csv

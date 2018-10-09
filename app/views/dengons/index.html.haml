@@ -27,7 +27,7 @@
 = form_for :dengon, url: dengons_path, html: {class:'form-inline'}, method: :get do |f|
   = render 'header', f:f
   %br
-  %table.dengon.table.table-striped.table-bordered.table-hover{cellspacing: 0, width: '100%' }
+  %table#dengon.table.table-striped.table-bordered.table-hover{cellspacing: 0, width: '100%' }
     %thead
       %tr
         %th= '相手先会社'
@@ -45,7 +45,7 @@
 
     %tbody
       - @dengons.each do |dengon|
-        %tr
+        %tr{ id: "dengon_#{dengon.id}" }
           %td= dengon.from1
           %td= dengon.from2
           %td= dengon.日付.strftime("%Y/%m/%d %H:%M" ) if dengon.日付
