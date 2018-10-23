@@ -177,6 +177,13 @@ create_calendar = (data) ->
           el.css 'background-color', '#67b168'
       }
       {
+        labelText: ''
+        field: 'shinki'
+        width: 30
+        render: (resources, el) ->
+          el.html '<a href="/events/new?param=timeline&shain_id=' + resources.id + '&start_at=' + $('#calendar-timeline').fullCalendar('getDate').format('YYYY/MM/DD') + '" class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:12px;"></a>'
+      }
+      {
         labelText: '内線'
         field: 'linenum'
         width: 45
@@ -213,13 +220,6 @@ create_calendar = (data) ->
           el.css 'background-color', '#adadad'
           if resources.id == $('#user_login').val()
             el.html '<div align="right"><span style="margin-right:10px">' + resources.kairan + '</span><a href="/kairans?head%5Bshainbango%5D=' + resources.id + '">' + '<i class="glyphicon glyphicon-envelope" aria-hidden="true" style="font-size:12px;"></i></a></div>'
-      }
-      {
-        labelText: ''
-        field: 'shinki'
-        width: 30
-        render: (resources, el) ->
-          el.html '<a href="/events/new?param=timeline&shain_id=' + resources.id + '&start_at=' + $('#calendar-timeline').fullCalendar('getDate').format('YYYY/MM/DD') + '" class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:12px;"></a>'
       }
     ]
     resources: data.shains)
