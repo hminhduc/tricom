@@ -400,7 +400,8 @@ class EventsController < ApplicationController
       end
     when '挿入登録'
       @event.attributes = event_params.except(:社員番号)
-      if @event.sounyuutouroku
+      event = @event.dup
+      if event.sounyuutouroku
         flash[:notice] = t 'app.flash.update_success'
         redirect
       else
