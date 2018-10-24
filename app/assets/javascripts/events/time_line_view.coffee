@@ -51,15 +51,15 @@ create_calendar = (data) ->
       while i < listEvents.length
         if moment(listEvents[i].start) <= selectedDate and selectedDate <= moment(listEvents[i].end)
           check_exist = true
-          $('.fc-resource-area tr[data-resource-id="' + listEvents[i].resourceId + '"] td:nth-child(3) .fc-cell-content').css('color', listEvents[i].textColor).css 'background-color', listEvents[i].color
-          $('.fc-resource-area tr[data-resource-id="' + listEvents[i].resourceId + '"] td:nth-child(3) .fc-cell-content>span').text listEvents[i].joutai
-          $('.fc-resource-area tr[data-resource-id="' + listEvents[i].resourceId + '"] td:nth-child(4) .fc-cell-content>div>span').text listEvents[i].bashomei
+          $('.fc-resource-area tr[data-resource-id="' + listEvents[i].resourceId + '"] td:nth-child(4) .fc-cell-content').css('color', listEvents[i].textColor).css 'background-color', listEvents[i].color
+          $('.fc-resource-area tr[data-resource-id="' + listEvents[i].resourceId + '"] td:nth-child(4) .fc-cell-content>span').text listEvents[i].joutai
+          $('.fc-resource-area tr[data-resource-id="' + listEvents[i].resourceId + '"] td:nth-child(5) .fc-cell-content>div>span').text listEvents[i].bashomei
           break
         i++
       if !check_exist
-        $('.fc-resource-area tr[data-resource-id="' + listShain[j].id + '"] td:nth-child(3) .fc-cell-content').css('color', data.default.textColor).css 'background-color', data.default.color
-        $('.fc-resource-area tr[data-resource-id="' + listShain[j].id + '"] td:nth-child(3) .fc-cell-content>span').text data.default.joutai
-        $('.fc-resource-area tr[data-resource-id="' + listShain[j].id + '"] td:nth-child(4) .fc-cell-content>div>span').text ''
+        $('.fc-resource-area tr[data-resource-id="' + listShain[j].id + '"] td:nth-child(4) .fc-cell-content').css('color', data.default.textColor).css 'background-color', data.default.color
+        $('.fc-resource-area tr[data-resource-id="' + listShain[j].id + '"] td:nth-child(4) .fc-cell-content>span').text data.default.joutai
+        $('.fc-resource-area tr[data-resource-id="' + listShain[j].id + '"] td:nth-child(5) .fc-cell-content>div>span').text ''
       j++
 
   calendar = $('#calendar-timeline').fullCalendar(
@@ -135,7 +135,7 @@ create_calendar = (data) ->
         selectedDate = $('#calendar-timeline').fullCalendar('getDate')
         calDate = moment(selectedDate).format()
         if event.start.isBefore(calDate) and event.end.isAfter(calDate)
-          $('.fc-resource-area tr[data-resource-id="' + event.resourceId + '"] td:nth-child(2)').css 'color', 'rgb(51, 51, 51)'
+          $('.fc-resource-area tr[data-resource-id="' + event.resourceId + '"] td:nth-child(3)').css 'color', 'rgb(51, 51, 51)'
       shain_old = event.resourceId
       start_old = event.start
       end_old = event.end
