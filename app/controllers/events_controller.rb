@@ -594,7 +594,7 @@ class EventsController < ApplicationController
       else
         job = Jobmaster.find_by(job番号: params[:myjob_id])
         if job
-          @myjob = Myjobmaster.new(job.slice(:job番号, :job名, :開始日, :終了日, :ユーザ番号, :ユーザ名, :入力社員番号, :分類コード, :分類名, :関連Job番号, :備考)
+          @myjob = Myjobmaster.new(job.slice(:job番号, :job名, :開始日, :終了日, :ユーザ番号, :ユーザ名, :分類コード, :分類名, :関連Job番号, :備考)
                                       .merge(社員番号: params[:shain]))
           if @myjob.save
             respond_to do |format|
