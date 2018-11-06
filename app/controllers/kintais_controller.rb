@@ -12,16 +12,18 @@ class KintaisController < ApplicationController
       @selected_month = Date.today.strftime('%Y/%m')
     end
     session[:selected_month] = @selected_month
-    @yuukyuu_kyuuka_rireki = YuukyuuKyuukaRireki.find_or_create_by(社員番号: session[:user], 年月: @selected_month)
+    selected_user = params[:selected_user] || session[:user]
+    @yuukyuu_kyuuka_rireki = YuukyuuKyuukaRireki.find_or_create_by(社員番号: selected_user, 年月: @selected_month)
 
     begin_of_month = @selected_month.to_date.beginning_of_month
-    check_kintai_at_day_by_user(current_user.id, begin_of_month)
-    @kintais = Kintai.selected_month(session[:user], begin_of_month).order(:日付)
-    @kintai = Kintai.find_by(日付: begin_of_month, 社員番号: session[:user])
+    check_kintai_at_day_by_user(selected_user, begin_of_month)
+    @kintais = Kintai.selected_month(selected_user, begin_of_month).order(:日付)
+    @kintai = Kintai.find_by(日付: begin_of_month, 社員番号: selected_user)
 
     # joutai_array = ['12','15','30','31','32','33','38','103','105','107','109','111','113']
     @joutais = Joutaimaster.where(勤怠使用区分: '1').order('CAST(状態コード AS DECIMAL) asc')
-    @daikyus = Kintai.current_user(session[:user]).where(代休取得区分: '0').select(:日付, :id)
+    @daikyus = Kintai.current_user(selected_user).where(代休取得区分: '0').select(:日付, :id)
+    @shains = Shainmaster.includes(:shozokumaster, :yakushokumaster, :shozai).reorder(:序列, :社員番号).where(社員番号: User.all.ids)
   end
 
   def search

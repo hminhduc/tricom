@@ -1,12 +1,16 @@
-- user = Shainmaster.find(session[:user])
-.row-fuid
-  - unless @kintai.try(:入力済) == '1'
-    %button#export_pdf.btn.btn-primary{:disabled => "true", :type => "button"}= (t 'app.label.export_pdf')
-    = link_to (t 'helpers.submit.entered'), kintai_path(@kintai, status: 'entered'), method: :patch, class: 'btn btn-primary'
-  - else
-    %button#export_pdf.btn.btn-primary{:type => "button"}= (t 'app.label.export_pdf')
-    = link_to (t 'helpers.submit.input'), kintai_path(@kintai, status: 'input'), method: :patch, class: 'btn btn-primary'
-  = link_to (t 'helpers.submit.destroy'), kintai_path(@kintai, :clear_month => true), method: :delete, class: 'btn btn-primary', :data => { :confirm => (t 'app.delete_data_in_month_confirm') }
+- user = Shainmaster.find(params[:selected_user] || session[:user])
+.row
+  .col-lg-3
+    - unless @kintai.try(:入力済) == '1'
+      %button#export_pdf.btn.btn-primary{:disabled => "true", :type => "button"}= (t 'app.label.export_pdf')
+      = link_to (t 'helpers.submit.entered'), kintai_path(@kintai, status: 'entered'), method: :patch, class: 'btn btn-primary'
+    - else
+      %button#export_pdf.btn.btn-primary{:type => "button"}= (t 'app.label.export_pdf')
+      = link_to (t 'helpers.submit.input'), kintai_path(@kintai, status: 'input'), method: :patch, class: 'btn btn-primary'
+    = link_to (t 'helpers.submit.destroy'), kintai_path(@kintai, :clear_month => true), method: :delete, class: 'btn btn-primary', :data => { :confirm => (t 'app.delete_data_in_month_confirm') }
+  .col-lg-3.col-lg-offset-3
+    = render 'share/shain_modal'
+    %button#search_user.btn.btn-primary{type:'button'}= (t 'title.shainsentaku')
 .spacer
   .row
 
@@ -15,6 +19,7 @@
     .form-group
       %label.sr-only date
       = form_for :kintai, url: kintais_path, html: {class:'form-inline'}, method: :get do |f|
+        = hidden_field_tag :selected_user
         .input-group.date-search
           = text_field_tag :search, @selected_month, class:'form-control', size: 6
           %span.input-group-addon
