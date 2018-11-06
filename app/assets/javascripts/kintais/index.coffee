@@ -289,3 +289,11 @@ jQuery ->
   # An hien bang kinmu_refer:
   $('#kinmu_toggle').click ->
     $('#kinmu_refer').toggle()
+
+  $('#search_user').click ()->
+    $('#select_user_modal').trigger('show', [''])
+
+  $('#user_table').on 'choose_shain', (e, selected_data)->
+    if selected_data != undefined
+      $('#selected_user').val(selected_data[0])
+      $('#selected_user').closest('form').submit()
