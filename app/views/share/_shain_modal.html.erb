@@ -33,7 +33,7 @@
         <div class="pull-left">
           <%= link_to '社員マスタ管理へ',shainmasters_path %>
         </div>
-        <span type="button" class='btn btn-default' data-dismiss="modal" id='current_user_button'><%= current_user.担当者名称  %></span>
+        <%= link_to current_user.担当者名称, events_path(selected_user: current_user.id), class: 'btn btn-default'%>
         <span type="button" class="btn btn-primary" data-dismiss="modal" id="user_sentaku_ok">　ＯＫ　</span>
         <button type="button" class="btn btn-default" data-dismiss="modal">閉じる</button>
       </div>
