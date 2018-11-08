@@ -16,6 +16,22 @@ class SetsubiyoyakusController < ApplicationController
     respond_with(@setsubiyoyakus)
   end
 
+  def timeline7Day
+    @setsubi_param = params[:setsubicode] if params[:setsubicode].present?
+    if @setsubi_param.present?
+      @setsubis = [Setsubi.find_by(設備コード: @setsubi_param)]
+      @setsubiyoyakus = Setsubiyoyaku.includes(:shainmaster, :kaishamaster, :setsubi).where(設備コード: @setsubi_param)
+    else
+      @setsubis = Setsubi.all.order(:設備コード)
+      @setsubiyoyakus = Setsubiyoyaku.includes(:shainmaster, :kaishamaster, :setsubi)
+    end
+    @data = {
+      setsubiyoyakus: build_setsubiyoyaku_json(@setsubiyoyakus),
+      setsubis: build_setsubi_json(@setsubis),
+      setting: { scrolltime: Setting.find_by(社員番号: session[:user]).try(:scrolltime) || '06:00' }
+    }.to_json
+  end
+
   def show
     respond_with(@setsubiyoyaku)
   end
@@ -138,5 +154,27 @@ class SetsubiyoyakusController < ApplicationController
     def all_day_in_month_list
       d = Date.today
       (d.at_beginning_of_month.to_date..d.at_end_of_month.to_date)
+    end
+
+    def build_setsubiyoyaku_json(setsubiyoyakus)
+      setsubiyoyakus.map do |setsubiyoyaku|
+        {
+          id: setsubiyoyaku.id,
+          description: "#{ setsubiyoyaku.kaishamaster.try(:会社名) || setsubiyoyaku.相手先 }",
+          title: "#{ setsubiyoyaku.用件 }\n#{ setsubiyoyaku.shainmaster.try(:氏名) } \n ",
+          start: setsubiyoyaku.開始,
+          end: setsubiyoyaku.終了,
+          url: edit_setsubiyoyaku_path(setsubiyoyaku),
+          resourceId: setsubiyoyaku.設備コード
+        }
+      end
+    end
+    def build_setsubi_json(setsubis)
+      setsubis.map do |setsubi|
+        {
+          id: setsubi.id,
+          name: setsubi.設備名,
+        }
+      end
     end
 end

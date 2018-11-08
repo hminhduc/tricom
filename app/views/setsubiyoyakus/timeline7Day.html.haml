@@ -1,0 +1,18 @@
+= javascript_include_tag 'setsubiyoyakus/timeline7Day'
+= stylesheet_link_tag 'setsubiyoyakus'
+= provide(:title, (t 'title.setsubiyoyaku'))
+%ol.breadcrumb
+  %li= link_to (t 'title.menu'), main_path
+  %li= link_to (t 'title.setsubiyoyaku'), setsubiyoyakus_path
+  %li.active 設備予約週表示
+
+.row-fruid
+  .form-inline
+    .form-group
+      .col-lg-12
+        = form_for :setsubiyoyaku, url: timeline7Day_setsubiyoyakus_path, html: {class:'form-inline'}, method: :get do
+          = label_tag t('title.setsubi1')
+          = select_tag :setsubicode, options_for_select(Setsubi.all.order(:設備コード).pluck(:設備名, :設備コード), @setsubi_param), include_blank: true, class: 'form-control'
+#setsubiyoyaku-timeline7Day.spacer
+= javascript_tag do
+  setsubi_data = #{@data.try(:html_safe)};
