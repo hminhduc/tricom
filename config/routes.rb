@@ -135,7 +135,7 @@ Jpt::Application.routes.draw do
 
   resources :setsubiyoyakus do
     collection { post :import, :ajax }
-    collection { get :export_csv }
+    collection { get :export_csv, :timeline7Day }
   end
 
   resources :yuukyuu_kyuuka_rirekis do
