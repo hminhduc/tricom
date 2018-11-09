@@ -165,7 +165,9 @@ class SetsubiyoyakusController < ApplicationController
           start: setsubiyoyaku.開始,
           end: setsubiyoyaku.終了,
           url: edit_setsubiyoyaku_path(setsubiyoyaku),
-          resourceId: setsubiyoyaku.設備コード
+          resourceId: setsubiyoyaku.設備コード,
+          shain: "#{ setsubiyoyaku.shainmaster.try(:氏名) } \n ",
+          yoken: setsubiyoyaku.用件
         }
       end
     end
