@@ -43,7 +43,7 @@ $ ->
     firstDay: 1
     nowIndicator: true
     aspectRatio: 1.5
-    resourceAreaWidth: '30%'
+    resourceAreaWidth: '15%'
     slotLabelFormat: [ 'HH : mm' ]
     scrollTime: setsubi_data.setting.scrolltime
     eventOverlap: false
@@ -53,10 +53,40 @@ $ ->
     events: setsubi_data.setsubiyoyakus
     defaultDate: moment($('#goto_date').val())
     height:'auto'
+    eventMouseover: (event, jsEvent, view) ->
+      tooltip = '<div class="tooltipevent hover-end">'
+      tooltip += '<div>' + event.start.format('YYYY/MM/DD HH:mm') + '</div>'
+      tooltip += '<div>' + event.end.format('YYYY/MM/DD HH:mm') + '</div>'
+      tooltip += '<div>' + event.shain + '</div>'
+      tooltip += '<div>' + event.yoken + '</div>'
+      tooltip += '<div>' + event.description + '</div>'
+      tooltip += '</div>'
+      $('body').append tooltip
+      $(this).mouseover((e) ->
+        $(this).css 'z-index', 10000
+        $('.tooltipevent').fadeIn '500'
+        $('.tooltipevent').fadeTo '10', 1.9
+        return
+      ).mousemove (e) ->
+        $('.tooltipevent').css 'top', e.pageY + 10
+        $('.tooltipevent').css 'left', e.pageX + 20
+        return
+      return
+    eventMouseout: (event, jsEvent, view) ->
+      $(this).css 'z-index', 8
+      $('.tooltipevent').remove()
+      return
     resourceColumns: [
       {
         labelText: '設備名'
         field: 'name'
+      }
+      {
+        labelText: ''
+        field: 'shinki'
+        width: 30
+        render: (resources, el) ->
+          el.html '<a href="/setsubiyoyakus/new?setsubi_code=' + resources.id + '" class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:12px;"></a>'
       }
     ]
     resources: setsubi_data.setsubis)

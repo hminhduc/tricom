@@ -18,11 +18,11 @@ class SetsubiyoyakusController < ApplicationController
 
   def timeline7Day
     @setsubi_param = params[:setsubicode] if params[:setsubicode].present?
+    @setsubis = Setsubi.where('設備名 LIKE ?', "%#{@setsubi_param}%").order(:設備コード)
+
     if @setsubi_param.present?
-      @setsubis = [Setsubi.find_by(設備コード: @setsubi_param)]
-      @setsubiyoyakus = Setsubiyoyaku.includes(:shainmaster, :kaishamaster, :setsubi).where(設備コード: @setsubi_param)
+      @setsubiyoyakus = Setsubiyoyaku.joins(:setsubi).where('設備マスタ.設備名 LIKE ?', "%#{@setsubi_param}%").includes(:shainmaster, :kaishamaster)
     else
-      @setsubis = Setsubi.all.order(:設備コード)
       @setsubiyoyakus = Setsubiyoyaku.includes(:shainmaster, :kaishamaster, :setsubi)
     end
     @data = {
@@ -165,7 +165,9 @@ class SetsubiyoyakusController < ApplicationController
           start: setsubiyoyaku.開始,
           end: setsubiyoyaku.終了,
           url: edit_setsubiyoyaku_path(setsubiyoyaku),
-          resourceId: setsubiyoyaku.設備コード
+          resourceId: setsubiyoyaku.設備コード,
+          shain: "#{ setsubiyoyaku.shainmaster.try(:氏名) } \n ",
+          yoken: setsubiyoyaku.用件
         }
       end
     end
