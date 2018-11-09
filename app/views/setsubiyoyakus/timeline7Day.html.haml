@@ -12,7 +12,7 @@
       .col-lg-12
         = form_for :setsubiyoyaku, url: timeline7Day_setsubiyoyakus_path, html: {class:'form-inline'}, method: :get do
           = label_tag t('title.setsubi1')
-          = select_tag :setsubicode, options_for_select(Setsubi.all.order(:設備コード).pluck(:設備名, :設備コード), @setsubi_param), include_blank: true, class: 'form-control'
+          = text_field_tag :setsubicode, @setsubi_param, class: 'form-control'
 #setsubiyoyaku-timeline7Day.spacer
 = javascript_tag do
   setsubi_data = #{@data.try(:html_safe)};
