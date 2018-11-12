@@ -17,6 +17,7 @@ class SetsubiyoyakusController < ApplicationController
   end
 
   def timeline7Day
+    @selected_date = session[:selected_date] || Date.current
     @setsubi_param = params[:setsubicode] if params[:setsubicode].present?
     @setsubis = Setsubi.where('設備名 LIKE ?', "%#{@setsubi_param}%").order(:設備コード)
 
@@ -103,7 +104,10 @@ class SetsubiyoyakusController < ApplicationController
 
   def destroy
     @setsubiyoyaku.destroy
-    render 'share/destroy', locals: { obj: @setsubiyoyaku }
+    respond_to do |f|
+      f.html { redirect_to timeline7Day_setsubiyoyakus_path }
+      f.js { render 'share/destroy', locals: { obj: @setsubiyoyaku } }
+    end
   end
 
   def ajax
