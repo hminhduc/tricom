@@ -11,6 +11,7 @@
     .form-group
       .col-lg-12
         = form_for :setsubiyoyaku, url: timeline7Day_setsubiyoyakus_path, html: {class:'form-inline'}, method: :get do
+          = hidden_field_tag 'selected_date', @selected_date
           = label_tag t('title.setsubi1')
           = text_field_tag :setsubicode, @setsubi_param, class: 'form-control'
 #setsubiyoyaku-timeline7Day.spacer

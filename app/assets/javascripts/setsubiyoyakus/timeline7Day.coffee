@@ -51,7 +51,7 @@ $ ->
     dragOpacity: '0.5'
     editable: true
     events: setsubi_data.setsubiyoyakus
-    defaultDate: moment($('#goto_date').val())
+    defaultDate: moment($('#selected_date').val())
     height:'auto'
     eventMouseover: (event, jsEvent, view) ->
       tooltip = '<div class="tooltipevent hover-end">'
@@ -90,3 +90,7 @@ $ ->
       }
     ]
     resources: setsubi_data.setsubis)
+  calendar.find('.fc-today-button,.fc-prev-button,.fc-next-button').click ->
+    $.post '/settings/ajax',
+      setting: 'setting_date'
+      selected_date: $('#setsubiyoyaku-timeline7Day').fullCalendar('getDate').format()
