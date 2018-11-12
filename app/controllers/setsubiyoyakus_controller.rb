@@ -91,7 +91,11 @@ class SetsubiyoyakusController < ApplicationController
     when (t 'helpers.submit.update')
       if @setsubiyoyaku.update_attributes(setsubiyoyaku_params)
         flash[:notice] = t 'app.flash.update_success'
-        redirect_to setsubiyoyakus_url(head: { setsubicode: @setsubiyoyaku.設備コード })
+        if params[:back] == 'timeline7Day'
+          redirect_to timeline7Day_setsubiyoyakus_path
+        else
+          redirect_to setsubiyoyakus_url(head: { setsubicode: @setsubiyoyaku.設備コード })
+        end
       else
         @kaishamasters = Kaishamaster.all
         render :edit
@@ -105,7 +109,7 @@ class SetsubiyoyakusController < ApplicationController
   def destroy
     @setsubiyoyaku.destroy
     respond_to do |f|
-      f.html { redirect_to timeline7Day_setsubiyoyakus_path }
+      f.html { redirect_to params[:back] == 'timeline7Day' ? timeline7Day_setsubiyoyakus_path : setsubiyoyakus_path }
       f.js { render 'share/destroy', locals: { obj: @setsubiyoyaku } }
     end
   end
@@ -168,7 +172,7 @@ class SetsubiyoyakusController < ApplicationController
           title: "#{ setsubiyoyaku.用件 }\n#{ setsubiyoyaku.shainmaster.try(:氏名) } \n ",
           start: setsubiyoyaku.開始,
           end: setsubiyoyaku.終了,
-          url: edit_setsubiyoyaku_path(setsubiyoyaku),
+          url: edit_setsubiyoyaku_path(setsubiyoyaku, back: 'timeline7Day'),
           resourceId: setsubiyoyaku.設備コード,
           shain: "#{ setsubiyoyaku.shainmaster.try(:氏名) } \n ",
           yoken: setsubiyoyaku.用件
