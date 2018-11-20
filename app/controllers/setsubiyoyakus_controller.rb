@@ -80,7 +80,11 @@ class SetsubiyoyakusController < ApplicationController
     @setsubiyoyaku = Setsubiyoyaku.new setsubiyoyaku_params
     session[:selected_date] = @setsubiyoyaku.開始 # lưu lại cái ngày vào session để sau reload chuyển đến
     if @setsubiyoyaku.save
-      respond_with @setsubiyoyaku, location: setsubiyoyakus_url(head: { setsubicode: @setsubiyoyaku.設備コード })
+      if params[:back] == 'timeline7Day'
+        redirect_to timeline7Day_setsubiyoyakus_path
+      else
+        redirect_to setsubiyoyakus_url(head: { setsubicode: @setsubiyoyaku.設備コード })
+      end
     else
       render :new
     end

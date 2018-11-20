@@ -86,7 +86,7 @@ $ ->
         field: 'shinki'
         width: 30
         render: (resources, el) ->
-          el.html '<a href="/setsubiyoyakus/new?setsubi_code=' + resources.id + '" class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:12px;"></a>'
+          el.html '<a href="/setsubiyoyakus/new?back=timeline7Day&setsubi_code=' + resources.id + '" class="glyphicon glyphicon-edit" aria-hidden="true" style="font-size:12px;"></a>'
       }
     ]
     resources: setsubi_data.setsubis)
