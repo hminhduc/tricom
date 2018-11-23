@@ -29,7 +29,8 @@ class SetsubiyoyakusController < ApplicationController
     @data = {
       setsubiyoyakus: build_setsubiyoyaku_json(@setsubiyoyakus),
       setsubis: build_setsubi_json(@setsubis),
-      setting: { scrolltime: Setting.find_by(社員番号: session[:user]).try(:scrolltime) || '06:00' }
+      setting: { scrolltime: Setting.find_by(社員番号: session[:user]).try(:scrolltime) || '06:00' },
+      holidays: JptHolidayMst.all.map { |x| x.event_date.to_s }
     }.to_json
   end
 

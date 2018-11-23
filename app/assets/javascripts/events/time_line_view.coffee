@@ -102,6 +102,8 @@ create_calendar = (data) ->
         else if now > calendar_date
           date = date + '  (過去)'
       $('#calendar-timeline .fc-left').replaceWith '<div class= "fc-left"><h2>' + date + '</h2></div>'
+      data.holidays.forEach (date)->
+        $('.fc-widget-header[data-date="' + date + '"]').addClass('holiday')
     schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives'
     lang: 'ja'
     height: 'auto'

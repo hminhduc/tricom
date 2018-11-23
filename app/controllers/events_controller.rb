@@ -171,7 +171,8 @@ class EventsController < ApplicationController
         joutai: joutaiDefault.name,
         color: joutaiDefault.色,
         textColor: joutaiDefault.text_color
-      }
+      },
+      holidays: JptHolidayMst.all.map { |x| x.event_date.to_s }
     }.to_json
     rescue => e
       p e
