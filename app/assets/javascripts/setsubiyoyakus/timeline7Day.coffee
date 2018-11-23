@@ -76,6 +76,9 @@ $ ->
       $(this).css 'z-index', 8
       $('.tooltipevent').remove()
       return
+    eventAfterAllRender: ()->
+      setsubi_data.holidays.forEach (date)->
+        $('.fc-widget-header[data-date="' + date + '"]').addClass('holiday')
     resourceColumns: [
       {
         labelText: '設備名'
