@@ -12,7 +12,9 @@ class KintaisController < ApplicationController
       @selected_month = Date.today.strftime('%Y/%m')
     end
     session[:selected_month] = @selected_month
-    selected_user = params[:selected_user] || session[:user]
+    session[:kintai_selected_shain] = params[:selected_user] if params[:selected_user].present?
+    session[:kintai_selected_shain] ||= session[:user]
+    selected_user = session[:kintai_selected_shain]
     @yuukyuu_kyuuka_rireki = YuukyuuKyuukaRireki.find_or_create_by(社員番号: selected_user, 年月: @selected_month)
 
     begin_of_month = @selected_month.to_date.beginning_of_month
