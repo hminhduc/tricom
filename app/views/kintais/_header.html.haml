@@ -1,4 +1,5 @@
-- user = Shainmaster.find(params[:selected_user] || session[:user])
+- userId = params[:selected_user].present? ? params[:selected_user] : session[:user]
+- user = Shainmaster.find(userId)
 .row
   .col-lg-3
     - unless @kintai.try(:入力済) == '1'
