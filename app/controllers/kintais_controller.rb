@@ -30,8 +30,8 @@ class KintaisController < ApplicationController
 
   def search
     begin_of_month = (session[:selected_month] || Date.today).to_date.beginning_of_month
-    @kintais = Kintai.selected_month(session[:user], begin_of_month)
-    @kintais_tonow = Kintai.selected_tocurrent(session[:user], begin_of_month)
+    @kintais = Kintai.selected_month(session[:kintai_selected_shain], begin_of_month)
+    @kintais_tonow = Kintai.selected_tocurrent(session[:kintai_selected_shain], begin_of_month)
     @yukyu = @kintais.day_off.count + @kintais.morning_off.count * 0.5 + @kintais.afternoon_off.count * 0.5
     if begin_of_month.month == 1
       @gesshozan = 12.0
@@ -433,12 +433,17 @@ class KintaisController < ApplicationController
       @results = []
       begin_t, end_t = date.beginning_of_month, date.end_of_month
       if params[:tai] == '1'
+=begin
+      データ出力の後ろ２項目
+      を不要とします。
+      データ出力を止めてください。
+=end
         Event.joins(:shainmaster, :jobmaster).left_outer_joins(:joutaimaster, :bashomaster, :shozokumaster, :kouteimaster)
           .where(社員マスタ: { 区分: false })
           .where('Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) >= ? AND Date(終了) <= ?',
                begin_t, begin_t, end_t, end_t, begin_t, end_t)
           .order('社員マスタ.序列 ASC', '社員マスタ.社員番号 ASC', :開始, :終了)
-          .select(:社員番号, :氏名, :開始, :終了, :状態コード, :状態名, :場所コード, :場所名, :JOB, :job名, :ユーザ番号, :ユーザ名, :所属コード, :所属名, :工程コード, :工程名, :工数, :工数, :計上, :comment)
+          .select(:社員番号, :氏名, :開始, :終了, :状態コード, :状態名, :場所コード, :場所名, :JOB, :job名, :ユーザ番号, :ユーザ名, :所属コード, :所属名, :工程コード, :工程名, :工数)
           .each do |event|
           @results << {
             社員番号: event.社員番号,
@@ -457,9 +462,7 @@ class KintaisController < ApplicationController
             所属名: event.所属名,
             工程コード: event.工程コード,
             工程名: event.工程名,
-            工数: event.工数,
-            計上: event.計上,
-            comment: event.comment
+            工数: event.工数
           }
         end
       else # if params[:tai] != 1
@@ -593,6 +596,28 @@ class KintaisController < ApplicationController
     end
 
     def to_csv_by_date(datas)
+      # check if @results still nil -> show only header
+      if datas.first.nil?
+        datas << {
+            社員番号:  '',
+            氏名:     '',
+            開始:     '',
+            終了:     '',
+            状態コード:'',
+            状態名:    '',
+            場所コード:  '',
+            場所名:    '',
+            JOB:      '',
+            JOB名:     '',
+            会社コード:  '',
+            会社名:      '',
+            所属コード:  '',
+            所属名:    '',
+            工程コード:  '',
+            工程名:    '',
+            工数:     ''
+        }
+      end
       headers = datas.first.keys
       CSV.generate(headers: true) do |csv|
         csv << headers
