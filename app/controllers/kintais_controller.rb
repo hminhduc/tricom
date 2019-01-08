@@ -46,8 +46,8 @@ class KintaisController < ApplicationController
     @date_param = vars['search'] if vars['search'] != '' && !vars['search'].nil?
     date = @date_param.to_date
 
-    @kintais = Kintai.selected_month(session[:user], date).order(:日付)
-    @kintai = Kintai.find_by(日付: date.beginning_of_month, 社員番号: session[:user])
+    @kintais = Kintai.selected_month(session[:kintai_selected_shain], date).order(:日付)
+    @kintai = Kintai.find_by(日付: date.beginning_of_month, 社員番号: session[:kintai_selected_shain])
     respond_to do |format|
       format.pdf do
         render pdf: 'kintai_pdf',
