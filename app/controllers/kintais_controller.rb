@@ -556,8 +556,24 @@ class KintaisController < ApplicationController
   end
 
   def summary
-    @shains = Shainmaster.reorder(:序列, :社員番号).where(社員番号: User.all.ids)
-    @search_month = params[:search]
+    begin
+      @search_month = params[:search].to_date
+    rescue
+      @search_month = Date.today.beginning_of_month
+    end
+    @shains = Shainmaster.includes(:kintais).reorder(:序列, :社員番号).where(社員番号: User.all.ids).map do |shain|
+      kintais = Kintai.selected_month(shain.社員番号, @search_month)
+      {
+          氏名: shain.氏名,
+          社員番号: shain.社員番号,
+          実労働: kintais.sum('実労働時間'),
+          遅刻早退: kintais.sum('遅刻時間'),
+          普通残業: kintais.sum('普通残業時間'),
+          深夜残業: kintais.sum('深夜残業時間'),
+          普通保守: kintais.sum('普通保守時間'),
+          深夜保守: kintais.sum('深夜保守時間')
+      }
+    end
   end
 
   private
