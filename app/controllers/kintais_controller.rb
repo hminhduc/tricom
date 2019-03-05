@@ -51,9 +51,9 @@ class KintaisController < ApplicationController
     respond_to do |format|
       format.pdf do
         render pdf: 'kintai_pdf',
-             template: 'kintais/pdf_show.pdf.erb',
-             encoding: 'utf8',
-             orientation: 'Landscape'
+               template: 'kintais/pdf_show.pdf.erb',
+               encoding: 'utf8',
+               orientation: 'Landscape'
       end
     end
   end
@@ -99,8 +99,8 @@ class KintaisController < ApplicationController
       #   format.json { respond_with_bip(@kintai) }
       #   end
       # end
-      related_kintai = { id: '', joutai: '', bikou: '' }
-      related_kintai2 = { id: '', joutai: '', bikou: '' }
+      related_kintai = {id: '', joutai: '', bikou: ''}
+      related_kintai2 = {id: '', joutai: '', bikou: ''}
       if kintai_params[:状態1].in?(['103', '107', '111']) # 振出
         if kintai_params[:代休取得区分] == ''
           params[:kintai][:代休相手日付] = ''
@@ -257,12 +257,12 @@ class KintaisController < ApplicationController
       respond_to do |format|
         if @kintai.update(kintai_params)
           flash[:notice] = t 'app.flash.update_success'
-          current_kintai = { id: @kintai.id, joutai: @kintai.状態1, joutaimei: @kintai.joutai_状態名, bikou: @kintai.備考 }
-          format.html { redirect_to kintais_url }
-          format.json { render json: { 'current_kintai' => current_kintai, 'related_kintai' => related_kintai, 'related_kintai2' => related_kintai2 } }
+          current_kintai = {id: @kintai.id, joutai: @kintai.状態1, joutaimei: @kintai.joutai_状態名, bikou: @kintai.備考}
+          format.html {redirect_to kintais_url}
+          format.json {render json: {'current_kintai' => current_kintai, 'related_kintai' => related_kintai, 'related_kintai2' => related_kintai2}}
         else
-          format.html { render action: 'edit' }
-          format.json { render json: { 'current_kintai' => current_kintai, 'related_kintai' => related_kintai, 'related_kintai2' => related_kintai2 } }
+          format.html {render action: 'edit'}
+          format.json {render json: {'current_kintai' => current_kintai, 'related_kintai' => related_kintai, 'related_kintai2' => related_kintai2}}
         end
       end
       # respond_with(@kintai, location: kintais_url)
@@ -283,32 +283,32 @@ class KintaisController < ApplicationController
       @kintais = Kintai.current_user(session[:user]).where(代休取得区分: '0', 状態1: joutai_aite).select(:日付)
       respond_to do |format|
         # format.json { render json: 'data'}
-        format.js { render 'reset_daikyu_modal' }
+        format.js {render 'reset_daikyu_modal'}
       end
     when 'update_time'
       time_start = params[:timeStart]
       time_end = params[:timeEnd]
       kintai = Kintai.find_by(id: params[:idKintai])
       kintai.update(出勤時刻: time_start, 退社時刻: time_end, 実労働時間: params[:real_hours], 普通残業時間: params[:fustu_zangyo], 深夜残業時間: params[:shinya_zangyou], 深夜保守時間: params[:shinya_kyukei], 遅刻時間: params[:chikoku_soutai])
-      data = { update: 'update_success' }
+      data = {update: 'update_success'}
       respond_to do |format|
-        format.json { render json: data }
+        format.json {render json: data}
       end
     when 'update_endtime'
       time_end = params[:timeEnd]
       kintai = Kintai.find_by(id: params[:idKintai])
       kintai.update(退社時刻: time_end)
-      data = { update: 'update_success' }
+      data = {update: 'update_success'}
       respond_to do |format|
-        format.json { render json: data }
+        format.json {render json: data}
       end
     when 'update_starttime'
       time_start = params[:timeStart]
       kintai = Kintai.find_by(id: params[:idKintai])
       kintai.update(出勤時刻: time_start)
-      data = { update: 'update_success' }
+      data = {update: 'update_success'}
       respond_to do |format|
-        format.json { render json: data }
+        format.json {render json: data}
       end
     when 'update_kinmutype'
       kinmutype = Kintai::KINMU_TYPE[params[:kinmutype]]
@@ -320,9 +320,9 @@ class KintaisController < ApplicationController
         start_time = text_time = ''
       end
       kintai.update(出勤時刻: starttime, 退社時刻: '', 実労働時間: '', 普通残業時間: '', 深夜残業時間: '', 普通保守時間: '', 深夜保守時間: '', 遅刻時間: '')
-      data = { starttime: text_time, endtime: '' }
+      data = {starttime: text_time, endtime: ''}
       respond_to do |format|
-        format.json { render json: data }
+        format.json {render json: data}
       end
     when 'gesshozan_calculate'
       zengetsu = params[:zengetsu]
@@ -399,9 +399,9 @@ class KintaisController < ApplicationController
         YuukyuuKyuukaRireki.create(社員番号: session[:user], 年月: tougetsu, 月初有給残: getsumatsu_zengetsu, 月末有給残: getsumatsu_tougetsu)
       end
       tou_yuukyu_kyuka = YuukyuuKyuukaRireki.find_by(社員番号: session[:user], 年月: tougetsu)
-      data = { gesshozan: tou_yuukyu_kyuka.月初有給残, getsumatsuzan: tou_yuukyu_kyuka.月末有給残 }
+      data = {gesshozan: tou_yuukyu_kyuka.月初有給残, getsumatsuzan: tou_yuukyu_kyuka.月末有給残}
       respond_to do |format|
-        format.json { render json: data }
+        format.json {render json: data}
       end
     end
   end
@@ -439,61 +439,61 @@ class KintaisController < ApplicationController
       データ出力を止めてください。
 =end
         Event.joins(:shainmaster, :jobmaster).left_outer_joins(:joutaimaster, :bashomaster, :shozokumaster, :kouteimaster)
-          .where(社員マスタ: { 区分: false })
-          .where('Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) >= ? AND Date(終了) <= ?',
-               begin_t, begin_t, end_t, end_t, begin_t, end_t)
-          .order('社員マスタ.序列 ASC', '社員マスタ.社員番号 ASC', :開始, :終了)
-          .select(:社員番号, :氏名, :開始, :終了, :状態コード, :状態名, :場所コード, :場所名, :JOB, :job名, :ユーザ番号, :ユーザ名, :所属コード, :所属名, :工程コード, :工程名, :工数)
-          .each do |event|
+            .where(社員マスタ: {区分: false})
+            .where('Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) >= ? AND Date(終了) <= ?',
+                   begin_t, begin_t, end_t, end_t, begin_t, end_t)
+            .order('社員マスタ.序列 ASC', '社員マスタ.社員番号 ASC', :開始, :終了)
+            .select(:社員番号, :氏名, :開始, :終了, :状態コード, :状態名, :場所コード, :場所名, :JOB, :job名, :ユーザ番号, :ユーザ名, :所属コード, :所属名, :工程コード, :工程名, :工数)
+            .each do |event|
           @results << {
-            社員番号: event.社員番号,
-            氏名: event.氏名,
-            開始: event.開始,
-            終了: event.終了,
-            状態コード: event.状態コード,
-            状態名: event.状態名,
-            場所コード: event.場所コード,
-            場所名: event.場所名,
-            JOB: event.JOB,
-            JOB名: event.job名,
-            会社コード: event.ユーザ番号,
-            会社名: event.ユーザ名,
-            所属コード: event.所属コード,
-            所属名: event.所属名,
-            工程コード: event.工程コード,
-            工程名: event.工程名,
-            工数: event.工数
+              社員番号: event.社員番号,
+              氏名: event.氏名,
+              開始: event.開始,
+              終了: event.終了,
+              状態コード: event.状態コード,
+              状態名: event.状態名,
+              場所コード: event.場所コード,
+              場所名: event.場所名,
+              JOB: event.JOB,
+              JOB名: event.job名,
+              会社コード: event.ユーザ番号,
+              会社名: event.ユーザ名,
+              所属コード: event.所属コード,
+              所属名: event.所属名,
+              工程コード: event.工程コード,
+              工程名: event.工程名,
+              工数: event.工数
           }
         end
       else # if params[:tai] != 1
         Event.joins(:shainmaster, :jobmaster)
-          .where(社員マスタ: { 区分: false })
-          .where('Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) >= ? AND Date(終了) <= ?',
-               begin_t, begin_t, end_t, end_t, begin_t, end_t)
-          .group(:氏名, :社員番号, :JOB, :job名, :ユーザ番号, :ユーザ名, '社員マスタ.序列')
-          .order('社員マスタ.序列', :社員番号, :JOB)
-          .select(:氏名, :社員番号, :JOB, :job名, :ユーザ番号, :ユーザ名, 'SUM(CAST(工数 AS DECIMAL)) AS sum_job')
-          .each do |event|
+            .where(社員マスタ: {区分: false})
+            .where('Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) >= ? AND Date(終了) <= ?',
+                   begin_t, begin_t, end_t, end_t, begin_t, end_t)
+            .group(:氏名, :社員番号, :JOB, :job名, :ユーザ番号, :ユーザ名, '社員マスタ.序列')
+            .order('社員マスタ.序列', :社員番号, :JOB)
+            .select(:氏名, :社員番号, :JOB, :job名, :ユーザ番号, :ユーザ名, 'SUM(CAST(工数 AS DECIMAL)) AS sum_job')
+            .each do |event|
           @results << {
-            日付: date.strftime('%Y/%m'),
-            氏名: event.氏名,
-            社員番号: event.社員番号,
-            JOB: event.JOB,
-            JOB名: event.job名,
-            会社コード: event.ユーザ番号,
-            会社名: event.ユーザ名,
-            工数: event.sum_job
+              日付: date.strftime('%Y/%m'),
+              氏名: event.氏名,
+              社員番号: event.社員番号,
+              JOB: event.JOB,
+              JOB名: event.job名,
+              会社コード: event.ユーザ番号,
+              会社名: event.ユーザ名,
+              工数: event.sum_job
           }
         end
       end # if params[:tai] != 1
       respond_to do |format|
-        format.csv { send_data to_csv_by_date(@results), filename: '勤怠.dat' }
+        format.csv {send_data to_csv_by_date(@results), filename: '勤怠.dat'}
       end
     else # if params[:date] == nil
       @kintais = Kintai.all
       respond_to do |format|
         format.html
-        format.csv { send_data @kintais.to_csv, filename: '勤怠.dat' }
+        format.csv {send_data @kintais.to_csv, filename: '勤怠.dat'}
       end
     end
   end
@@ -508,31 +508,31 @@ class KintaisController < ApplicationController
     @events = []
     @begin_t, @end_t = date.beginning_of_month, date.end_of_month
     Event.joins('INNER JOIN "JOB内訳マスタ" ON "JOB内訳マスタ"."ジョブ内訳番号" = "events"."JOB内訳番" INNER JOIN "社員マスタ" ON "社員マスタ"."社員番号" = "events"."社員番号" INNER JOIN "作業区分内訳" ON "作業区分内訳"."作業区分" = "events"."作業区分"')
-      .where(JOB: params[:job])
-      .where('Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) >= ? AND Date(終了) <= ?',
+        .where(JOB: params[:job])
+        .where('Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) <= ? AND Date(終了) >= ? OR Date(開始) >= ? AND Date(終了) <= ?',
                @begin_t, @begin_t, @end_t, @end_t, @begin_t, @end_t)
-      .order(:JOB内訳番, :社員番号, :開始, :作業区分)
-      .select(:JOB内訳番, '"JOB内訳マスタ"."件名" AS kenmei', :社員番号, '"社員マスタ"."氏名" AS minmei', 'Date(開始) AS day', :作業区分, '"作業区分内訳"."作業区分名称" AS meishou', :工数, :comment)
-      .each do |event|
+        .order(:JOB内訳番, :社員番号, :開始, :作業区分)
+        .select(:JOB内訳番, '"JOB内訳マスタ"."件名" AS kenmei', :社員番号, '"社員マスタ"."氏名" AS minmei', 'Date(開始) AS day', :作業区分, '"作業区分内訳"."作業区分名称" AS meishou', :工数, :comment)
+        .each do |event|
       @events << {
-        JOB内訳番号: event.JOB内訳番,
-        件名: event.kenmei,
-        社員コード: event.社員番号,
-        社員名: event.minmei,
-        受付日: event.day,
-        作業区分: event.作業区分,
-        名称: event.meishou,
-        実労時間: event.工数,
-        コメント: event.comment
+          JOB内訳番号: event.JOB内訳番,
+          件名: event.kenmei,
+          社員コード: event.社員番号,
+          社員名: event.minmei,
+          受付日: event.day,
+          作業区分: event.作業区分,
+          名称: event.meishou,
+          実労時間: event.工数,
+          コメント: event.comment
       }
     end
     respond_to do |format|
       format.pdf do
         render pdf: 'event_job_pdf',
-          title: 'JOB内訳番号別の工数詳細',
-          template: 'kintais/export_pdf.pdf.erb',
-          encoding: 'utf8',
-          orientation: 'Landscape'
+               title: 'JOB内訳番号別の工数詳細',
+               template: 'kintais/export_pdf.pdf.erb',
+               encoding: 'utf8',
+               orientation: 'Landscape'
       end
     end
   end
@@ -544,102 +544,123 @@ class KintaisController < ApplicationController
       @date = Date.today.beginning_of_month
     end
     @kintais = Shainmaster.includes(:kintais).where(区分: false).map do |shain|
-      kintai = shain.kintais.find { |k| k.日付 == @date }
+      kintai = shain.kintais.find {|k| k.日付 == @date}
       {
-        氏名: shain.氏名,
-        社員番号: shain.社員番号,
-        日付: @date,
-        入力済: kintai.try(:入力済)
+          氏名: shain.氏名,
+          社員番号: shain.社員番号,
+          日付: @date,
+          入力済: kintai.try(:入力済)
       }
     end
     @jobs = Jobmaster.includes(:bunrui)
   end
 
+  def summary
+    begin
+      @search_month = params[:search].to_date
+    rescue
+      @search_month = Date.today.beginning_of_month
+    end
+    @shains = Shainmaster.includes(:kintais).reorder(:序列, :社員番号).where(社員番号: User.all.ids).map do |shain|
+      kintais = Kintai.selected_month(shain.社員番号, @search_month)
+      {
+          氏名: shain.氏名,
+          社員番号: shain.社員番号,
+          実労働: kintais.sum('実労働時間'),
+          遅刻早退: kintais.sum('遅刻時間'),
+          普通残業: kintais.sum('普通残業時間'),
+          深夜残業: kintais.sum('深夜残業時間'),
+          普通保守: kintais.sum('普通保守時間'),
+          深夜保守: kintais.sum('深夜保守時間')
+      }
+    end
+  end
+
   private
 
-    def set_kintai
-      @daikyus = Kintai.current_user(session[:user]).where(代休取得区分: '0').select(:日付, :id)
-      @kintai = Kintai.find_by(id: params[:id])
+  def set_kintai
+    @daikyus = Kintai.current_user(session[:user]).where(代休取得区分: '0').select(:日付, :id)
+    @kintai = Kintai.find_by(id: params[:id])
 
-      # kubunlist = []
-      # case @kintai.曜日
-      #   when '日','土'
-      #   kubunlist = ['1', '2', '5', '6']
-      #   when '月', '火', '水', '木', '金'
-      #   if @kintai.try(:holiday) == '1'
-      #     kubunlist = ['1', '2', '5', '6']
-      #   else
-      #     kubunlist = ['1', '2', '6']
-      #   end
-      # end
-      # Tam thoi ko hieu doan code tren loc kubunlist dung 1,2,5,6 voi y nghia gi,
-      # nen cu de all [1,2,5,6] cho no hien thi het:
-      kubunlist = ['1', '2', '5', '6']
-      # @joutais = Joutaimaster.active(kubunlist)
-      # joutai_array = ['12','15','30','31','32','33','38','103','105','107','109','111','113']
-      @joutais = Joutaimaster.active(kubunlist).order('CAST(状態コード AS DECIMAL) asc')
+    # kubunlist = []
+    # case @kintai.曜日
+    #   when '日','土'
+    #   kubunlist = ['1', '2', '5', '6']
+    #   when '月', '火', '水', '木', '金'
+    #   if @kintai.try(:holiday) == '1'
+    #     kubunlist = ['1', '2', '5', '6']
+    #   else
+    #     kubunlist = ['1', '2', '6']
+    #   end
+    # end
+    # Tam thoi ko hieu doan code tren loc kubunlist dung 1,2,5,6 voi y nghia gi,
+    # nen cu de all [1,2,5,6] cho no hien thi het:
+    kubunlist = ['1', '2', '5', '6']
+    # @joutais = Joutaimaster.active(kubunlist)
+    # joutai_array = ['12','15','30','31','32','33','38','103','105','107','109','111','113']
+    @joutais = Joutaimaster.active(kubunlist).order('CAST(状態コード AS DECIMAL) asc')
+  end
+
+  def kintai_params
+    params.require(:kintai).permit(:日付, :曜日, :勤務タイプ, :出勤時刻, :退社時刻, :保守携帯回数, :状態1, :状態2, :状態3, :備考,
+                                   :実労働時間, :遅刻時間, :早退時間, :普通残業時間, :深夜残業時間, :普通保守時間, :深夜保守時間,
+                                   :holiday, :代休相手日付, :代休取得区分)
+  end
+
+  def check_edit_kintai
+    @kintai_now = Kintai.find_by id: params[:id]
+    @kintai = Kintai.find_by(日付: @kintai_now.日付.beginning_of_month, 社員番号: session[:user])
+    if @kintai.入力済 == '1'
+      flash[:danger] = t 'app.flash.access_denied'
+      redirect_to kintais_path
     end
+  end
 
-    def kintai_params
-      params.require(:kintai).permit(:日付, :曜日, :勤務タイプ, :出勤時刻, :退社時刻, :保守携帯回数, :状態1, :状態2, :状態3, :備考,
-                       :実労働時間, :遅刻時間, :早退時間, :普通残業時間, :深夜残業時間, :普通保守時間, :深夜保守時間,
-                       :holiday, :代休相手日付, :代休取得区分)
+  def to_csv_by_date(datas)
+    # check if @results still nil -> show only header
+    if datas.first.nil?
+      datas << {
+          社員番号: '',
+          氏名: '',
+          開始: '',
+          終了: '',
+          状態コード: '',
+          状態名: '',
+          場所コード: '',
+          場所名: '',
+          JOB: '',
+          JOB名: '',
+          会社コード: '',
+          会社名: '',
+          所属コード: '',
+          所属名: '',
+          工程コード: '',
+          工程名: '',
+          工数: ''
+      }
     end
-
-    def check_edit_kintai
-      @kintai_now = Kintai.find_by id: params[:id]
-      @kintai = Kintai.find_by(日付: @kintai_now.日付.beginning_of_month, 社員番号: session[:user])
-      if @kintai.入力済 == '1'
-        flash[:danger] = t 'app.flash.access_denied'
-        redirect_to kintais_path
+    headers = datas.first.keys
+    CSV.generate(headers: true) do |csv|
+      csv << headers
+      datas.each do |h|
+        csv << h.values
       end
     end
+  end
 
-    def to_csv_by_date(datas)
-      # check if @results still nil -> show only header
-      if datas.first.nil?
-        datas << {
-            社員番号:  '',
-            氏名:     '',
-            開始:     '',
-            終了:     '',
-            状態コード:'',
-            状態名:    '',
-            場所コード:  '',
-            場所名:    '',
-            JOB:      '',
-            JOB名:     '',
-            会社コード:  '',
-            会社名:      '',
-            所属コード:  '',
-            所属名:    '',
-            工程コード:  '',
-            工程名:    '',
-            工数:     ''
-        }
-      end
-      headers = datas.first.keys
-      CSV.generate(headers: true) do |csv|
-        csv << headers
-        datas.each do |h|
-          csv << h.values
-        end
-      end
+  def update_inputting_or_entered_status(kintai, status)
+    begin_of_month = kintai.日付
+    selected_month = begin_of_month.strftime('%Y/%m')
+    kintais = Kintai.selected_month(session[:user], begin_of_month).order(:日付)
+    yuukyuu_kyuuka_rireki = YuukyuuKyuukaRireki.find_or_create_by(社員番号: session[:user], 年月: selected_month)
+    case params[:status]
+    when 'entered'
+      kintai.update(入力済: '1') if kintai
+      yuukyuu_kyuuka_rireki.calculate_getshozan
+      yuukyuu_kyuuka_rireki.calculate_getmatsuzan(kintais)
+      yuukyuu_kyuuka_rireki.save
+    when 'input'
+      kintai.update(入力済: '0') if kintai
     end
-
-    def update_inputting_or_entered_status(kintai, status)
-      begin_of_month = kintai.日付
-      selected_month = begin_of_month.strftime('%Y/%m')
-      kintais = Kintai.selected_month(session[:user], begin_of_month).order(:日付)
-      yuukyuu_kyuuka_rireki = YuukyuuKyuukaRireki.find_or_create_by(社員番号: session[:user], 年月: selected_month)
-      case params[:status]
-      when 'entered'
-        kintai.update(入力済: '1') if kintai
-        yuukyuu_kyuuka_rireki.calculate_getshozan
-        yuukyuu_kyuuka_rireki.calculate_getmatsuzan(kintais)
-        yuukyuu_kyuuka_rireki.save
-      when 'input'
-        kintai.update(入力済: '0') if kintai
-      end
-    end
+  end
 end
