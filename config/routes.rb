@@ -75,7 +75,7 @@ Jpt::Application.routes.draw do
   end
 
   resources :kintais do
-    collection { get :search, :pdf_show, :sumikakunin }
+    collection { get :search, :pdf_show, :sumikakunin, :summary }
     collection { post :import, :ajax }
     collection { get :export_csv, :export_pdf }
   end
