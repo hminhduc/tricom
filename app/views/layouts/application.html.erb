@@ -19,7 +19,7 @@
 
         <div class="container-fluid">
           <div class="row-fluid">
-            <%= render 'share/messages' %>
+            <%= render 'share/messages' unless controller.action_name == 'time_line_view'%>
             <%= yield %>
           </div>
         </div>
