@@ -4,7 +4,7 @@ class Rorumenba < ApplicationRecord
   CSV_HEADERS = %w(ロールコード 社員番号 氏名 ロール内序列)
   SHOW_ATTRS = %w(ロールコード roru_ロール名 社員番号 shain_氏名 ロール内序列)
   include PgSearch
-  multisearchable against: %w{ロールコード rorumaster_ロール名 社員番号 氏名 ロール内序列}
+  multisearchable against: %w{ロールコード roru_ロール名 社員番号 氏名 ロール内序列}
   validates :ロールコード, :社員番号, presence: true
   validates :ロール内序列, length: { maximum: 10 }
   belongs_to :shainmaster, foreign_key: :社員番号
