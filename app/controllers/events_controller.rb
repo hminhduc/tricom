@@ -156,7 +156,9 @@ class EventsController < ApplicationController
         end
         @shains = @shains.where(社員番号: shain_ids)
       end
-      @all_events = Event.includes(:jobmaster, :joutaimaster, :bashomaster).where(社員番号: @shains.ids.uniq)
+      @all_events = Event.includes(:jobmaster, :joutaimaster, :bashomaster)
+                        .where('Date(開始) >= ?', 3.month.ago(@selected_date.to_date))
+                        .where(社員番号: @shains.ids.uniq)
       @events = Event.includes(:joutaimaster, { bashomaster: :kaishamaster }, :jobmaster, :kouteimaster)
                     .where(社員番号: @shains.ids.uniq).where('Date(開始) >= ?', 1.month.ago(Date.today))
                     .order(開始: :desc)
