@@ -35,3 +35,6 @@ end
 every 1.days do
   rake 'serverchat:start'
 end
+every 1.month do
+  rake 'tricom:remove_old_data'
+end
