@@ -236,7 +236,7 @@ create_calendar = (data) ->
   calendar.find('.fc-timelineDay-button').click ->
     calendar.find('.fc-next10Days-button, .fc-prev10Days-button').removeClass 'fc-state-disabled'
 
-  setInterval(update_joutai_timeline, 5000)
+  setInterval(update_joutai_timeline, 60000)
 
 jQuery ->
   $('#timeline_time').text moment(new Date).format('YYYY年M月D日 (ddd) HH:mm')
