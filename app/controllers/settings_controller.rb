@@ -13,16 +13,6 @@ class SettingsController < ApplicationController
     @settings = Setting.all
   end
 
-  def setting
-    session[:return_to] = request.referer
-    @shains = Shainmaster.all
-    @setting = Setting.where(社員番号: session[:user]).first
-    if @setting.nil?
-      @setting = Setting.new(社員番号: session[:user])
-      @setting.save
-    end
-  end
-
   def show
     @shains = Shainmaster.all
     respond_with(@setting)
@@ -40,15 +30,8 @@ class SettingsController < ApplicationController
   end
 
   def update
-    case params[:commit]
-    when (t 'helpers.submit.setting')
-      notice = t 'app.flash.update_success' if @setting.update(setting_params)
-      # redirect_to :back, notice: notice
-      redirect_to(session[:return_to])
-    when (t 'helpers.submit.update')
-      flash[:notice] = t 'app.flash.update_success' if @setting.update(setting_params)
-      respond_with(@setting, location: settings_url)
-    end
+    flash[:notice] = t 'app.flash.update_success' if @setting.update(setting_params)
+    respond_with(@setting, location: settings_url)
   end
 
   def destroy
@@ -137,7 +120,7 @@ class SettingsController < ApplicationController
 
   private
     def set_setting
-      @setting = Setting.find(params[:id])
+      @setting = Setting.find_by(社員番号: params[:id])
     end
 
     def setting_params

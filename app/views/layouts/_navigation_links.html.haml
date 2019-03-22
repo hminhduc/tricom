@@ -59,7 +59,7 @@
               -#- if current_user.shainmaster.shozokumaster.try 所属コード == "3"
               - if current_user.admin?
                 %li= link_to raw("<i class='glyphicon glyphicon-list-alt' style='margin-right:1em;'></i>"+(t 'title.kanrig')), kanris_root_path
-              %li= link_to raw("<i class='glyphicon glyphicon-asterisk' style='margin-right:1em;'></i>"+(t 'title.setting')), setting_settings_path
+              %li= link_to raw("<i class='glyphicon glyphicon-asterisk' style='margin-right:1em;'></i>"+(t 'title.setting')), edit_setting_path(Setting.find_or_create_by(社員番号: current_user.担当者コード))
           %li.dropdown
             %a.dropdown-toggle{'href'=>"#", 'data-toggle'=>"dropdown", 'role'=>"button", 'aria-haspopup'=>"true", 'aria-expanded'=>"false" }
               %span= image_tag current_user.avatar_link, size: "30x30"
