@@ -104,6 +104,7 @@ create_calendar = (data) ->
       $('#calendar-timeline .fc-left').replaceWith '<div class= "fc-left"><h2>' + date + '</h2></div>'
       data.holidays.forEach (date)->
         $('.fc-widget-header[data-date="' + date + '"]').addClass('holiday')
+      update_joutai_timeline()
     schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives'
     lang: 'ja'
     height: 'auto'
@@ -236,7 +237,6 @@ create_calendar = (data) ->
   calendar.find('.fc-timelineDay-button').click ->
     calendar.find('.fc-next10Days-button, .fc-prev10Days-button').removeClass 'fc-state-disabled'
 
-  update_joutai_timeline()
   setInterval(update_joutai_timeline, 60000)
 
 jQuery ->
