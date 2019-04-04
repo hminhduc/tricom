@@ -37,4 +37,5 @@ every 1.days do
 end
 every 1.month do
   rake 'tricom:remove_old_data'
+  rake 'tricom:log_clear'
 end
