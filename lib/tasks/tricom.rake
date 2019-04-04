@@ -16,4 +16,18 @@ namespace :tricom do
       puts e
     end
   end
+
+  desc 'Xoa log cu trong production.log'
+  task log_clear: :environment do
+    begin
+      file = ENV['FILE'] || 'log/production.log'
+      max_size = ENV['MAX_SIZE'].to_i || 1000000000
+      if File.exist?(file) and File.size(file) > max_size
+        FileUtils.cp(file, file + '.old')
+        File.truncate(file, 0)
+      end
+    rescue => e
+      puts e
+    end
+  end
 end
