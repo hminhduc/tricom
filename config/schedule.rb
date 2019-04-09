@@ -32,10 +32,10 @@ end
 every '3 0 * * *' do
   rake 'backup:gitpush'
 end
-every 1.days do
+every '4 0 * * *' do
   rake 'serverchat:start'
 end
-every 1.month do
-  rake 'tricom:remove_old_data'
-  rake 'tricom:log_clear'
+every '5 0 * * *' do
+  command 'cd /home/cmc-global/tricom; bundle exec rails runner scripts/remove_old_data.rb'
+  command 'cd /home/cmc-global/tricom; bundle exec rails runner scripts/log_clear.rb'
 end
