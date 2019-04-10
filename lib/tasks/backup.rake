@@ -2,7 +2,6 @@ namespace :backup do
   desc 'Dumps the database to backups'
   task dump: :environment do
     cmd = "PGPASSWORD=#{ENV['JPTPASSWORD']} pg_dump -F c -v -h localhost -U jpt -d #{ENV['JPTDB']} -f ../Backups/tricom_jpt.psql"
-    puts cmd
     exec cmd
   end
 
@@ -13,7 +12,6 @@ namespace :backup do
 
       Rake::Task['db:drop'].invoke
       Rake::Task['db:create'].invoke
-      puts cmd
       exec cmd
     else
       puts 'Please pass a date to the task'
