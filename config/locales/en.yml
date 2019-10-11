@@ -342,6 +342,7 @@ en:
     setsubi: Device master
     setsubi1: Device
     setsubiyoyaku: Device reservation
+    setsubiyoyaku7Day: Device reservation by week
     shainmaster: Employee master
     share: TRICOM
     shoninshamst: Approver master
