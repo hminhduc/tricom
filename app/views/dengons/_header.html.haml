@@ -6,7 +6,7 @@
       = select(:head, :nyuuryokusha, shains, {selected: @nyuuryokusha, include_blank: true }, class: 'form-control')
     .form-group
       = label_tag '送信先社員'
-      = select(:head, :shainbango, shains, {selected: @shain_param, include_blank: true }, class: 'form-control')
+      = select(:head, :shainbango, shains, {selected: @shain_param, include_blank: false }, class: 'form-control')
     .form-group
       = label_tag (t 'title.youkendengon')
       = select(:head, :youken, Dengonyouken.includes(:yuusen).collect {|p| [ p.種類名, p.id, {:style => "background-color: "+p.yuusen.try(:色).to_s+"; color: Black"} ] }, {selected: @yoken, include_blank: true }, class: 'form-control')

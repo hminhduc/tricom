@@ -13,10 +13,18 @@ class DengonsController < ApplicationController
     @yoken = params[:head][:youken] if params[:head].present?
     @kaitou = params[:head][:kaitou] if params[:head].present?
 
-    @dengons = @dengons.where('社員番号 = ?', @shain_param) if @shain_param.present? && vars['search'].nil?
-    if !vars['search'].nil?
-      @shain_param = ''
+    if vars['search'].nil?
+      @dengons = @dengons.where('社員番号 = ?', @shain_param) if @shain_param.present?
+    else
+      shain = Shainmaster.find_by(氏名: vars['search'])
+      if shain.present?
+        @shain_param = shain.社員番号
+        vars['search'] = shain.氏名
+      else
+        @shain_param = ''
+      end
     end
+
     @dengons = @dengons.where(用件: @yoken) if @yoken.present?
     @dengons = @dengons.where(回答: @kaitou) if @kaitou.present?
     @dengons = @dengons.where(入力者: @nyuuryokusha) if @nyuuryokusha.present?

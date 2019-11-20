@@ -97,7 +97,7 @@
                 /#dengon-notify                
                 -dengons.each do |dengon|
                   -naiyou = dengon.伝言内容.length > 12 ? "#{dengon.伝言内容[0...12]}..." : dengon.伝言内容
-                  %li= link_to ' '+ naiyou, "/dengons?locale=ja&search="+dengon.伝言内容, :class => "glyphicon glyphicon-comment icon-left"
+                  %li= link_to ' '+ naiyou, "/dengons?locale=ja&search=#{dengon.to_user_氏名} 未確認", :class => "glyphicon glyphicon-comment icon-left"
           - else
             %li.dropdown
               %a.dropdown-toggle{'href'=>"#", 'data-toggle'=>"dropdown", 'role'=>"button", 'aria-haspopup'=>"true", 'aria-expanded'=>"false" }
