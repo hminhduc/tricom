@@ -19,6 +19,7 @@ class DengonsController < ApplicationController
       shain = Shainmaster.find_by(氏名: vars['search'])
       if shain.present?
         @shain_param = shain.社員番号
+        @dengons = @dengons.where.not(確認: true).where(社員番号: @shain_param)
         vars['search'] = shain.氏名
       else
         @shain_param = ''
