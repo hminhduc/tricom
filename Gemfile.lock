@@ -227,9 +227,6 @@ GEM
     parallel (1.12.1)
     parser (2.5.1.2)
       ast (~> 2.4.0)
-    passenger (5.1.4)
-      rack
-      rake (>= 0.8.1)
     pg (0.21.0)
     pg_search (2.0.1)
       activerecord (>= 4.2)
@@ -245,6 +242,7 @@ GEM
     private_pub (1.0.3)
       faye
     public_suffix (2.0.5)
+    puma (3.12.4)
     rack (2.0.3)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -430,11 +428,11 @@ DEPENDENCIES
   mail
   momentjs-rails (>= 2.8.1)
   numeraljs-rails
-  passenger (>= 5.0.4)
   pg
   pg_search
   poltergeist
   private_pub
+  puma
   rails (~> 5.0.0.1)
   rails-controller-testing
   rails_layout

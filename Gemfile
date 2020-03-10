@@ -8,9 +8,9 @@ gem 'jquery-ui-rails'
 gem 'font-awesome-rails'
 gem 'sinatra', git: 'https://github.com/sinatra/sinatra.git'
 # passenger start
-gem 'passenger', '>= 5.0.4'
+# gem 'passenger', '>= 5.0.4'
 # gem 'thin'
-# gem 'puma'
+gem 'puma'
 gem 'sweetalert2'
 # for avatar, upload picture
 # gem 'paperclip', '4.3.7'
