@@ -10,7 +10,7 @@ class MyjobmastersController < ApplicationController
   # GET /jobmasters
   # GET /jobmasters.json
   def index
-    @myjobmasters = Myjobmaster.all.order('updated_at desc')
+    @myjobmasters = Myjobmaster.includes(:bunrui).order('updated_at desc')
   end
 
   # GET /jobmasters/1
