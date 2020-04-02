@@ -10,7 +10,7 @@ class JobmastersController < ApplicationController
   # GET /jobmasters
   # GET /jobmasters.json
   def index
-    @jobmasters = Jobmaster.all
+    @jobmasters = Jobmaster.includes(:bunrui)
   end
 
   # GET /jobmasters/1
