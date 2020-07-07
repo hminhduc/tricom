@@ -1,8 +1,28 @@
 = javascript_include_tag 'yuukyuu_kyuuka_rirekis/form'
 = simple_form_for(@yuukyuu_kyuuka_rireki) do |f|
-  .col-md-3.col-xs-9.col-sm-6.col-lg-3.col-md-offset-2.col-xs-offset-2.col-sm-offset-2.col-lg-offset-2
-    = f.association :shainmaster, label_method: :氏名, value_method: :社員番号, label: (t 'title.shain') if mode == :new
-    = f.input :年月, as: :date_time_picker if mode == :new
-    = f.input :月初有給残
-    = f.input :月末有給残
-    = f.button :submit, class: 'btn btn-primary'
+  .row
+    .col-md-2.col-xs-6.col-sm-4
+      -unless mode == :new
+        %table
+          %tbody
+            %tr
+              %th 年月:
+              %td
+                &nbsp;
+                = @yuukyuu_kyuuka_rireki.年月
+            %tr
+              %th 社員番号:
+              %td
+                &nbsp;
+                = @yuukyuu_kyuuka_rireki.社員番号
+            %tr
+              %th 社員名:
+              %td
+                &nbsp;
+                = @yuukyuu_kyuuka_rireki.氏名
+    .col-md-2.col-xs-6.col-sm-4
+      = f.association :shainmaster, label_method: :氏名, value_method: :社員番号, label: (t 'title.shain') if mode == :new
+      = f.input :年月, as: :date_time_picker if mode == :new
+      = f.input :月初有給残
+      = f.input :月末有給残
+      = f.button :submit, class: 'btn btn-primary'
