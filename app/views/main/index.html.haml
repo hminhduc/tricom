@@ -58,7 +58,7 @@
         %ul.list-group
           %li.list-group-item= link_to (t 'title.yakushokumaster_table'), yakushokumasters_path
           %li.list-group-item= link_to (t 'title.jpt_hokiday_mst'), jpt_holiday_msts_path
-          %li.list-group-item= link_to (t 'title.yuukyuu_kyuuka'), yuukyuu_kyuuka_rirekis_path
+          %li.list-group-item= link_to (t 'title.yuukyuu_kyuuka'), yuukyuu_kyuuka_rirekis_path(search: Date.today.strftime("%Y/%m"))
           %li.list-group-item= link_to (t 'title.bunruimaster'), bunruis_path
           %li.list-group-item= link_to (t 'title.joutaimaster'), joutaimasters_path
           %li.list-group-item= link_to (t 'title.yuusen'), yuusens_path

@@ -8,7 +8,7 @@ class YuukyuuKyuukaRirekisController < ApplicationController
   end
 
   def index
-    @yuukyuu_kyuuka_rirekis = YuukyuuKyuukaRireki.all
+    @yuukyuu_kyuuka_rirekis = YuukyuuKyuukaRireki.includes(:shainmaster)
   end
 
   def show
