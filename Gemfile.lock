@@ -242,7 +242,7 @@ GEM
     private_pub (1.0.3)
       faye
     public_suffix (2.0.5)
-    puma (3.12.4)
+    puma (3.12.6)
     rack (2.0.3)
     rack-test (0.6.3)
       rack (>= 1.0)
