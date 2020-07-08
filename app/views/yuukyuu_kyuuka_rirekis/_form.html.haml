@@ -25,4 +25,13 @@
       = f.input :年月, as: :date_time_picker if mode == :new
       = f.input :月初有給残
       = f.input :月末有給残
-      = f.button :submit, class: 'btn btn-primary'
+      .row
+        .col-xs-4
+          = f.button :submit, class: 'btn btn-primary'
+        -if mode == :edit
+          -unless @no_prev
+            .col-xs-4
+              = f.button :submit, "←前", class: 'btn btn-primary'
+          -unless @no_next
+            .col-xs-4
+              = f.button :submit, "次→", class: 'btn btn-primary'

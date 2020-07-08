@@ -16,6 +16,9 @@ class YuukyuuKyuukaRirekisController < ApplicationController
   end
 
   def edit
+    ids = YuukyuuKyuukaRireki.order(年月: :asc, 社員番号: :asc).pluck(:id)
+    @no_prev = true if @yuukyuu_kyuuka_rireki.id == ids.first
+    @no_next = true if @yuukyuu_kyuuka_rireki.id == ids.last
     respond_with(@yuukyuu_kyuuka_rireki)
   end
 
@@ -27,7 +30,26 @@ class YuukyuuKyuukaRirekisController < ApplicationController
 
   def update
     flash[:notice] = t 'app.flash.update_success' if @yuukyuu_kyuuka_rireki.update(yuukyuu_kyuuka_rireki_params)
-    respond_with(@yuukyuu_kyuuka_rireki, location: yuukyuu_kyuuka_rirekis_url)
+    case params["commit"]
+    when "←前"
+      ids = YuukyuuKyuukaRireki.order(年月: :asc, 社員番号: :asc).pluck(:id)
+      index = ids.index(@yuukyuu_kyuuka_rireki.id)
+      if index > 0
+        prev_id = ids[index - 1]
+        prev_object = YuukyuuKyuukaRireki.find(prev_id)
+        respond_with(prev_object, location: edit_yuukyuu_kyuuka_rireki_path(prev_object))
+      end
+    when "次→"
+      ids = YuukyuuKyuukaRireki.order(年月: :asc, 社員番号: :asc).pluck(:id)
+      index = ids.index(@yuukyuu_kyuuka_rireki.id)
+      if index < ids.size - 1
+        next_id = ids[index + 1]
+        next_object = YuukyuuKyuukaRireki.find(next_id)
+        respond_with(next_object, location: edit_yuukyuu_kyuuka_rireki_path(next_object))
+      end
+    else
+      respond_with(@yuukyuu_kyuuka_rireki, location: yuukyuu_kyuuka_rirekis_url)
+    end
   end
 
   def destroy
