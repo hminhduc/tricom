@@ -64,9 +64,15 @@ module EventsHelper
       next if time_array && !time_array.include?(t)
       case (t / 60) % 24 # tinh xem thoi diem t ung voi may gio trong ngay.
       when 12 then hiru_kyukei += 1 # tuong duong 12:00->13:00
-      when 18 then yoru_kyukei += 1
-      when 23 then shinya_kyukei += 1
-      when 4, 5, 6 then souchou_kyukei += 1
+      when 18
+        real_hours += 1
+        yoru_kyukei += 0
+      when 23
+        real_hours += 1
+        shinya_kyukei += 0
+      when 4, 5, 6
+        real_hours += 1
+        souchou_kyukei += 0
       else real_hours += 1
       end
     end
