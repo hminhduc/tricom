@@ -289,18 +289,21 @@ jQuery ->
   #    nghi_trua_time += 0.5 if i % 30 == 12 
   #    i+=30 // tang them 30 phut
   kyuukei_time_calculate = (start, end)->
-    hiru_kyukei = yoru_kyukei = shinya_kyukei = souchou_kyukei = real_hours = 0
+    hiru_kyukei = yoru_kyukei = shinya_kyukei = souchou_kyukei = real_hours = 0.0
     t = start
     while t + 30 <= end
       switch Math.floor(t / 60) % 24 # tinh xem thoi diem t ung voi may gio trong ngay.
         when 12 # tuong duong 12:00->13:00
           hiru_kyukei += 0.5
         when 18
-          yoru_kyukei += 0.5
+          real_hours += 0.5
+          yoru_kyukei += 0
         when 23
-          shinya_kyukei += 0.5
+          real_hours += 0.5
+          shinya_kyukei += 0
         when 4, 5, 6
-          souchou_kyukei += 0.5
+          real_hours += 0.5
+          souchou_kyukei += 0
         else
           real_hours += 0.5
       t += 30
