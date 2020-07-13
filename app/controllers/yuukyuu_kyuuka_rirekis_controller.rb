@@ -16,7 +16,11 @@ class YuukyuuKyuukaRirekisController < ApplicationController
   end
 
   def edit
-    ids = YuukyuuKyuukaRireki.order(年月: :asc, 社員番号: :asc).pluck(:id)
+    if session[:yuukyuu_kyuuka_rirekis_search_month] == @yuukyuu_kyuuka_rireki.年月
+      ids = YuukyuuKyuukaRireki.where(年月: @yuukyuu_kyuuka_rireki.年月).order(社員番号: :asc).pluck(:id)
+    else
+      ids = YuukyuuKyuukaRireki.order(年月: :asc, 社員番号: :asc).pluck(:id)
+    end
     @no_prev = true if @yuukyuu_kyuuka_rireki.id == ids.first
     @no_next = true if @yuukyuu_kyuuka_rireki.id == ids.last
     respond_with(@yuukyuu_kyuuka_rireki)
@@ -32,7 +36,11 @@ class YuukyuuKyuukaRirekisController < ApplicationController
     flash[:notice] = t 'app.flash.update_success' if @yuukyuu_kyuuka_rireki.update(yuukyuu_kyuuka_rireki_params)
     case params["commit"]
     when "←前"
-      ids = YuukyuuKyuukaRireki.order(年月: :asc, 社員番号: :asc).pluck(:id)
+      if session[:yuukyuu_kyuuka_rirekis_search_month] == @yuukyuu_kyuuka_rireki.年月
+        ids = YuukyuuKyuukaRireki.where(年月: @yuukyuu_kyuuka_rireki.年月).order(社員番号: :asc).pluck(:id)
+      else
+        ids = YuukyuuKyuukaRireki.order(年月: :asc, 社員番号: :asc).pluck(:id)
+      end
       index = ids.index(@yuukyuu_kyuuka_rireki.id)
       if index > 0
         prev_id = ids[index - 1]
@@ -40,7 +48,11 @@ class YuukyuuKyuukaRirekisController < ApplicationController
         respond_with(prev_object, location: edit_yuukyuu_kyuuka_rireki_path(prev_object))
       end
     when "次→"
-      ids = YuukyuuKyuukaRireki.order(年月: :asc, 社員番号: :asc).pluck(:id)
+      if session[:yuukyuu_kyuuka_rirekis_search_month] == @yuukyuu_kyuuka_rireki.年月
+        ids = YuukyuuKyuukaRireki.where(年月: @yuukyuu_kyuuka_rireki.年月).order(社員番号: :asc).pluck(:id)
+      else
+        ids = YuukyuuKyuukaRireki.order(年月: :asc, 社員番号: :asc).pluck(:id)
+      end
       index = ids.index(@yuukyuu_kyuuka_rireki.id)
       if index < ids.size - 1
         next_id = ids[index + 1]
@@ -48,7 +60,11 @@ class YuukyuuKyuukaRirekisController < ApplicationController
         respond_with(next_object, location: edit_yuukyuu_kyuuka_rireki_path(next_object))
       end
     else
-      respond_with(@yuukyuu_kyuuka_rireki, location: yuukyuu_kyuuka_rirekis_url)
+      if session[:yuukyuu_kyuuka_rirekis_search_month].present?
+        respond_with(@yuukyuu_kyuuka_rireki, location: yuukyuu_kyuuka_rirekis_url(search: session[:yuukyuu_kyuuka_rirekis_search_month]))
+      else
+        respond_with(@yuukyuu_kyuuka_rireki, location: yuukyuu_kyuuka_rirekis_url)
+      end
     end
   end
 
@@ -83,6 +99,8 @@ class YuukyuuKyuukaRirekisController < ApplicationController
       respond_to do |format|
         format.json { render json: data }
       end
+    when 'set_search_month'
+      session[:yuukyuu_kyuuka_rirekis_search_month] = params[:yuukyuu_kyuuka_rirekis_search_month].present? ? params[:yuukyuu_kyuuka_rirekis_search_month] : nil
     end
   end
   def import

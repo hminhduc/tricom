@@ -11,3 +11,12 @@ jQuery ->
     search_params: queryParameters().search
     get_id_from_row_data: (data)->
       return data[0]
+
+  $(document).on 'change', '#yuukyuu_kyuuka_rireki_filter input', (event) ->
+    console.log($(this).val())
+    jQuery.ajax
+      url: '/yuukyuu_kyuuka_rirekis/ajax'
+      data:
+        focus_field: 'set_search_month'
+        yuukyuu_kyuuka_rirekis_search_month: $(this).val()
+      type: "POST"
