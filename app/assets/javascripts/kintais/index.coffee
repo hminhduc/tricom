@@ -262,7 +262,7 @@ jQuery ->
   calculater = (start_time, end_time, idKintai) ->
     kinmutype = $('#kinmutype'+idKintai).text()
     results = time_calculate(start_time, end_time, kinmutype)
-    $('#best_in_place_kintai_'+idKintai+"_実労働時間").text(results.real_hours + results.fustu_zangyo + results.shinya_zangyou || '')
+    $('#best_in_place_kintai_'+idKintai+"_実労働時間").text(results.real_hours || '')
     $('#best_in_place_kintai_'+idKintai+"_遅刻時間").text(results.chikoku_soutai || '')
     $('#best_in_place_kintai_'+idKintai+"_普通残業時間").text(results.fustu_zangyo || '')
     $('#best_in_place_kintai_'+idKintai+"_深夜残業時間").text(results.shinya_zangyou || '')

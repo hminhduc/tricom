@@ -15,6 +15,8 @@ jQuery ->
         real_time = 4
         $('#kintai_状態1').val('31')
         $('#kintai_状態1').parent().parent().find('p.joutai-code-hint').text('午前半休')
+      when '006', '007', '008', '009'
+        real_time = 9
       else
         real_time = 8
     $('#kintai_出勤時刻').val(start_time)
