@@ -1,7 +1,10 @@
 = provide(:title, (t 'title.yuukyuu_kyuuka'))
 %ol.breadcrumb
   %li= link_to (t 'title.menu'), main_path
-  %li= link_to (t 'title.yuukyuu_kyuuka'), yuukyuu_kyuuka_rirekis_path
+  -if session[:yuukyuu_kyuuka_rirekis_search_month].present?
+    %li= link_to (t 'title.yuukyuu_kyuuka'), yuukyuu_kyuuka_rirekis_path(search: session[:yuukyuu_kyuuka_rirekis_search_month])
+  -else
+    %li= link_to (t 'title.yuukyuu_kyuuka'), yuukyuu_kyuuka_rirekis_path(search: Date.today.strftime("%Y/%m"))
   %li.active 編集
 
 = render 'form', mode: :edit
