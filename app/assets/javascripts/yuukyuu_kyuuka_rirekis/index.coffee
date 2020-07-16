@@ -9,6 +9,7 @@ jQuery ->
     no_sort_columns: [6, 7]
     page_length: 100
     search_params: queryParameters().search
+    order_columns: [1, 'asc']
     get_id_from_row_data: (data)->
       return data[0]
 
