@@ -8,6 +8,7 @@ class YuukyuuKyuukaRirekisController < ApplicationController
   end
 
   def index
+    session[:yuukyuu_kyuuka_rirekis_search_month] = params[:search].present? ? params[:search] : nil
     @yuukyuu_kyuuka_rirekis = YuukyuuKyuukaRireki.includes(:shainmaster)
   end
 
