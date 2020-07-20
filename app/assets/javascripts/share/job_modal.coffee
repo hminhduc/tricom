@@ -7,3 +7,4 @@ jQuery ->
     trigger_name: 'choose_job'
     invisible_columns: 4
     no_search_columns: 4
+    page_length: 50

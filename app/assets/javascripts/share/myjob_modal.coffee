@@ -7,3 +7,4 @@ jQuery ->
     trigger_name: 'choose_myjob'
     order_columns: [1, 'asc']
     invisible_columns: 5
+    page_length: 50

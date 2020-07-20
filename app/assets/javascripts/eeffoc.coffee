@@ -54,6 +54,7 @@ jQuery ->
           bSearchable: false
         }
       ]
+      pageLength: args.page_length
       order: args.order_columns
     args.modal.on 'show', (e, code)->
       row_can_tim = data_table.row (idx, data, node)->
