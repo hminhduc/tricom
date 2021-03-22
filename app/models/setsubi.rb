@@ -8,4 +8,8 @@ class Setsubi < ApplicationRecord
   validates :設備コード, :設備名, presence: true
   validates :設備コード, uniqueness: true
   has_many :setsubiyoyaku, dependent: :destroy, foreign_key: :設備コード
+
+  alias_attribute :id, :設備コード
+  alias_attribute :name, :設備名
+  alias_attribute :note, :備考
 end

@@ -1,8 +1,13 @@
 = javascript_include_tag 'setsubiyoyakus/form'
 = simple_form_for(@setsubiyoyaku) do |f|
   .col-md-8.col-xs-8.col-sm-6.col-lg-8.col-sm-offset-2
-    = f.input :設備コード, as: :hidden
-    = f.association :setsubi, label_method: :設備名, value_method: :設備コード, label:'設備コード', disabled: true,input_html: {style: "width:200px"}
+    / = f.input :設備コード, as: :hidden
+    / = f.association :setsubi, label_method: :設備名, value_method: :設備コード, label:'設備コード', disabled: true,input_html: {style: "width:200px"}
+    .set-width{style: "width: 239px"}
+      = f.input :設備コード, wrapper: :vertical_input_group , hint:"#{@setsubiyoyaku.setsubi.try :設備名}", hint_html: {class: 'hint-setsubi-refer'} do
+        = f.input_field :設備コード, class: 'form-control'
+        %span.input-group-addon.refer-setsubi
+          %span.glyphicon.glyphicon-search{'aria-hidden'=>"true"}
     = f.input :予約者, label:'予約者' do
       = f.select :予約者, Shainmaster.all.map {|p| [ p.氏名, p.社員番号 ] },{}, {include_blank: true, class: 'form-control', style: "width:200px"}
     .row
@@ -27,4 +32,5 @@
     = hidden_field_tag :back, params[:back]
     = link_to '削除', setsubiyoyaku_path(@setsubiyoyaku, back: params[:back]), :method => :delete, :data => { :confirm => (t 'app.delete_confirm') }, class: 'btn btn-primary' if modal == "edit"
     %span#time_start{hidden: true}=@setsubiyoyaku.開始
+= render 'share/setsubi_modal'
 = render 'share/kaisha_modal'

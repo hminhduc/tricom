@@ -40,6 +40,7 @@ class SetsubiyoyakusController < ApplicationController
 
   def new
     @kaishamasters = Kaishamaster.all
+    @setsubis = Setsubi.all
     vars = request.query_parameters
     param_date = vars['start_at']
     param_setsubi = vars['setsubi_code']
@@ -74,10 +75,12 @@ class SetsubiyoyakusController < ApplicationController
 
   def edit
     @kaishamasters = Kaishamaster.all
+    @setsubis = Setsubi.all
   end
 
   def create
     @kaishamasters = Kaishamaster.all
+    @setsubis = Setsubi.all
     @setsubiyoyaku = Setsubiyoyaku.new setsubiyoyaku_params
     session[:selected_date] = @setsubiyoyaku.開始 # lưu lại cái ngày vào session để sau reload chuyển đến
     if @setsubiyoyaku.save
@@ -103,6 +106,7 @@ class SetsubiyoyakusController < ApplicationController
         end
       else
         @kaishamasters = Kaishamaster.all
+        @setsubis = Setsubi.all
         render :edit
         # respond_with(@setsubiyoyaku)
       end

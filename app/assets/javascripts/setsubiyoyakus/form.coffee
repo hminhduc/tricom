@@ -41,3 +41,18 @@ jQuery ->
     input: $('#setsubiyoyaku_相手先')
     output: $('.hint-kaisha-refer')
     table: $('#kaisha-table-modal')
+
+  $('.refer-setsubi').click ()->
+    $('#setsubi-search-modal').trigger('show', [$('#setsubiyoyaku_設備コード').val()])
+
+  $('#setsubi-table-modal').on 'choose_setsubi', (e, selected_data)->
+    if selected_data != undefined
+      $('#setsubiyoyaku_設備コード').val(selected_data[0])
+      $('.hint-setsubi-refer').text(selected_data[1])
+      $('#setsubiyoyaku_設備コード').closest('.form-group').find('span.help-block').remove()
+      $('#setsubiyoyaku_設備コード').closest('.form-group').removeClass('has-error')
+
+  setup_tab_render_name
+    input: $('#setsubiyoyaku_設備コード')
+    output: $('.hint-setsubi-refer')
+    table: $('#setsubi-table-modal')
