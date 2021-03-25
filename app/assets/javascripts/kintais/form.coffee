@@ -21,7 +21,7 @@ jQuery ->
         real_time = 8
     $('#kintai_出勤時刻').val(start_time)
     $('#kintai_退社時刻').val(end_time)
-    $('#kintai_遅刻時間').val(0)
+    # $('#kintai_遅刻時間').val(0)
     $('#kintai_深夜残業時間').val(0)
     $('#kintai_実労働時間').val(real_time)
     $('#kintai_普通残業時間').val(0)
@@ -49,7 +49,7 @@ jQuery ->
       results.fustu_zangyo = 0.0
       results.shinya_zangyou = 0.0
     $('#kintai_実労働時間').val(koushuu)
-    $('#kintai_遅刻時間').val(results.chikoku_soutai)
+    # $('#kintai_遅刻時間').val(results.chikoku_soutai)
     $('#kintai_普通残業時間').val(results.fustu_zangyo)
     $('#kintai_深夜残業時間').val(results.shinya_zangyou)
 

@@ -3,7 +3,7 @@
 <table id="keihi-table-show" cellspacing="0" width="100%" style="font-size: 10px">
     <tr style="page-break-inside: avoid;">
         <td colspan="5" style="text-align: left;font-size: 13px"><%= @date_param[0..3] %> 年  <%= @date_param[5..6] %>月度</td>
-        <td colspan="2" style="font-size: 15px">勤務工数表</td>
+        <td colspan="2" style="font-size: 15px">勤務工数表2222</td>
         <td style="font-size: 13px" colspan="2">氏名： <u><%= user.氏名 %></u></td>
         <td style="font-size: 13px">印</td>
         <td style="font-size: 13px" colspan="2">担当者番号： <u><%= user.社員番号 %></u></td>
@@ -32,19 +32,20 @@
     <tr style="page-break-inside: avoid;">
         <td rowspan="2" style="width: 4%;text-align: center; border-left: 1px solid #000;border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">日付</td>
         <td rowspan="2" style="width: 4%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">曜日</td>
-        <td rowspan="2" style="width: 6%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">タイプ</td>
-        <td rowspan="2" style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">出勤時間</td>
-        <td rowspan="2" style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">退社時間</td>
-        <td colspan="6" style="text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">就
+        <td rowspan="2" style="width: 4%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">タイプ</td>
+        <td rowspan="2" style="width: 5%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">出勤時間</td>
+        <td rowspan="2" style="width: 5%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">退社時間</td>
+        <td colspan="7" style="text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">就
             業 時 間
         </td>
         <td rowspan="2" class="table-width" style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">保守携帯</td>
         <td rowspan="2" style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">処理区分</td>
-        <td rowspan="2" style="width: 16%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">備考</td>
+        <td rowspan="2" style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000; border-top: 1px solid #000">備考</td>
     </tr>
     <tr style="page-break-inside: avoid;">
         <td style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000;">実労働時間</td>
         <td style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000">遅刻早退</td>
+        <td style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000">時間内残業</td>
         <td style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000">普通残業</td>
         <td style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000">深夜残業</td>
         <td style="width: 7%;text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000">普通保守</td>
@@ -55,6 +56,7 @@
     <tbody>
     <% jitsuroudou = 0 %>
     <% chikoku = 0 %>
+    <% jikannaizangyou = 0 %>
     <% futsuuzangyou = 0 %>
     <% shinyazangyou = 0 %>
     <% futsuuhoshu = 0 %>
@@ -72,6 +74,7 @@
             <td style="text-align: center; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.退社時刻.to_s(:time) unless kintai.退社時刻.blank? %></td>
             <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.実労働時間 %></td>
             <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.遅刻時間 %></td>
+            <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.時間内残業 %></td>
             <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.普通残業時間 %></td>
             <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.深夜残業時間 %></td>
             <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= kintai.普通保守時間 %></td>
@@ -97,6 +100,9 @@
         <% if !kintai.遅刻時間.nil? %>
             <% chikoku += kintai.遅刻時間 %>
         <% end %>
+        <% if !kintai.時間内残業.nil? %>
+            <% jikannaizangyou += kintai.時間内残業 %>
+        <% end %>
         <% if !kintai.普通残業時間.nil? %>
             <% futsuuzangyou += kintai.普通残業時間 %>
         <% end %>
@@ -117,6 +123,7 @@
         <td colspan=5 style="text-align: center; border-left: 1px solid #000;border-right: 1px solid #000; border-bottom: 1px solid #000">合　　計</td>
         <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= jitsuroudou %></td>
         <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= chikoku %></td>
+        <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= jikannaizangyou %></td>
         <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= futsuuzangyou %></td>
         <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= shinyazangyou %></td>
         <td style="text-align: right; border-right: 1px solid #000; border-bottom: 1px solid #000"><%= futsuuhoshu %></td>
@@ -128,13 +135,13 @@
         <td>&nbsp;</td>
     </tr>
     <tr style="page-break-inside: avoid;">
-        <td colspan=11>&nbsp;</td>
+        <td colspan=12>&nbsp;</td>
         <td style="text-align: center; border-left: 1px solid #000;border-right: 1px solid #000; border-top: 1px solid #000"></td>
         <td style="text-align: center; border-right: 1px solid #000;border-top: 1px solid #000"></td>
         <td colspan=2> &nbsp;</td>
     </tr>
     <tr style="page-break-inside: avoid;">
-        <td colspan=11>&nbsp;</td>
+        <td colspan=12>&nbsp;</td>
         <td rowspan="2" style="text-align: center; border-left: 1px solid #000; border-right: 1px solid #000;border-bottom: 1px  solid #000">&nbsp;</td>
         <td rowspan="2" style="text-align: center;border-right: 1px solid #000; border-bottom: 1px solid #000">&nbsp;</td>
     </tr>

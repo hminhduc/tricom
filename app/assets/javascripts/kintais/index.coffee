@@ -31,7 +31,7 @@ jQuery ->
     else
       gesshozan = parseFloat(gesshozan)
 
-    yuukyu = $('.sum8').text()
+    yuukyu = $('.sum9').text()
 
     if yuukyu == ''
       yuukyu = 0
@@ -187,6 +187,7 @@ jQuery ->
       $('.sum6').text(data.summary.sum6)
       $('.sum7').text(data.summary.sum7)
       $('.sum8').text(data.summary.sum8)
+      $('.sum9').text(data.summary.sum9)
       summary()
 
   $('#kintai-table').on 'click', 'td', ()->

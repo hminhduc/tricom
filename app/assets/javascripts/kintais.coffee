@@ -173,7 +173,8 @@ jQuery ->
     $('.sum6').text(data.summary.sum6)
     $('.sum7').text(data.summary.sum7)
     $('.sum8').text(data.summary.sum8)
-    #$('.input-number').val(data.summary.sum9)
+    $('.sum9').text(data.summary.sum9)
+    #$('.input-number').val(data.summary.sum10)
     summary()
   )
 
@@ -676,6 +677,7 @@ jQuery ->
       $('.sum6').text(data.summary.sum6)
       $('.sum7').text(data.summary.sum7)
       $('.sum8').text(data.summary.sum8)
+      $('.sum9').text(data.summary.sum9)
       summary()
     )
   );
@@ -698,7 +700,7 @@ jQuery ->
     else
       gesshozan = parseFloat(gesshozan)
 
-    yuukyu = $('.sum8').text()
+    yuukyu = $('.sum9').text()
 
     if yuukyu == ''
       yuukyu = 0

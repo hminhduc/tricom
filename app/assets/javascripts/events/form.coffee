@@ -23,19 +23,19 @@ jQuery ->
           $('#event_有無').val('')
           $('.event_帰社').hide()
 
-      if DAIKYU_JOUTAIS.includes(joutai_code)
-        $.post
-          url: '/events/ajax'
-          data:
-            id: 'get_kintais'
-            joutai: joutai_code
-            shain: $('#event_社員番号').val()
-          success: (data)->
-            console.log("OK")
-          failure: ()->
-            console.log("Unsuccessful")
-      else
-        $('#kintai_daikyu').val('')
+      # if DAIKYU_JOUTAIS.includes(joutai_code)
+      #   $.post
+      #     url: '/events/ajax'
+      #     data:
+      #       id: 'get_kintais'
+      #       joutai: joutai_code
+      #       shain: $('#event_社員番号').val()
+      #     success: (data)->
+      #       console.log("OK")
+      #     failure: ()->
+      #       console.log("Unsuccessful")
+      # else
+      #   $('#kintai_daikyu').val('')
 
       # neu joutaikubun = 1 hoac 5 thi disable basho, job, koutei inputs
       joutai_kubun = selected_data[3]

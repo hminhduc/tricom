@@ -36,6 +36,7 @@
     </td>
     <td class='kintai-item' style="white-space: pre" id="jitsuroudou<%= kintai.id %>"><%= best_in_place kintai, :実労働時間, :as => :input, activator: '#jitsuroudou' + kintai.id.to_s,:html_attrs => { size: 3 },:place_holder => place_holders[3],inner_class: "set-width"%></td>
     <td class='kintai-item' style="white-space: pre" id="chikoku<%= kintai.id %>"><%= best_in_place kintai, :遅刻時間, :as => :input, activator: '#chikoku' + kintai.id.to_s,:html_attrs => { size: 3 },:place_holder => place_holders[4],inner_class: "set-width"%></td>
+    <td class='kintai-item' style="white-space: pre" id="jikannaizangyou<%= kintai.id %>"><%= best_in_place kintai, :時間内残業, :as => :input, activator: '#jikannaizangyou' + kintai.id.to_s,:html_attrs => { size: 3 },:place_holder => place_holders[5],inner_class: "set-width"%></td>
     <td class='kintai-item' style="white-space: pre" id="futsuzangyou<%= kintai.id %>"><%= best_in_place kintai, :普通残業時間, :as => :input, activator: '#futsuzangyou' + kintai.id.to_s,:html_attrs => { size: 3 },:place_holder => place_holders[5],inner_class: "set-width"%></td>
     <td class='kintai-item' style="white-space: pre" id="shinyazangyou<%= kintai.id %>"><%= best_in_place kintai, :深夜残業時間, :as => :input, activator: '#shinyazangyou' + kintai.id.to_s,:html_attrs => { size: 3 },:place_holder => place_holders[6],inner_class: "set-width"%></td>
     <td class='kintai-item' style="white-space: pre" id="fushuuhoshu<%= kintai.id %>"><%= best_in_place kintai, :普通保守時間, :as => :input, activator: '#fushuuhoshu' + kintai.id.to_s,:html_attrs => { size: 3 },:place_holder => place_holders[7],inner_class: "set-width"%></td>
@@ -48,6 +49,7 @@
     <td><%= kintai.退社時刻.to_s(:time) unless kintai.退社時刻.blank? %></td>
     <td><%= kintai.実労働時間 %></td>
     <td><%= kintai.遅刻時間 %></td>
+    <td><%= kintai.時間内残業 %></td>
     <td><%= kintai.普通残業時間 %></td>
     <td><%= kintai.深夜残業時間 %></td>
     <td><%= kintai.普通保守時間 %></td>

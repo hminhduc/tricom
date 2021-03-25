@@ -568,6 +568,7 @@ class KintaisController < ApplicationController
           社員番号: shain.社員番号,
           実労働: kintais.sum('実労働時間'),
           遅刻早退: kintais.sum('遅刻時間'),
+          時間内残業: kintais.sum('時間内残業'),
           普通残業: kintais.sum('普通残業時間'),
           深夜残業: kintais.sum('深夜残業時間'),
           普通保守: kintais.sum('普通保守時間'),
@@ -604,7 +605,7 @@ class KintaisController < ApplicationController
   def kintai_params
     params.require(:kintai).permit(:日付, :曜日, :勤務タイプ, :出勤時刻, :退社時刻, :保守携帯回数, :状態1, :状態2, :状態3, :備考,
                                    :実労働時間, :遅刻時間, :早退時間, :普通残業時間, :深夜残業時間, :普通保守時間, :深夜保守時間,
-                                   :holiday, :代休相手日付, :代休取得区分)
+                                   :holiday, :代休相手日付, :代休取得区分, :時間内残業)
   end
 
   def check_edit_kintai
