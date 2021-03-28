@@ -20,7 +20,8 @@ module KintaisHelper
       "<span class='text-gray'>0.0</span>",
       "<span class='text-gray'>0.0</span>",
       "<span class='text-gray'></span>",
-      "<span class='text-gray'></span>"
+      "<span class='text-gray'></span>",
+      "<span class='text-gray'>時間内残業</span>"
     ]
   end
 
