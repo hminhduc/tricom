@@ -4,7 +4,8 @@ module KintaisHelper
       "<i class='fa fa-sort-desc'></i>",
       '&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;', '&nbsp;',
       "<i class='fa fa-sort-desc'></i>",
-      "<i class='fa fa-sort-desc'></i>"
+      "<i class='fa fa-sort-desc'></i>",
+      '&nbsp;'
     ]
   end
 
