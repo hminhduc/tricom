@@ -45,7 +45,7 @@
     = f.input :終了, label: (t 'title.shyuuryou'), as: :date_time_picker
     = f.input :工数, label: (t 'title.koushuu'), input_html: {style: 'width:100px'}, hint: (t 'title.tani'), readonly: true
     = f.button :button, (t 'title.koushuusaikeisan'), type: :button, id: :koushuusaikeisan
-    = f.input :comment, label: (t 'title.comment')
+    = f.input :comment, label: (t 'title.comment'), as: :string
 
     - if mode == 'new'
       = f.button :submit, t('helpers.submit.create'), class: 'btn btn-primary submit-button'
