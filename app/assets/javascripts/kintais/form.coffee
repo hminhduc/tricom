@@ -66,22 +66,26 @@ jQuery ->
   $('#joutai_table').on 'choose_joutai', (e, selected_data)->
     if selected_data != undefined
       # fill data to this input
-      if DAIKYU_JOUTAIS.includes(selected_data[0]) #振替勤務, 午前振出, 午後振出
-        $.post
-          url: '/kintais/ajax'
-          data:
-            id: 'get_kintais'
-            joutai: selected_data[0]
-          success: (data) ->
-            console.log("OK")
-          failure: ()->
-            console.log("NG")
-      else
-        $('#kintai_状態1').val(selected_data[0])
-        $('.joutai-code-hint').text(selected_data[1])
-        $('#kintai_状態1').closest('.form-group').find('span.help-block').remove()
-        $('#kintai_状態1').closest('.form-group').removeClass('has-error')
+      # if DAIKYU_JOUTAIS.includes(selected_data[0]) #振替勤務, 午前振出, 午後振出
+      #   $.post
+      #     url: '/kintais/ajax'
+      #     data:
+      #       id: 'get_kintais'
+      #       joutai: selected_data[0]
+      #     success: (data) ->
+      #       console.log("OK")
+      #     failure: ()->
+      #       console.log("NG")
+      # else
+      #   $('#kintai_状態1').val(selected_data[0])
+      #   $('.joutai-code-hint').text(selected_data[1])
+      #   $('#kintai_状態1').closest('.form-group').find('span.help-block').remove()
+      #   $('#kintai_状態1').closest('.form-group').removeClass('has-error')
+      $('#kintai_状態1').val(selected_data[0])
+      $('.joutai-code-hint').text(selected_data[1])
+      $('#kintai_状態1').closest('.form-group').find('span.help-block').remove()
+      $('#kintai_状態1').closest('.form-group').removeClass('has-error')
 
-  $('#daikyu_table').on 'choose_daikyu', (e, selected_data)->
-    if selected_data != undefined
-      $('#kintai_代休相手日付').val(selected_data[0])
+  # $('#daikyu_table').on 'choose_daikyu', (e, selected_data)->
+  #   if selected_data != undefined
+  #     $('#kintai_代休相手日付').val(selected_data[0])
