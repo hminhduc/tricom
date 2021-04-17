@@ -83,7 +83,7 @@ create_calendar = (data) ->
     ]
   $('#calendar-month-view').fullCalendar
     schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives'
-    firstDay: 1
+    firstDay: 0
     timeFormat: 'H:mm'
     slotLabelFormat: [ 'HH : mm' ]
     nowIndicator: true

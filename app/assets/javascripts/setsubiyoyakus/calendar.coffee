@@ -38,7 +38,7 @@ $ ->
   $.getJSON '/setsubiyoyakus?' + param, (data) ->
     setsubiyoyaku_timeline = $('#setsubiyoyaku-timeline').fullCalendar(
       schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives'
-      firstDay: 1
+      firstDay: 0
       height: 600
       businessHours:
         start: '09:00:00'

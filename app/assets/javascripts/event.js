@@ -1160,7 +1160,7 @@ function create_calendar(data) {
     //    // days of week. an array of zero-based day of week integers (0=Sunday)
     //    // (Monday-Freeday in this example)
     //},
-    firstDay: 1,
+    firstDay: 0,
     timeFormat: 'H:mm',
     //editable: true,
     //aspectRatio: 1.5,/

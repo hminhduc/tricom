@@ -120,7 +120,7 @@ create_calendar = (data) ->
         5
         6
       ]
-    firstDay: 1
+    firstDay: 0
     nowIndicator: true
     aspectRatio: 1.5
     resourceAreaWidth: '30%'
