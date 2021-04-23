@@ -264,7 +264,7 @@ jQuery ->
     kinmutype = $('#kinmutype'+idKintai).text()
     results = time_calculate(start_time, end_time, kinmutype)
     $('#best_in_place_kintai_'+idKintai+"_実労働時間").text(results.real_hours || '')
-    $('#best_in_place_kintai_'+idKintai+"_遅刻時間").text(results.chikoku_soutai || '')
+    # $('#best_in_place_kintai_'+idKintai+"_遅刻時間").text(results.chikoku_soutai || '')
     $('#best_in_place_kintai_'+idKintai+"_普通残業時間").text(results.fustu_zangyo || '')
     $('#best_in_place_kintai_'+idKintai+"_深夜残業時間").text(results.shinya_zangyou || '')
     $('#best_in_place_kintai_'+idKintai+"_深夜保守時間").text(results.shinya_kyukei || '')
@@ -281,7 +281,7 @@ jQuery ->
         shinya_zangyou: results.shinya_zangyou || ''
         yoru_kyukei: results.yoru_kyukei || ''
         shinya_kyukei: results.shinya_kyukei || ''
-        chikoku_soutai: results.chikoku_soutai || ''
+        chikoku_soutai: '' || results.chikoku_soutai
       success: (data) ->
         console.log("update_time success")
       failure: () ->

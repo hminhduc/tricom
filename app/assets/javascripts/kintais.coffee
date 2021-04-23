@@ -507,7 +507,7 @@ jQuery ->
       results.fustu_zangyo = 0.0
       results.shinya_zangyou = 0.0
     $('#kintai_実労働時間').val(koushuu)
-    $('#kintai_遅刻時間').val(results.chikoku_soutai)
+    # $('#kintai_遅刻時間').val(results.chikoku_soutai)
     $('#kintai_普通残業時間').val(results.fustu_zangyo)
     $('#kintai_深夜残業時間').val(results.shinya_zangyou)
 
@@ -743,7 +743,7 @@ jQuery ->
     kinmutype = $('#'+idKintai).text()
     results = time_calculate(start_time, end_time, kinmutype)
     $('#best_in_place_kintai_'+idKintai+"_実労働時間").text(results.real_hours + results.fustu_zangyo + results.shinya_zangyou)
-    $('#best_in_place_kintai_'+idKintai+"_遅刻時間").text(results.chikoku_soutai)
+    # $('#best_in_place_kintai_'+idKintai+"_遅刻時間").text(results.chikoku_soutai)
     $('#best_in_place_kintai_'+idKintai+"_普通残業時間").text(results.fustu_zangyo)
     $('#best_in_place_kintai_'+idKintai+"_深夜残業時間").text(results.shinya_zangyou)
     #$('#best_in_place_kintai_'+idKintai+"_普通保守時間").text(results.yoru_kyukei)

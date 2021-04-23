@@ -374,6 +374,6 @@ jQuery ->
               results.chikoku_soutai += start_time - kinmu_start + kinmu_end - end_time
           else # if start_time >= kinmu_end
             # nothing to do
-    results.chikoku_soutai = Math.ceil(results.chikoku_soutai / 30) * 0.5
+    results.chikoku_soutai = null #Math.ceil(results.chikoku_soutai / 30) * 0.5
     results.real_hours -= results.fustu_zangyo + results.shinya_zangyou
     return results
