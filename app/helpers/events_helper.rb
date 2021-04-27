@@ -107,8 +107,8 @@ module EventsHelper
     soutai = kinmu_end - end_time
     soutai = 0 if soutai < 0
     {
-      chikoku: chikoku,
-      soutai: soutai
+      chikoku: 0,#chikoku,
+      soutai: 0#soutai
     }
   end
 
