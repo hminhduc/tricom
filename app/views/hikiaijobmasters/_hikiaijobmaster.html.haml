@@ -1,0 +1,12 @@
+%tr{ id: "hikiaijobmaster_#{ hikiaijobmaster.id }" }
+  %td= hikiaijobmaster.job番号
+  %td= hikiaijobmaster.job名
+  %td= hikiaijobmaster.開始日.try(:strftime, '%Y/%m/%d')
+  %td= hikiaijobmaster.終了日.try(:strftime, '%Y/%m/%d')
+  %td= hikiaijobmaster.ユーザ番号
+  %td= hikiaijobmaster.ユーザ名
+  %td= hikiaijobmaster.紹介元名
+  %td= hikiaijobmaster.入力社員番号
+  %td= hikiaijobmaster.備考
+  %td= link_to_edit(edit_hikiaijobmaster_path(hikiaijobmaster))
+  %td= link_to_delete(hikiaijobmaster)

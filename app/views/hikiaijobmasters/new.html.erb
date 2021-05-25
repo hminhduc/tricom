@@ -1,0 +1,9 @@
+<%= stylesheet_link_tag 'hikiaijobmst' %>
+<%provide(:title, 'JOB引合マスタ')%>
+<ol class="breadcrumb">
+  <li><%= link_to 'メニュー', main_path %></li>
+  <li><%= link_to 'JOB引合マスタ', hikiaijobmasters_path %></li>
+  <li class="active">新規</li>
+</ol>
+
+<%= render 'form', mode: :new %>

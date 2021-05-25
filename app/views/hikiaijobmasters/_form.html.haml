@@ -1,0 +1,17 @@
+= javascript_include_tag 'hikiaijobmasters/form'
+.editor-datetime
+  = simple_form_for @hikiaijobmaster do |f|
+    .col-sm-3.col-sm-offset-1
+      = f.input :job番号 if mode == :new
+      = f.input :job名
+      = f.input :開始日, as: :date_picker
+      = f.input :終了日, as: :date_picker
+      = f.input :ユーザ番号, as: :search_field
+      = f.input :ユーザ名
+      = f.input :紹介元名
+      = f.input :入力社員番号, hint:'', hint_html: {class: 'hint-shain-refer'}, as: :search_field
+      = f.input :備考, as: :text
+      = f.button :submit, class: 'btn btn-primary'
+
+= render 'share/kaisha_modal'
+= render 'share/shain_modal_refer'

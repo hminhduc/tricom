@@ -101,6 +101,11 @@ Jpt::Application.routes.draw do
     collection { get :export_csv }
   end
 
+  resources :hikiaijobmasters do
+    collection { post :ajax, :import }
+    collection { get :export_csv }
+  end
+
   resources :myjobmasters do
     collection { post :ajax, :import }
     collection { get :export_csv }

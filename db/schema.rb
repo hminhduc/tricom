@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210325162812) do
+ActiveRecord::Schema.define(version: 20210525170730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,21 @@ ActiveRecord::Schema.define(version: 20210325162812) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.boolean  "完了区分",       default: false
+  end
+
+  create_table "JOB引合マスタ", force: :cascade do |t|
+    t.string   "job番号"
+    t.string   "job名"
+    t.date     "開始日"
+    t.date     "終了日"
+    t.string   "ユーザ番号"
+    t.string   "ユーザ名"
+    t.string   "紹介元名"
+    t.string   "入力社員番号"
+    t.string   "備考"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job番号"], name: "index_JOB引合マスタ_on_job番号", unique: true, using: :btree
   end
 
   create_table "MYJOBマスタ", id: false, force: :cascade do |t|
