@@ -23,6 +23,7 @@ class Event < ApplicationRecord
   belongs_to :shozokumaster, foreign_key: :所属コード
   # belongs_to :shozai
   belongs_to :jobmaster, foreign_key: :JOB
+  belongs_to :hikiaijobmaster, foreign_key: :JOB引合
   belongs_to :jobuchiwake, foreign_key: :JOB内訳番
   belongs_to :sagyoukubun, foreign_key: :作業区分
 

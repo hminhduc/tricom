@@ -106,6 +106,7 @@ jQuery ->
         when 'event_状態コード' then $('#joutai_search_modal').trigger('show', [input.val()])
         when 'event_場所コード' then $('#basho_search_modal').trigger('show', [input.val()])
         when 'event_JOB' then $('#job_search_modal').trigger('show', [input.val()])
+        when 'event_JOB引合' then $('#hikiaijob_search_modal').trigger('show', [input.val()])
         when 'event_JOB内訳番' then $('#jobuchiwake_search_modal').trigger('show', [input.val()])
   $('.search-history').click ()->
     input = $(this).prev().prev()
@@ -126,6 +127,10 @@ jQuery ->
     input: $('#event_JOB')
     output: $('.hint-job-refer')
     table: $('#job_table')
+  setup_tab_render_name
+    input: $('#event_JOB引合')
+    output: $('.hint-hikiaijob-refer')
+    table: $('#hikiaijob_table')
   setup_tab_render_name
     input: $('#event_JOB内訳番')
     output: $('.hint-jobuchiwake-refer')
@@ -174,6 +179,13 @@ jQuery ->
       $('.hint-jobuchiwake-refer').text(selected_data[2])
       $('#event_JOB内訳番').closest('.form-group').find('span.help-block').remove()
       $('#event_JOB内訳番').closest('.form-group').removeClass('has-error')
+  $('#hikiaijob_table').on 'choose_hikiaijob', (e, selected_data)->
+    if selected_data != undefined
+      $('#event_JOB引合').val(selected_data[0])
+      $('.hint-hikiaijob-refer').text(selected_data[1])
+      $('#event_JOB引合').closest('.form-group').find('span.help-block').remove()
+      $('#event_JOB引合').closest('.form-group').removeClass('has-error')
+      $('#event_JOB引合').trigger('change', [selected_data])
 
   # nut co tac dung goi ajax de tinh so gio lam dua theo 2 thoi diem da nhap
   $('#koushuusaikeisan').click (event)->

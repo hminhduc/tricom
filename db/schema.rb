@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210525170730) do
+ActiveRecord::Schema.define(version: 20210526031528) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 20210525170730) do
     t.integer  "受注金額"
     t.date     "納期"
     t.boolean  "JOB内訳区分"
+    t.boolean  "JOB引合区分"
     t.index ["job番号"], name: "index_JOBマスタ_on_job番号", unique: true, using: :btree
   end
 
@@ -135,6 +136,7 @@ ActiveRecord::Schema.define(version: 20210525170730) do
     t.boolean  "経費精算"
     t.string   "JOB内訳番"
     t.string   "作業区分"
+    t.string   "JOB引合"
   end
 
   create_table "jpt_holiday_msts", force: :cascade do |t|

@@ -34,5 +34,6 @@ class Jobmaster < ApplicationRecord
 
   def check_input
     errors.add(:終了日, (I18n.t 'app.model.check_data_input')) if 開始日.present? && 終了日.present? && 開始日 > 終了日
+    errors.add(:JOB引合区分, 'とJOB内訳区分が同時にONにすることはできません') if self.JOB引合区分 && self.JOB内訳区分
   end
 end
