@@ -26,7 +26,7 @@
     .row
       .col-lg-6.col-sm-12
         = f.input :JOB, input_html: {style: 'width:100px'}, as: :search_history, hint:"#{@event.jobmaster.try :job名}", hint_html: {class: 'hint-job-refer'}
-    .row
+    .row{style:"display: #{@event.jobmaster.try(:JOB引合区分) ? 'block' : 'none'};"}
       .col-lg-6.col-sm-12
         = f.input :JOB引合, label: '引合JOB番号', input_html: {style: 'width:100px'}, as: :search_field, hint:"#{@event.hikiaijobmaster.try :job名}", hint_html: {class: 'hint-hikiaijob-refer'}
     .row#uchiwake{style: 'display: ' + (@event.jobmaster&.JOB内訳区分 ? 'block' : 'none')}

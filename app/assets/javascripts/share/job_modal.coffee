@@ -5,6 +5,6 @@ jQuery ->
     ok_button: $('#job_sentaku_ok')
     clear_button: $('#clear_job')
     trigger_name: 'choose_job'
-    invisible_columns: 4
-    no_search_columns: 4
+    invisible_columns: [4,5]
+    no_search_columns: [4,5]
     page_length: 50
