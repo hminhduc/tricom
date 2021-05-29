@@ -203,16 +203,16 @@ jQuery ->
     else
       console.log('Not you')
 
-  $('#shainmaster_kinmutype').on 'change', ()->
-    $.post
-      url: '/events/ajax'
-      data:
-        id: 'save_kinmu_type'
-        data:$(this).val()
-      success: (data) ->
-#        swal('勤務タイプ保存！')
-      failure: () ->
-        console.log("save-kinmu-type field")
+#   $('#shainmaster_kinmutype').on 'change', ()->
+#     $.post
+#       url: '/events/ajax'
+#       data:
+#         id: 'save_kinmu_type'
+#         data:$(this).val()
+#       success: (data) ->
+# #        swal('勤務タイプ保存！')
+#       failure: () ->
+#         console.log("save-kinmu-type field")
 
   $('#goto-date-input').val(moment().format('YYYY/MM/DD'))
   $('.datetime_search').datetimepicker
