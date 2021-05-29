@@ -178,6 +178,12 @@ jQuery ->
       $('#event_JOB').closest('.form-group').find('span.help-block').remove()
       $('#event_JOB').closest('.form-group').removeClass('has-error')
       $('#event_JOB').trigger('change', [selected_data].slice(1))
+      if selected_data[7] == "true"
+        $("#event_JOB引合").closest(".row").show()
+      else
+        $("#event_JOB引合").val(null)
+        $('.hint-hikiaijob-refer').text('')
+        $("#event_JOB引合").closest(".row").hide()
 
   $('#jobuchiwake_table').on 'choose_jobuchiwake', (e, selected_data)->
     if selected_data != undefined

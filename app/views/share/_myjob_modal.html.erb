@@ -19,6 +19,7 @@
             <th>分類名</th>
             <th></th>
             <th>更新日</th>
+            <th></th>
           </tr>
           </thead>
 
@@ -32,6 +33,7 @@
                 <td><%= myjob.bunrui_分類名 %></td>
                 <td><%= myjob.jobmaster.try(:JOB内訳区分)%></td>
                 <td><%= myjob.updated_at.to_s[0..18] %></td>
+                <td><%= myjob.jobmaster.try(:JOB引合区分)%></td>
               </tr>
           <% end %>
           </tbody>
