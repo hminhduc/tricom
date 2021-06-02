@@ -5,3 +5,4 @@ jQuery ->
     ok_button: $('#basho_sentaku_ok')
     clear_button: $('#clear_basho')
     trigger_name: 'choose_basho'
+    page_length: 50

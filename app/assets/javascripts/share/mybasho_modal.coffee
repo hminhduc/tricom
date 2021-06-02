@@ -6,3 +6,4 @@ jQuery ->
     clear_button: $('#clear_mybasho')
     trigger_name: 'choose_mybasho'
     order_columns: [1, 'asc']
+    page_length: 50
