@@ -2,10 +2,10 @@
 $('#task<%=@task.id%>').remove();
 done = '<%=@task.done%>'
 if(done == '1'){
-  $('.finished').append("<%= j render @task%>");
+  $("<%= j render @task%>").insertAfter(".finished font.ui-sortable-handle");
   $('#task<%=@task.id%> .best_in_place').best_in_place();
 }
 else{
-  $('.unfinished').append("<%= j render @task%>");
+  $("<%= j render @task%>").insertAfter(".unfinished font.ui-sortable-handle");
   $('#task<%=@task.id%> .best_in_place').best_in_place();
 }
