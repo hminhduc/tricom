@@ -5,5 +5,5 @@ jQuery ->
     ok_button: $('#mybasho_sentaku_ok')
     clear_button: $('#clear_mybasho')
     trigger_name: 'choose_mybasho'
-    order_columns: [1, 'asc']
+    order_columns: [0, 'asc']
     page_length: 50

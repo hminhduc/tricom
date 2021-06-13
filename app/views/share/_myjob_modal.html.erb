@@ -4,7 +4,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">履歴から選択</h4>
+        <h4 class="modal-title" id="myModalLabel">Job履歴から選択</h4>
       </div>
 
       <div class="modal-body">
@@ -12,7 +12,6 @@
 
           <thead>
           <tr>
-            <th>社員番号</th>
             <th>JOB番号</th>
             <th>JOB名</th>
             <th>ユーザ名</th>
@@ -26,13 +25,12 @@
           <tbody>
           <% @myjobs.each do |myjob| %>
               <tr>
-                <td><%= myjob.社員番号 %></td>
                 <td><%= myjob.job番号 %></td>
                 <td><%= myjob.job名 %></td>
                 <td><%= myjob.ユーザ名 %></td>
                 <td><%= myjob.bunrui_分類名 %></td>
                 <td><%= myjob.jobmaster.try(:JOB内訳区分)%></td>
-                <td><%= myjob.updated_at.to_s[0..18] %></td>
+                <td><%= myjob.updated_at.to_s[0..10] %></td>
                 <td><%= myjob.jobmaster.try(:JOB引合区分)%></td>
               </tr>
           <% end %>

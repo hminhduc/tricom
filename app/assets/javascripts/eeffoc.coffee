@@ -65,6 +65,7 @@ jQuery ->
         data_table.page.jumpToData(code, 0)
         args.ok_button.attr('disabled', false)
         args.clear_button.attr('disabled', false)
+        data_table.columns.adjust().draw();
       $(this).modal('show')
 
     args.table.on 'click', 'tbody>tr', ()->
