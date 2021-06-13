@@ -12,6 +12,7 @@
 
           <thead>
           <tr>
+            <th>社員番号</th>
             <th>JOB番号</th>
             <th>JOB名</th>
             <th>ユーザ名</th>
@@ -25,6 +26,7 @@
           <tbody>
           <% @myjobs.each do |myjob| %>
               <tr>
+                <td><%= myjob.社員番号 %></td>
                 <td><%= myjob.job番号 %></td>
                 <td><%= myjob.job名 %></td>
                 <td><%= myjob.ユーザ名 %></td>
