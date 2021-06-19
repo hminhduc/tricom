@@ -12,8 +12,8 @@ class EventsController < ApplicationController
     session[:selected_shain] = params[:selected_user] if params[:selected_user].present?
     session[:selected_shain] = current_user.id unless session[:selected_shain].present?
     @events = Event.includes(:jobmaster, :joutaimaster, :kouteimaster, bashomaster: :kaishamaster)
-                  .where(社員番号: session[:selected_shain])
-                  .order(開始: :desc)
+                   .where(社員番号: session[:selected_shain])
+                   .order(開始: :desc)
     @shain = Shainmaster.find_by_id(session[:selected_shain])
     @kintai = Kintai.first
     @selected_date = session[:selected_date] || Date.current
@@ -30,7 +30,6 @@ class EventsController < ApplicationController
     @date_start = vars['date_start'] if vars['date_start'].present?
     @date_end = vars['date_end'] if vars['date_end'].present?
 
-
     session[:selected_shain] = current_user.id unless session[:selected_shain].present?
     @events = Shainmaster.find(session[:selected_shain]).events.
       where('Date(開始) >= ?', @date_start.to_date.to_s(:db)).
@@ -44,11 +43,11 @@ class EventsController < ApplicationController
     date = @date_start.to_date
     respond_to do |format|
       format.pdf do
-        render  pdf: 'event_pdf',
-                template: 'events/pdf_show.pdf.erb',
-                encoding: 'utf8',
-                orientation: 'Landscape',
-                title: (t 'app.label.pdf_event')
+        render pdf: 'event_pdf',
+               template: 'events/pdf_show.pdf.erb',
+               encoding: 'utf8',
+               orientation: 'Landscape',
+               title: (t 'app.label.pdf_event')
       end
     end
   end
@@ -57,7 +56,6 @@ class EventsController < ApplicationController
     vars = request.query_parameters
     @date_start = vars['date_start'] if vars['date_start'].present?
     @date_end = vars['date_end'] if vars['date_end'].present?
-
 
     session[:selected_shain] = current_user.id unless session[:selected_shain].present?
     @events = Shainmaster.find(session[:selected_shain]).events.
@@ -74,11 +72,11 @@ class EventsController < ApplicationController
     date = @date_start.to_date
     respond_to do |format|
       format.pdf do
-        render  pdf: 'event_job_pdf',
-                title: (t 'app.label.pdf_event_job'),
-                template: 'events/pdf_job_show.pdf.erb',
-                encoding: 'utf8',
-                orientation: 'Landscape'
+        render pdf: 'event_job_pdf',
+               title: (t 'app.label.pdf_event_job'),
+               template: 'events/pdf_job_show.pdf.erb',
+               encoding: 'utf8',
+               orientation: 'Landscape'
       end
     end
   end
@@ -87,7 +85,6 @@ class EventsController < ApplicationController
     vars = request.query_parameters
     @date_start = vars['date_start'] if vars['date_start'] != '' && !vars['date_start'].nil?
     @date_end = vars['date_end'] if vars['date_end'] != '' && !vars['date_end'].nil?
-
 
     session[:selected_shain] = current_user.id unless session[:selected_shain].present?
     @events = Shainmaster.find(session[:selected_shain]).events.
@@ -104,11 +101,11 @@ class EventsController < ApplicationController
     date = @date_start.to_date
     respond_to do |format|
       format.pdf do
-        render  pdf: 'event_koutei_pdf',
-                title: (t 'app.label.pdf_event_koutei'),
-                template: 'events/pdf_koutei_show.pdf.erb',
-                encoding: 'utf8',
-                orientation: 'Landscape'
+        render pdf: 'event_koutei_pdf',
+               title: (t 'app.label.pdf_event_koutei'),
+               template: 'events/pdf_koutei_show.pdf.erb',
+               encoding: 'utf8',
+               orientation: 'Landscape'
       end
     end
   end
@@ -116,8 +113,8 @@ class EventsController < ApplicationController
   def time_line_view
     @selected_date = session[:selected_date] || Date.today.strftime('%Y/%m/%d')
     @events = Event.includes(:joutaimaster, { bashomaster: :kaishamaster }, :jobmaster, :kouteimaster)
-                    .where(社員番号: session[:selected_shain]).where('Date(開始) >= ?', 1.month.ago(Date.today))
-                    .order(開始: :desc)
+                   .where(社員番号: session[:selected_shain]).where('Date(開始) >= ?', 1.month.ago(Date.today))
+                   .order(開始: :desc)
     @kitaku_event = Event.where(社員番号: session[:user], 状態コード: '99').where('Date(開始) = ?', Date.today)
     if request.post?
       case params[:commit]
@@ -141,27 +138,27 @@ class EventsController < ApplicationController
       current_time_text = "#{@selected_date} #{Time.zone.now.strftime('%H:%M')}"
       @shains = Shainmaster.where(タイムライン区分: false)
       session[:selected_roru] = Shainmaster.find_by(社員番号: session[:user]).try(:デフォルトロール) unless session[:selected_roru]
-      session[:selected_roru] = vars['roru'] if  vars['roru']
+      session[:selected_roru] = vars['roru'] if vars['roru']
       @shains = @shains.joins(:rorumenbas).where(ロールメンバ: { ロールコード: session[:selected_roru] }) if session[:selected_roru].present?
       session[:selected_joutai] = vars['joutai'] if vars['joutai']
       if session[:selected_joutai].present?
         if session[:selected_joutai] == '00' # 不在 chossen.
           shain_ids = Shainmaster.pluck(:社員番号).uniq - Event.where(' ? BETWEEN 開始 AND 終了', current_time_text)
-                                                              .where.not(状態コード: '00')
-                                                              .pluck(:社員番号).uniq
+                                                           .where.not(状態コード: '00')
+                                                           .pluck(:社員番号).uniq
         else
           shain_ids = Event.where(' ? BETWEEN 開始 AND 終了', current_time_text)
-                            .where(状態コード: session[:selected_joutai])
-                            .pluck(:社員番号).uniq
+                           .where(状態コード: session[:selected_joutai])
+                           .pluck(:社員番号).uniq
         end
         @shains = @shains.where(社員番号: shain_ids)
       end
       @all_events = Event.includes(:jobmaster, :joutaimaster, :bashomaster)
-                        .where('Date(開始) >= ?', 3.month.ago(@selected_date.to_date))
-                        .where(社員番号: @shains.ids.uniq)
+                         .where('Date(開始) >= ?', 3.month.ago(@selected_date.to_date))
+                         .where(社員番号: @shains.ids.uniq)
       @events = Event.includes(:joutaimaster, { bashomaster: :kaishamaster }, :jobmaster, :kouteimaster)
-                    .where(社員番号: @shains.ids.uniq).where('Date(開始) >= ?', 1.month.ago(Date.today))
-                    .order(開始: :desc)
+                     .where(社員番号: @shains.ids.uniq).where('Date(開始) >= ?', 1.month.ago(Date.today))
+                     .order(開始: :desc)
     end
 
     joutaiDefault = Joutaimaster.find_by(状態コード: '00')
@@ -176,9 +173,9 @@ class EventsController < ApplicationController
       },
       holidays: JptHolidayMst.all.map { |x| x.event_date.to_s }
     }.to_json
-    rescue => e
-      p e
-      @events = Shainmaster.take.events.includes(:joutaimaster, :bashomaster, :jobmaster, :kouteimaster)
+  rescue => e
+    p e
+    @events = Shainmaster.take.events.includes(:joutaimaster, :bashomaster, :jobmaster, :kouteimaster)
   end
 
   def edit
@@ -233,13 +230,13 @@ class EventsController < ApplicationController
         else
           format.html {
             render action: 'shutchou_ikkatsu_new',
-            locals: {
-              param: 'timeline',
-              event1_joutai: params[:event1][:状態コード], event1_start: params[:event1_start], event1_end: params[:event1_end],
-              event1_koushuu: params[:event1_koushuu], event1_umu: params[:event1][:有無],
-              event3_joutai: params[:event3][:状態コード], event3_start: params[:event3_start], event3_end: params[:event3_end],
-              event3_koushuu: params[:event3_koushuu], event3_umu: params[:event3][:有無]
-            }
+                   locals: {
+                     param: 'timeline',
+                     event1_joutai: params[:event1][:状態コード], event1_start: params[:event1_start], event1_end: params[:event1_end],
+                     event1_koushuu: params[:event1_koushuu], event1_umu: params[:event1][:有無],
+                     event3_joutai: params[:event3][:状態コード], event3_start: params[:event3_start], event3_end: params[:event3_end],
+                     event3_koushuu: params[:event3_koushuu], event3_umu: params[:event3][:有無]
+                   }
           }
           format.xml { render xml: @event.errors, status: :unprocessable_entity }
         end
@@ -271,19 +268,20 @@ class EventsController < ApplicationController
         else
           format.html {
             render action: 'shutchou_ikkatsu_new',
-            locals: {
-              param: 'event',
-              event1_joutai: params[:event1][:状態コード], event1_start: params[:event1_start], event1_end: params[:event1_end],
-              event1_koushuu: params[:event1_koushuu], event1_umu: params[:event1][:有無],
-              event3_joutai: params[:event3][:状態コード], event3_start: params[:event3_start], event3_end: params[:event3_end],
-              event3_koushuu: params[:event3_koushuu], event3_umu: params[:event3][:有無]
-            }
+                   locals: {
+                     param: 'event',
+                     event1_joutai: params[:event1][:状態コード], event1_start: params[:event1_start], event1_end: params[:event1_end],
+                     event1_koushuu: params[:event1_koushuu], event1_umu: params[:event1][:有無],
+                     event3_joutai: params[:event3][:状態コード], event3_start: params[:event3_start], event3_end: params[:event3_end],
+                     event3_koushuu: params[:event3_koushuu], event3_umu: params[:event3][:有無]
+                   }
           }
           format.xml { render xml: @event.errors, status: :unprocessable_entity }
         end
       end
     end
   end
+
   def create_kaisha
     @kaisha = Kaishamaster.new(kaisha_params)
     if @kaisha.save == false
@@ -296,7 +294,7 @@ class EventsController < ApplicationController
   def update_kaisha
     @kaishamaster = Kaishamaster.find(kaisha_params[:会社コード])
     respond_to do |format|
-      if  @kaishamaster.update(kaisha_params)
+      if @kaishamaster.update(kaisha_params)
         format.js { render 'edit_kaisha' }
       else
         format.js { render json: @kaishamaster.errors, status: :unprocessable_entity }
@@ -316,7 +314,7 @@ class EventsController < ApplicationController
   def update_basho
     @bashomaster = Bashomaster.find(bashomaster_params[:場所コード])
     respond_to do |format|
-      if  @bashomaster.update(bashomaster_params)
+      if @bashomaster.update(bashomaster_params)
         format.js { render 'edit_basho' }
       else
         format.js { render json: @bashomaster.errors, status: :unprocessable_entity }
@@ -335,10 +333,11 @@ class EventsController < ApplicationController
       end
     end
   end
+
   def update_job
     @jobmaster = Jobmaster.find(jobmaster_params[:job番号])
     respond_to do |format|
-      if  @jobmaster.update(jobmaster_params)
+      if @jobmaster.update(jobmaster_params)
         format.js { render 'edit_job' }
       else
         format.js { render json: @jobmaster.errors, status: :unprocessable_entity }
@@ -350,15 +349,35 @@ class EventsController < ApplicationController
     @event = Event.new event_params
     case params[:commit]
     when (t 'helpers.submit.create')
-      respond_to do |format|
-        if @event.save
-          flash[:notice] = t 'app.flash.new_success'
-          format.html { redirect }
-          format.xml { render xml: @event, status: :created, location: @event }
-        else
-          format.html { render action: 'new' }
-          format.xml { render xml: @event.errors, status: :unprocessable_entity }
-        end # if @event.save
+      if params[:event][:shainmultiselect] == '1' #check to create mutli shain
+        selected_shain = params[:shain_ids].split(',')
+        selected_shain.each do |item|
+          attributes = event_params.clone
+          attributes[:社員番号] = item
+          shainevent = Event.new attributes
+          shainevent.save
+        end
+        respond_to do |format|
+          if @event.save
+            flash[:notice] = t 'app.flash.new_success'
+            format.html { redirect }
+            format.xml { render xml: @event, status: :created, location: @event }
+          else
+            format.html { render action: 'new' }
+            format.xml { render xml: @event.errors, status: :unprocessable_entity }
+          end
+        end
+      else
+        respond_to do |format|
+          if @event.save
+            flash[:notice] = t 'app.flash.new_success'
+            format.html { redirect }
+            format.xml { render xml: @event, status: :created, location: @event }
+          else
+            format.html { render action: 'new' }
+            format.xml { render xml: @event.errors, status: :unprocessable_entity }
+          end # if @event.save
+        end
       end
     when '挿入登録'
       if @event.sounyuutouroku
@@ -567,14 +586,13 @@ class EventsController < ApplicationController
       else
         basho = Bashomaster.find_by(場所コード: params[:mybasho_id])
         @mybasho = Mybashomaster.new(basho.slice(:場所コード, :場所名, :場所名カナ, :SUB, :場所区分, :会社コード)
-                                           .merge(社員番号: params[:shain]))
+                                          .merge(社員番号: params[:shain]))
         if @mybasho.save
           respond_to do |format|
             format.js { render 'create_mybasho' }
           end
         end
       end
-
 
     when 'myjob_削除する'
       myjob = Myjobmaster.where(社員番号: params[:shain], job番号: params[:myjob_id]).first
@@ -614,16 +632,16 @@ class EventsController < ApplicationController
       respond_to do |format|
         format.json { render json: data }
       end
-    # when 'event_drag_check'
-    #    event = Event.find(params[:eventId])
-    #    if event.社員番号 == params[:shainId]
-    #      data = {check: 'OK' }
-    #    else
-    #      data = {check: 'NOT OK' }
-    #    end
-    #    respond_to do |format|
-    #      format.json { render json: data }
-    #    end
+      # when 'event_drag_check'
+      #    event = Event.find(params[:eventId])
+      #    if event.社員番号 == params[:shainId]
+      #      data = {check: 'OK' }
+      #    else
+      #      data = {check: 'NOT OK' }
+      #    end
+      #    respond_to do |format|
+      #      format.json { render json: data }
+      #    end
     when 'event_destroy'
       eventIds = params[:events]
       eventIds.each { |eventId|
@@ -647,8 +665,8 @@ class EventsController < ApplicationController
       end
     when 'create_kitaku_event'
       @kitaku_events = Shainmaster.find(session[:user]).events.
-      where('開始 <= ?', DateTime.parse(params[:time_start]).to_s(:db)).
-      where('終了 >= ?', DateTime.parse(params[:time_start]).to_s(:db))
+        where('開始 <= ?', DateTime.parse(params[:time_start]).to_s(:db)).
+        where('終了 >= ?', DateTime.parse(params[:time_start]).to_s(:db))
       # where('DateTime(終了) <= ?',params[:time_start].to_date.to_s(:db))
       if @kitaku_events.count > 0
         data = { create_message: 'FAIL' }
@@ -667,9 +685,12 @@ class EventsController < ApplicationController
       end
     when 'get_kintais'
       case params[:joutai]
-      when '105' then joutai_aite = '103'
-      when '109' then joutai_aite = '107'
-      when '113' then joutai_aite = '111'
+      when '105' then
+        joutai_aite = '103'
+      when '109' then
+        joutai_aite = '107'
+      when '113' then
+        joutai_aite = '111'
       end
       @kintais = Kintai.where(社員番号: params[:shain], 代休取得区分: '0', 状態1: joutai_aite)
                        .select(:日付, :id)
@@ -717,7 +738,8 @@ class EventsController < ApplicationController
     end
   end
 
-private
+  private
+
   # Use callbacks to share common setup or constraints between actions.
   def set_event
     @event = Event.find(params[:id])
@@ -755,8 +777,8 @@ private
   # Never trust parameters from the scary internet, only allow the white list through.
   def event_params
     attributes = params.require(:event).permit(:社員番号, :開始, :終了, :状態コード, :場所コード, :JOB, :所属コード, :工程コード, :工数,
-                                  :計上, :所在コード, :comment, :有無, :帰社区分, :経費精算, :JOB内訳番, :作業区分, :JOB引合)
-                          .merge(kintai_daikyu_date: params[:kintai_daikyu])
+                                               :計上, :所在コード, :comment, :有無, :帰社区分, :経費精算, :JOB内訳番, :作業区分, :JOB引合)
+                       .merge(kintai_daikyu_date: params[:kintai_daikyu])
     attributes[:終了] = "#{ Time.now.strftime('%Y/%m/%d') } 18:00" if attributes[:開始].present? && attributes[:終了].blank?
     joutai_kubun = Joutaimaster.find_by(状態コード: attributes[:状態コード]).try(:状態区分)
     unless joutai_kubun.in?(['1', '5'])
@@ -774,6 +796,7 @@ private
   def kaisha_params
     params.require(:kaishamaster).permit(:会社コード, :会社名, :備考)
   end
+
   def jobmaster_params
     params.require(:jobmaster).permit(:job番号, :job名, :開始日, :終了日, :ユーザ番号, :ユーザ名, :入力社員番号, :分類コード, :分類名, :関連Job番号, :備考)
   end
@@ -847,6 +870,10 @@ private
   end
 
   def redirect
-    if params[:param] == 'timeline' then redirect_to time_line_view_events_path else redirect_to events_path end
+    if params[:param] == 'timeline' then
+      redirect_to time_line_view_events_path
+    else
+      redirect_to events_path
+    end
   end
 end

@@ -1,4 +1,5 @@
 = javascript_include_tag 'events/form'
+= javascript_include_tag 'events/formjs'
 = stylesheet_link_tag 'events'
 - param = request['param'] || 'event'
 - shain_id = request['shain_id'] || @event.社員番号
@@ -59,9 +60,16 @@
       = f.button :submit,  (t 'helpers.submit.create_clone'), class: 'btn btn-primary submit-button'
       = f.button :submit, '挿入登録', class: 'btn btn-primary'
       = link_to t('helpers.submit.destroy'), event_path(id: @event.id, param: param), method: :delete, data: { confirm: (t 'app.delete_confirm') }, class: 'btn btn-primary'
+  - if mode == 'new'
+    .col-lg-4.col-sm-6
+    .row
+      = f.input :shainmultiselect, label:'自分と他社員', as: :boolean, input_html: { checked: false }
+      = f.button :button, '社員選択', type: :button, id: :shainsentaku
+
     = hidden_field_tag :kintai_daikyu
     = hidden_field_tag :old_joutai, @event.状態コード
     = hidden_field_tag :param, param
+    = hidden_field_tag :shain_ids
 
 = render 'share/basho_modal'
 = render 'share/mybasho_modal'
@@ -71,3 +79,4 @@
 = render 'share/daikyu_modal'
 = render 'share/jobuchiwake_modal'
 = render 'share/hikiaijob_modal'
+= render 'share/shainsentaku_modal'
