@@ -350,7 +350,7 @@ class EventsController < ApplicationController
     case params[:commit]
     when (t 'helpers.submit.create')
       if params[:event][:shainmultiselect] == '1' #check to create mutli shain
-        selected_shain = params[:shain_ids].split(',')
+        selected_shain = event_params[:shain_ids].split(',')
         selected_shain.each do |item|
           attributes = event_params.clone
           attributes[:社員番号] = item
@@ -777,7 +777,7 @@ class EventsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def event_params
     attributes = params.require(:event).permit(:社員番号, :開始, :終了, :状態コード, :場所コード, :JOB, :所属コード, :工程コード, :工数,
-                                               :計上, :所在コード, :comment, :有無, :帰社区分, :経費精算, :JOB内訳番, :作業区分, :JOB引合)
+                                               :計上, :所在コード, :comment, :有無, :帰社区分, :経費精算, :JOB内訳番, :作業区分, :JOB引合, :shainmultiselect,:shain_ids)
                        .merge(kintai_daikyu_date: params[:kintai_daikyu])
     attributes[:終了] = "#{ Time.now.strftime('%Y/%m/%d') } 18:00" if attributes[:開始].present? && attributes[:終了].blank?
     joutai_kubun = Joutaimaster.find_by(状態コード: attributes[:状態コード]).try(:状態区分)

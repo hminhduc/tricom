@@ -1,5 +1,7 @@
 class Event < ApplicationRecord
   attr_accessor :kintai_daikyu_date
+  attr_accessor :shainmultiselect
+  attr_accessor :shain_ids
   self.table_name = :events
   CSV_HEADERS = %w(社員番号 開始 終了 状態コード 場所コード JOB 所属コード 工程コード 工数 計上 comment)
   include PgSearch
