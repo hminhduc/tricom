@@ -5,8 +5,8 @@ $(function () {
         oLanguage: {
             "sUrl": "../../assets/resource/dataTable_" + $('#language').text() + ".txt"
         },
-        order: [1, 'asc'],
-        pageLength: 10,
+        // order: [1, 'asc'],
+        pageLength: 50,
         columnDefs: [{
             orderable: false,
             className: 'select-checkbox',
