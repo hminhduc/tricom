@@ -65,12 +65,11 @@
     .row
       = f.input :shainmultiselect, label: '自分と他社員', input_html: {style: 'margin: 1px 0px 0px 1px'}, as: :boolean, boolean_style: :inline
       = f.button :button, '社員選択', type: :button, id: :shainsentaku
+      = f.hidden_field :shain_ids
 
-    = hidden_field_tag :kintai_daikyu
-    = hidden_field_tag :old_joutai, @event.状態コード
-    = hidden_field_tag :param, param
-    -# = hidden_field_tag :shain_ids
-    = f.hidden_field :shain_ids
+  = hidden_field_tag :kintai_daikyu
+  = hidden_field_tag :old_joutai, @event.状態コード
+  = hidden_field_tag :param, param
 
 = render 'share/basho_modal'
 = render 'share/mybasho_modal'
