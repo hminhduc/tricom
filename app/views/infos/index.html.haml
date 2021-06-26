@@ -1,0 +1,21 @@
+= javascript_include_tag 'info'
+= javascript_include_tag 'infos'
+= stylesheet_link_tag 'infos'
+= provide(:title, '共有情報')
+
+%button.btn.btn-primary#new_info{type: :button}#{t 'title.new'}
+
+.row
+  .col-md-5.col-md-offset-1.sortable.unfinished
+
+    %font{:size => "6"}='継続中'
+    - @infos = Info.where(done: 0).order(id: :desc)
+    = render @infos
+
+
+  .col-md-5.col-md-offset-0.sortable.finished
+    %font{:size => "6"}=(t 'title.finished')
+    - @infos = Info.where(done: 1).order(updated_at: :desc)
+    = render @infos
+
+= render 'info_new_modal'

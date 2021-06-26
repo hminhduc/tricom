@@ -1,0 +1,18 @@
+<div class="panel panel-default" data-id="<%= info.id %>" id="info<%=info.id%>">
+  <div class="panel-heading">
+    <h3 class="panel-title" style="white-space: pre" id="title<%= info.id %>"><%= best_in_place info, :title, :as => :input, activator: '#title' + info.id.to_s,:classes => 'title-edit',:place_holder => "タイトル",inner_class: "set-width"%></h3>
+  </div>
+  <div class="panel-body" id="description<%= info.id %>" style="white-space: pre-line">
+    <%= best_in_place info, :description, :as => :textarea, activator: '#description' + info.id.to_s,:place_holder => "内容",inner_class: "set-width"%>
+  </div>
+  <div class="panel-footer" align="right">
+    <% if info.done == 0%>
+      <button class='btn btn-primary change-status' info-id='<%= info.id %>' type= 'button'><%= (t 'title.finished') %></button>
+    <% elsif info.done == 1 %>
+      <button class='btn btn-primary change-status' info-id='<%= info.id %>' type= 'button'><%= (t 'title.unfinished') %></button>
+    <% end %>
+    <span id='message_confirm_delete' hidden="true"><%=(t "app.delete_confirm")%></span>
+
+    <button class='btn btn-primary destroy-info' id='<%= info.id %>' type= 'button'><%= (t 'title.delete') %></button>
+  </div>
+</div>

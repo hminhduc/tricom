@@ -9,13 +9,13 @@
   .col-md-5.col-md-offset-1.sortable.unfinished
 
     %font{:size => "6"}=(t 'title.unfinished')
-    - @tasks = Task.where(done: 0)
+    - @tasks = Task.where(done: 0).order(id: :desc)
     = render @tasks
 
 
   .col-md-5.col-md-offset-0.sortable.finished
     %font{:size => "6"}=(t 'title.finished')
-    - @tasks = Task.where(done: 1)
+    - @tasks = Task.where(done: 1).order(updated_at: :desc)
     = render @tasks
 
 = render 'task_new_modal'

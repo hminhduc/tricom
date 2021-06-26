@@ -1,4 +1,8 @@
 Jpt::Application.routes.draw do
+  resources :infos do
+    put :sort, on: :collection
+    collection { post :change_status, :ajax }
+  end
   Rails.application.routes.draw do
     resources :tasks do
       put :sort, on: :collection
