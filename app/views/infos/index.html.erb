@@ -1,0 +1,56 @@
+<%= javascript_include_tag 'info' %>
+<%= javascript_include_tag 'infos' %>
+<%= stylesheet_link_tag 'infos' %>
+<%= provide(:title, '共有情報') %>
+
+<div class="row">
+  <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 col-xs-12 col-sm-12 col-lg-12">
+    <ol class="breadcrumb">
+      <li><%= link_to (t 'title.menu'), main_path %></li>
+      <li><%= link_to (t 'title.time_line_view'), time_line_view_events_path %></li>
+      <li><%= link_to 'カレンダー', events_path %></li>
+      <li class="active">共有情報</li>
+    </ol>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12 col-xs-12 col-sm-12 col-lg-12 col-xs-12 col-sm-12 col-lg-12">
+    <table class="pull-left">
+      <td>
+        <button class="btn btn-primary" id="new_info" type="button">新規共有情報</button>
+      </td>
+    </table>
+  </div>
+</div>
+<%= form_tag infos_path, method: :get do %>
+  <div class="row">
+    <div class="col-md-5 col-md-offset-1 sortable unfinished">
+      <span style="font-size: 24pt">継続中</span>
+      <div class="pull-right">
+        <div class="pull-right">
+          <button class="btn btn-default" type="submit" id="search_unfinished">検索</button>
+        </div>
+        <div class="pull-right">
+          <input type="text" class="form-control input-sm" name="search_unfinish" id="search_unfinish" value="<%= @keyword1 %>">
+        </div>
+      </div>
+      <%# @infos = Info.where(done: 0).order(id: :desc) %>
+      <%= render @infos1 %>
+    </div>
+
+    <div class="col-md-5 col-md-offset-0 sortable finished">
+      <span style="font-size: 24pt">完了</span>
+      <div class="pull-right">
+        <div class="pull-right">
+          <button class="btn btn-default" type="submit" id="search_finished">検索</button>
+        </div>
+        <div class="pull-right">
+          <input type="text" class="form-control input-sm" id="search_finish" name="search_finish" value="<%= @keyword2 %>">
+        </div>
+      </div>
+      <%# @infos = Info.where(done: 1).order(updated_at: :desc) %>
+      <%= render @infos2 %>
+    </div>
+  </div>
+<% end %>
+<%= render 'info_new_modal' %>

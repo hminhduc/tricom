@@ -3,7 +3,15 @@
 = stylesheet_link_tag 'tasks'
 = provide(:title, (t 'title.task'))
 
-%button.btn.btn-primary#new_task{type: :button}#{t 'title.new'}
+.row
+  .col-md-12.col-xs-12.col-sm-12.col-lg-12.col-xs-12.col-sm-12.col-lg-12
+    %ol.breadcrumb
+      %li= link_to (t 'title.menu'), main_path
+      %li= link_to (t 'title.time_line_view'), time_line_view_events_path
+      %li= link_to 'カレンダー', events_path
+      %li.active= 'メモ帳'
+
+%button.btn.btn-primary#new_task{type: :button}新規メモ帳
 
 .row
   .col-md-5.col-md-offset-1.sortable.unfinished

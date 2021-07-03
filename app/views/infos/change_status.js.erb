@@ -2,10 +2,10 @@
 $('#info<%=@info.id%>').remove();
 done = '<%=@info.done%>'
 if(done == '1'){
-$("<%= j render @info%>").insertAfter(".finished font.ui-sortable-handle");
+$("<%= j render @info%>").insertAfter(".finished .pull-right.ui-sortable-handle");
 $('#info<%=@info.id%> .best_in_place').best_in_place();
 }
 else{
-$("<%= j render @info%>").insertAfter(".unfinished font.ui-sortable-handle");
+$("<%= j render @info%>").insertAfter(".unfinished .pull-right.ui-sortable-handle");
 $('#info<%=@info.id%> .best_in_place').best_in_place();
 }

@@ -4,7 +4,19 @@ class InfosController < ApplicationController
   respond_to :html, :json
 
   def index
-    @infos = Info.all
+    @keyword1 = params[:search_unfinish] #you can get this params from the value of the search form input
+    if @keyword1.present?
+      @infos1 = Info.where("done = 0 AND (title LIKE (?) OR description LIKE (?))", "%#{@keyword1}%","%#{@keyword1}%").order(id: :desc)
+    else
+      @infos1 = Info.where(done: 0).order(id: :desc)
+    end
+
+    @keyword2 = params[:search_finish]
+    if @keyword2.present?
+      @infos2 = Info.where("done = 1 AND (title LIKE (?) OR description LIKE (?))", "%#{@keyword2}%","%#{@keyword2}%").order(updated_at: :desc)
+    else
+      @infos2 = Info.where(done: 1).order(updated_at: :desc)
+    end
   end
 
   def show
@@ -22,7 +34,7 @@ class InfosController < ApplicationController
   def create
     @info = Info.new(info_params)
     respond_to do |format|
-      if  @info.save
+      if @info.save
         format.js { render 'create_info' }
       else
         format.js { render json: @info.errors, status: :unprocessable_entity }
@@ -82,7 +94,7 @@ class InfosController < ApplicationController
     when 'info_create'
       @info = Info.new(title: 'タイトル')
       respond_to do |format|
-        if  @info.save
+        if @info.save
           format.js { render 'create_info' }
         else
           format.js { render json: @info.errors, status: :unprocessable_entity }
@@ -90,12 +102,19 @@ class InfosController < ApplicationController
       end
     end
   end
-  private
-    def set_info
-      @info = Info.find(params[:id])
-    end
 
-    def info_params
-      params.require(:info).permit(:title, :description, :priority, :done)
-    end
+  def search
+    keyword = params[:search_unfinish] #you can get this params from the value of the search form input
+    @infos = Info.where("title LIKE ?", "%#{keyword}%")
+  end
+
+  private
+
+  def set_info
+    @info = Info.find(params[:id])
+  end
+
+  def info_params
+    params.require(:info).permit(:title, :description, :priority, :done)
+  end
 end
