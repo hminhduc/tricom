@@ -60,7 +60,7 @@ jQuery ->
         confirmButtonText: "OK",
         cancelButtonText: "キャンセル",
       }).then((result) ->
-        if result.value
+        if result
           $.ajax({
             url: '/tasks/ajax',
             data:{
@@ -74,8 +74,6 @@ jQuery ->
             failure: () ->
               console.log("task_削除する keydown Unsuccessful")
           })
-        else if result.dismiss == 'cancel'
-          console.log('canceled')
         );
   )
 
