@@ -50,7 +50,6 @@ jQuery ->
     );
 
   $(document).on('click', '.destroy-task', (e) ->
-
     task_id = $(this).attr('id')
     swal({
         title: $('#message_confirm_delete').text(),
@@ -60,28 +59,24 @@ jQuery ->
         confirmButtonColor: "#DD6B55",
         confirmButtonText: "OK",
         cancelButtonText: "キャンセル",
-        closeOnConfirm: false,
-        closeOnCancel: false
-      }).then(() ->
-        $.ajax({
-          url: '/tasks/ajax',
-          data:{
-            focus_field: 'task_削除する',
-            task_id: task_id
-          },
-
-          type: "POST",
-
-          success: (data) ->
-            swal("削除されました!", "", "success");
-            $('#task'+task_id).remove();
-
-
-          failure: () ->
-            console.log("task_削除する keydown Unsuccessful")
-
-        })
-      );
+      }).then((result) ->
+        if result.value
+          $.ajax({
+            url: '/tasks/ajax',
+            data:{
+              focus_field: 'task_削除する',
+              task_id: task_id
+            },
+            type: "POST",
+            success: (data) ->
+              swal("削除されました!", "", "success");
+              $('#task'+task_id).remove();
+            failure: () ->
+              console.log("task_削除する keydown Unsuccessful")
+          })
+        else if result.dismiss == 'cancel'
+          console.log('canceled')
+        );
   )
 
   $(document).on('click', '.change-status', (e) ->
